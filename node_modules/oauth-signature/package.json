@@ -1,0 +1,78 @@
+{
+  "name": "oauth-signature",
+  "description": "OAuth 1.0a signature generator (RFC 5849)",
+  "version": "1.3.1",
+  "author": {
+    "name": "Marco Bettiolo",
+    "email": "marco@bettiolo.it",
+    "url": "https://github.com/bettiolo"
+  },
+  "homepage": "https://github.com/bettiolo/oauth-signature-js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bettiolo/oauth-signature-js.git"
+  },
+  "bugs": {
+    "url": "http://github.com/bettiolo/oauth-signature-js/issues"
+  },
+  "license": "BSD-3-Clause",
+  "main": "src/app/oauth-signature",
+  "scripts": {
+    "prepublish": "grunt build",
+    "test": "grunt build"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "keywords": [
+    "oauth",
+    "hmac-sha1"
+  ],
+  "devDependencies": {
+    "chai": "~1.10.0",
+    "grunt": "~0.4.5",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-concat": "~0.5.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-requirejs": "~0.4.4",
+    "grunt-contrib-uglify": "~0.6.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-mocha-test": "~0.12.4",
+    "mocha": "~2.0.1"
+  },
+  "volo": {
+    "baseUrl": "src/lib",
+    "dependencies": {
+      "url.min": "github:websanova/js-url/v1.8.6#url.min.js",
+      "cryptojs/hmac-sha1": "https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha1.js",
+      "cryptojs/enc-base64-min": "https://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"
+    }
+  },
+  "dependencies": {
+    "crypto-js": "~3.1.5",
+    "uri-js": "^2.1.1"
+  },
+  "gitHead": "fab13230d9b068d68ab946ca926472fc11f11180",
+  "_id": "oauth-signature@1.3.1",
+  "_shasum": "7075d01f6580524cde6049c9e587fd1e49b0ae17",
+  "_from": "oauth-signature@*",
+  "_npmVersion": "2.11.3",
+  "_nodeVersion": "0.12.7",
+  "_npmUser": {
+    "name": "bettiolo",
+    "email": "marco@bettiolo.it"
+  },
+  "dist": {
+    "shasum": "7075d01f6580524cde6049c9e587fd1e49b0ae17",
+    "tarball": "http://registry.npmjs.org/oauth-signature/-/oauth-signature-1.3.1.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "bettiolo",
+      "email": "marco@bettiolo.it"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/oauth-signature/-/oauth-signature-1.3.1.tgz"
+}
