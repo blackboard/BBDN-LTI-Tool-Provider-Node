@@ -48,26 +48,16 @@ exports.caliper = function(req, res) {
 
 exports.outcomes = function(req,res) {
 
-  var provider = new lti.Provider(consumer_key, consumer_secret);
-  req.body = _.omit(req.body, '__proto__');
+  var options = {};
 
-  provider.valid_request(req, function(err, isValid) {
-     if(err) {
-         console.log(err);
-         res.send(403);
-     }
-     else {
-       if (!isValid || !provider.outcome_service) return false;
+  options.consumer_key=consumer_key;
+  options.consumer_secret=consumer_secret;
+  options.service_url=lisoutcomesendpoint;
+  options.source_did=sourcedid;
 
-       //Check if the outcome service supports the result data extension using the
-       //text format. Available formats include text and url.
-       console.log(provider.outcome_service.supports_result_data('text'));
+  var outcomes_service = new lti.OutcomeService(options);
 
-       //Replace accepts a value between 0 and 1.
-       provider.outcome_service.send_replace_result(.5, function(err,result) {
-         console.log(result); //True or false
-       });
-     }
+  outcomes_service.send_replace_result(.5, function(err,result) {
+    console.log(result); //True or false
   });
-
 };
