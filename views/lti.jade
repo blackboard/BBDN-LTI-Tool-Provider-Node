@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+  p We have received your LTI Launch. You can view the request bogy below.
+  p What would you like to do now?
+  p
+    form(name="login", action="/lti/outcomes", method="post")
+      input(type="submit", value="Outcomes")
+    form(name="login", action="/lti/caliper", method="post")
+      input(type="submit", value="Caliper")
+  p 
+  p Here's the request body!
+  p !{content}

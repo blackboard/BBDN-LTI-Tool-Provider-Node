@@ -1,0 +1,14 @@
+{
+  "name": "BBDN-LTI-Tool-Provider-Node",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.2.6",
+    "ims-lti": "^3.0.2",
+    "jade": "*",
+    "lodash": "^3.10.1"
+  }
+}
