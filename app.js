@@ -29,6 +29,7 @@ if ('development' == app.get('env')) {
 
 app.post('/lti/caliper', lti.caliper);
 app.post('/lti/outcomes', lti.outcomes);
+app.post('/lti/send_outcomes', lti.send_outcomes);
 app.post('/lti', lti.got_launch);
 app.get('/', routes.index);
 

@@ -36,12 +36,17 @@ exports.got_launch = function(req, res){
   provider.valid_request(req, function(err, isValid) {
      if(err) {
          console.log(err);
-	 res.send(403);
+	     res.send(403);
      }
      else {
  	 if (!isValid) res.send(422);
-
-	 res.render('lti', { title: 'LTI Launch Received!', content: content });
+ 	 
+ 	 lis_result_sourcedid = req.body['lis_result_sourcedid'];
+ 	 lis_outcome_service_url = req.body['lis_outcome_service_url'];
+ 	 caliper_profile_url = req.body['caliper_profile_url'];
+ 	 custom_caliper_federated_session_id = req.body['custom_caliper_federated_session_id'];
+ 	 
+ 	 res.render('lti', { title: 'LTI Launch Received!', content: content });
      }
   });
 };
@@ -116,19 +121,24 @@ exports.caliper = function(req, res) {
               
 };
 
-
 exports.outcomes = function(req,res) {
+	res.render('outcomes', { title: 'Enter Grade', sourcedid: lis_result_sourcedid, endpoint: lis_outcome_service_url, key: consumer_key, secret: consumer_secret})
+};
+
+exports.send_outcomes = function(req,res) {
 
   var options = {};
 
-  options.consumer_key=consumer_key;
-  options.consumer_secret=consumer_secret;
-  options.service_url=lis_outcome_service_url;
-  options.source_did=lis_result_sourcedid;
+  options.consumer_key=req.body.key;
+  options.consumer_secret=req.body.secret;
+  options.service_url=req.body.url;
+  options.source_did=req.body.sourcedid;
+  
+  var grade = parseFloat(req.body.grade);
 
   var outcomes_service = new lti.OutcomeService(options);
 
-  outcomes_service.send_replace_result(.5, function(err,result) {
+  outcomes_service.send_replace_result(grade, function(err,result) {
     console.log(result); //True or false
     
     if(result){
@@ -139,4 +149,20 @@ exports.outcomes = function(req,res) {
     }
 
   });
+};
+
+var send_outcomes = function(endpoint,sourced_id) {
+	var options = {};
+
+	  options.consumer_key=consumer_key;
+	  options.consumer_secret=consumer_secret;
+	  options.service_url=endpoint;
+	  options.source_did=sourced_id;
+
+	  var outcomes_service = new lti.OutcomeService(options);
+
+	  outcomes_service.send_replace_result(.5, function(err,result) {
+	    console.log(result); //True or false
+	    return Boolean(result);
+	  })
 };
