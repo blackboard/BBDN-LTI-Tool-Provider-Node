@@ -27,6 +27,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+app.post('/lti/caliper/send', lti.caliper_send);
 app.post('/lti/caliper', lti.caliper);
 app.post('/lti/outcomes', lti.outcomes);
 app.post('/lti/send_outcomes', lti.send_outcomes);
