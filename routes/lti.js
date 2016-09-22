@@ -86,6 +86,10 @@ exports.caliper = function(req, res) {
 exports.caliper_send = function(req,res) {
 
     finish(function(async) {
+    	
+    	var actorId = "https://example.edu/user/554433";
+		var courseSectionId = "https://example.edu/politicalScience/2015/american-revolution-101/section/001";
+		
     	// Any asynchronous calls within this function will be captured 
     	// Just wrap each asynchronous call with function 'async'. 
     	// Each asynchronous call should invoke 'done' as its callback. 
@@ -104,7 +108,7 @@ exports.caliper_send = function(req,res) {
     	
     	async('actor', function(done) {
 		    // The Actor for the caliper Event
-		    var actor = new caliper.Person("https://example.edu/user/554433");
+		    var actor = new caliper.Person(actorId);
 		    actor.setDateCreated((new Date("2015-08-01T06:00:00Z")).toISOString());
 		    actor.setDateModified((new Date("2015-09-02T11:30:00Z")).toISOString());
 		    
@@ -116,17 +120,6 @@ exports.caliper_send = function(req,res) {
     		var action = caliper.NavigationActions.NAVIGATED_TO;
     		
     		done(null,action);
-    	});
-    	
-    	async('eventObj', function(done) {    
-    		// The Object being interacted with by the Actor
-		    var eventObj = new caliper.EPubVolume("https://example.com/viewer/book/34843#epubcfi(/4/3)");
-		    eventObj.setName("The Glorious Cause: The American Revolution, 1763-1789 (Oxford History of the United States)");
-		    eventObj.setVersion("2nd ed.");
-		    eventObj.setDateCreated((new Date("2015-08-01T06:00:00Z")).toISOString());
-		    eventObj.setDateModified((new Date("2015-09-02T11:30:00Z")).toISOString());
-		    
-		    done(null,eventObj);
     	});
     	
     	async('target', function(done) {    
@@ -181,7 +174,7 @@ exports.caliper_send = function(req,res) {
 		    courseOffering.setDateModified((new Date("2015-09-02T11:30:00Z")).toISOString());
     	  
     		// LIS Course Section
-		    var courseSection = new caliper.CourseSection("https://example.edu/politicalScience/2015/american-revolution-101/section/001");
+		    var courseSection = new caliper.CourseSection(courseSectionId);
 		    courseSection.setName("American Revolution 101");
 		    courseSection.setCourseNumber("POL101");
 		    courseSection.setAcademicSession("Fall-2015");
@@ -199,9 +192,6 @@ exports.caliper_send = function(req,res) {
     	});
     	
     	async('membership', function(done) {
-    		var actorId = "https://example.edu/user/554433";
-    		var courseSectionId = "https://example.edu/politicalScience/2015/american-revolution-101/section/001";
-    		
     		// The Actor's Membership
 		    var membership = new caliper.Membership("https://example.edu/politicalScience/2015/american-revolution-101/roster/554433");
 		    membership.setName("American Revolution 101");
@@ -219,7 +209,7 @@ exports.caliper_send = function(req,res) {
 	        var event = new caliper.NavigationEvent();
 	        event.setActor(results['actor']);
 	        event.setAction(results['action']);
-	        event.setObject(results['eventObj']);
+	        event.setObject(results['target'].isPartOf);
 	        event.setTarget(results['target']);
 	        event.setNavigatedFrom(results['navigatedFrom']);
 	        event.setEventTime((new Date("2015-09-15T10:15:00Z")).toISOString());
@@ -246,8 +236,8 @@ exports.caliper_send = function(req,res) {
         	// This callback is invoked after all asynchronous calls finish 
         	// or as soon as an error occurs 
         	// results is an array that contains result of each asynchronous call 
-        	console.log("Sensor: " + results['sensor'].ToS + " Actor: " + results['actor'] + " Action: " +  results['action'] + " Object: " + results['evenObj'] + " Target: " + results['target'] + " NavigatedFrom: " + results['navigatedFor'] + " EdApp: " + results['edApp'] + " Group: " + results['group'] + " Membership: " + results['membership']);
-        	
+        	console.log('Sensor: %O Actor: %O Action: %O Object: %O Target: %O NavigatedFrom: %O EdApp: %O Group: %O Membership: %O',results['sensor'],results['actor'],results['action'],results['eventObj'],results['target'],results['navigatedFrom'],results['edApp'],results['group'],results['membership']);
+        	console.log('eventObj from target: %O', results['target'].isPartOf);
         	res.send('201',envelope);
     });
 };
