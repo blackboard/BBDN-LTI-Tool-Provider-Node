@@ -67,6 +67,10 @@ exports.caliper = function(req, res) {
 		options.consumer_key=consumer_key;
 		options.consumer_secret=consumer_secret;
 		options.caliper_profile_url=caliper_profile_url;
+		options.signer = (new HMAC_SHA1());
+		
+	    var parts = this.caliper_profile_url_parts = url.parse(this.caliper_profile_url, true);
+	    var caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname;
 		
 		  
 		var now = + new Date();
@@ -80,22 +84,16 @@ exports.caliper = function(req, res) {
 				'oauth_version' : '1.0'
 		};
 		
-		var endpoint = caliper_path;
-	    var method = "GET";
-	    var signature = oauth.generate('GET', caliper_host + caliper_path, parameters, consumer_secret );
-	    var headers = {
-	                'Authorization': 'OAuth oauth_nonce="' + parameters.oauth_nonce + '", oauth_timestamp="' + parameters.oauth_timestamp + '", oauth_version="' + parameters.oauth_version + '", oauth_signature_method="' + parameters.oauth_signature_method + '", oauth_consumer_key="' + parameters.oauth_consumer_key + '", oauth_signature="' + signature + '"'
-	    };
-	    console.log(headers);
-	    
-	    var options = {
-	                host: caliper_host,
-	                path: endpoint,
-	                method: method,
-	                headers: headers
+	    var req_options = {
+	            hostname: caliper_profile_url_parts.hostname,
+	            path: caliper_profile_url_parts.path,
+	            method: 'GET',
+	            headers: this._build_headers(xml)
 	    };
 	    
-	    var http_req = https.request(options, function(http_res) {
+	    console.log(req_options);
+	    
+	    var http_req = https.request(req_options, function(http_res) {
 	    	http_res.setEncoding('utf-8');
 	    	var responseString = '';
 	    	http_res.on('data', function(data) {
@@ -113,6 +111,32 @@ exports.caliper = function(req, res) {
 	              
 	};	    
 
+	_build_headers = function(body) {
+	      var headers, key, val;
+	      headers = {
+	        oauth_version: '1.0',
+	        oauth_nonce: uuid.v4(),
+	        oauth_timestamp: Math.round(Date.now() / 1000),
+	        oauth_consumer_key: consumer_key,
+	        oauth_signature_method: 'HMAC-SHA1'
+	      };
+	      headers.oauth_signature = this.signer.build_signature_raw(this.caliper_profile_url_oauth, this.caliper_profile_url_parts, 'GET', headers, this.consumer_secret);
+	      return {
+	        Authorization: 'OAuth realm="",' + ((function() {
+	          var results;
+	          results = [];
+	          for (key in headers) {
+	            val = headers[key];
+	            results.push(key + "=\"" + (utils.special_encode(val)) + "\"");
+	          }
+	          return results;
+	        })()).join(','),
+	        'Content-Type': 'application/xml',
+	        'Content-Length': 0
+	      };
+	};
+
+	 
 exports.caliper_send = function(req,res) {
 
     finish(function(async) {
