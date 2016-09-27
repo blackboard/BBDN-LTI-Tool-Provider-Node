@@ -2,13 +2,15 @@ extends layout
 
 block content
   h1= title
-  p We have received your LTI Launch. You can view the request bogy below.
+  p We have received your LTI Launch. You can view the request body below.
   p What would you like to do now?
   p
     form(name="login", action="/lti/outcomes", method="post")
       input(type="submit", value="Outcomes")
     form(name="login", action="/lti/caliper", method="post")
-      input(type="submit", value="Caliper")
+      input(type="submit", value="Register Caliper")
+    form(name="login", action="/lti/caliper/send", method="post")
+      input(type="submit", value="Emit Event")
   p 
   p Here's the request body!
   p !{content}
