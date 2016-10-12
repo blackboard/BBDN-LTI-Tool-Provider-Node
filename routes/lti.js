@@ -4,6 +4,10 @@ var _ = require('lodash');
 var oauth = require('oauth-signature');
 var https = require('https');
 var finish = require('finish');
+var HMAC_SHA1 = require('./hmac-sha1');
+var utils = require('./utils');
+var url = require('url');
+var uuid = require('uuid');
 const util = require('util');
 
 //for testing
@@ -15,6 +19,9 @@ var caliper_profile_url = "https://ultra-integ.int.bbpd.io/learn/api/v1/telemetr
 var caliper_host = 'ultra-integ.int.bbpd.io';
 var caliper_path = '/learn/api/v1/telemetry/caliper/profile/_268383_1';
 var custom_caliper_federated_session_id = "https://caliper-mapping.cloudbb.blackboard.com/v1/sites/62bca10c-bad8-4aa7-be05-ae779ce67919/sessions/D9F03CA3CE92715F2ECE3928D0967081";
+var caliper_id = "https://ultra-integ.int.bbpd.io/learn/api/v1/telemetry/caliper/profile";
+var eventStoreUrl = "https://ultra-integ.int.bbpd.io/telemetry/api/v1/sites/62bca10c-bad8-4aa7-be05-ae779ce67919/caliper/ingestion/172F31DB66A97F59E60077AF3461D396";
+var apiKey = "cb495bbe-365c-4e9b-ad80-bb1f9e405866";
 
 var oauth_consumer_key = '12345';
 var oauth_nonce = '2666261012817';
@@ -50,7 +57,7 @@ exports.got_launch = function(req, res){
  	 
  	 lis_result_sourcedid = req.body['lis_result_sourcedid'];
  	 lis_outcome_service_url = req.body['lis_outcome_service_url'];
- 	 caliper_profile_url = req.body['caliper_profile_url'];
+ 	 caliper_profile_url = req.body['custom_caliper_profile_url'];
  	 custom_caliper_federated_session_id = req.body['custom_caliper_federated_session_id'];
  	 oauth_consumer_key = req.body['oauth_consumer_key'];
  	 oauth_nonce = req.body['oauth_nonce'];
@@ -69,7 +76,7 @@ exports.caliper = function(req, res) {
 		options.caliper_profile_url=caliper_profile_url;
 		options.signer = (new HMAC_SHA1());
 		
-	    var parts = this.caliper_profile_url_parts = url.parse(this.caliper_profile_url, true);
+	    var parts = this.caliper_profile_url_parts = url.parse(options.caliper_profile_url, true);
 	    var caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname;
 		
 		  
@@ -88,7 +95,7 @@ exports.caliper = function(req, res) {
 	            hostname: caliper_profile_url_parts.hostname,
 	            path: caliper_profile_url_parts.path,
 	            method: 'GET',
-	            headers: this._build_headers(xml)
+	            headers: this._build_headers(options,parts)
 	    };
 	    
 	    console.log(req_options);
@@ -101,6 +108,13 @@ exports.caliper = function(req, res) {
 	    	});
 	    	http_res.on('end', function() {
 	    		console.log(responseString);
+	    		var json = JSON.parse(responseString);
+	    		caliper_id = json['id'];
+	    		eventStoreUrl = json['eventStoreUrl'];
+	    		apiKey = json['apiKey'];
+	    		
+	    		console.log("ID: " + caliper_id + " eventStoreUrl: " + eventStoreUrl + " apiKey: " + apiKey);
+	    		
 	    		res.render('lti', { title: 'Caliper Response Received!', content: responseString });
 	    	});
 	    });
@@ -111,16 +125,16 @@ exports.caliper = function(req, res) {
 	              
 	};	    
 
-	_build_headers = function(body) {
+	_build_headers = function(options, parts) {
 	      var headers, key, val;
 	      headers = {
 	        oauth_version: '1.0',
 	        oauth_nonce: uuid.v4(),
 	        oauth_timestamp: Math.round(Date.now() / 1000),
-	        oauth_consumer_key: consumer_key,
+	        oauth_consumer_key: options.consumer_key,
 	        oauth_signature_method: 'HMAC-SHA1'
 	      };
-	      headers.oauth_signature = this.signer.build_signature_raw(this.caliper_profile_url_oauth, this.caliper_profile_url_parts, 'GET', headers, this.consumer_secret);
+	      headers.oauth_signature = options.signer.build_signature_raw(caliper_profile_url, parts, 'GET', headers, options.consumer_secret);
 	      return {
 	        Authorization: 'OAuth realm="",' + ((function() {
 	          var results;
@@ -144,16 +158,21 @@ exports.caliper_send = function(req,res) {
     	var actorId = "https://example.edu/user/554433";
 		var courseSectionId = "https://example.edu/politicalScience/2015/american-revolution-101/section/001";
 		
-    	// Any asynchronous calls within this function will be captured 
+		var parts = url.parse(eventStoreUrl, true);
+	    
+		// Any asynchronous calls within this function will be captured 
     	// Just wrap each asynchronous call with function 'async'. 
     	// Each asynchronous call should invoke 'done' as its callback. 
     	// 'done' tasks two arguments: error and result. 
     	async('sensor', function(done) { 
     		// Initialize sensor with options
     	    var sensor = caliper.Sensor;
-		    sensor.initialize(custom_caliper_federated_session_id,{
-		        host: caliper_host,
-		        path: caliper_path
+		    sensor.initialize(caliper_id,{
+		        host: parts.host,
+		        path: parts.path,
+		        auth: apiKey
+		
+		        
 		    });
 		    
 		    done(null,sensor);
@@ -277,7 +296,7 @@ exports.caliper_send = function(req,res) {
 	
 	        // Send the Event
 	        var envelope = new caliper.Envelope();
-	        envelope.setSensor(caliper_profile_url);
+	        envelope.setSensor(caliper_id);
 	        envelope.setSendTime(currentTimeMillis);
 	        envelope.setData(event);
 	
