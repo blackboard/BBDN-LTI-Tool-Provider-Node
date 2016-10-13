@@ -168,9 +168,9 @@ exports.caliper_send = function(req,res) {
     		// Initialize sensor with options
     	    var sensor = caliper.Sensor;
 		    sensor.initialize(caliper_id,{
-		        host: parts.host,
+		        hostname: parts.host,
 		        path: parts.path,
-		        auth: apiKey
+		        headers: { "Authorization" : apiKey }
 		
 		        
 		    });
@@ -292,7 +292,7 @@ exports.caliper_send = function(req,res) {
 	
 	        console.log('created navigation event %O', event);
 	
-	        var currentTimeMillis = (new Date()).getTime().toISOString;
+	        var currentTimeMillis = Date.now();
 	
 	        // Send the Event
 	        var envelope = new caliper.Envelope();
