@@ -115,7 +115,7 @@ exports.caliper = function(req, res) {
 	    		
 	    		console.log("ID: " + caliper_id + " eventStoreUrl: " + eventStoreUrl + " apiKey: " + apiKey);
 	    		
-	    		res.render('lti', { title: 'Caliper Response Received!', content: responseString });
+	    		res.render('lti', { title: 'Caliper Response Received!', content: JSON.stringify(json, null, '\t') });
 	    	});
 	    });
 	    
@@ -155,6 +155,8 @@ exports.caliper_send = function(req,res) {
 
     finish(function(async) {
     	
+    	var empty = {};
+    	
     	var actorId = "https://example.edu/user/554433";
 		var courseSectionId = "https://example.edu/politicalScience/2015/american-revolution-101/section/001";
 		
@@ -167,7 +169,8 @@ exports.caliper_send = function(req,res) {
     	async('sensor', function(done) { 
     		// Initialize sensor with options
     	    var sensor = caliper.Sensor;
-		    sensor.initialize(caliper_id,{
+    	    
+    	    sensor.initialize(caliper_id,{
 		        hostname: parts.host,
 		        path: parts.path,
 		        headers: { "Authorization" : apiKey }
@@ -181,6 +184,8 @@ exports.caliper_send = function(req,res) {
     	async('actor', function(done) {
 		    // The Actor for the caliper Event
 		    var actor = new caliper.Person(actorId);
+		    actor.setName("Scott Hurrey");
+		    actor.setDescription("Scott Hurrey");
 		    actor.setDateCreated((new Date()).toISOString());
 		    actor.setDateModified((new Date()).toISOString());
 		    
@@ -198,18 +203,23 @@ exports.caliper_send = function(req,res) {
     		// The Object being interacted with by the Actor
 		    var eventObj = new caliper.EPubVolume("https://example.com/viewer/book/34843#epubcfi(/4/3)");
 		    eventObj.setName("The Glorious Cause: The American Revolution, 1763-1789 (Oxford History of the United States)");
+		    eventObj.setDescription("The Glorious Cause: The American Revolution, 1763-1789 (Oxford History of the United States)");
 		    eventObj.setVersion("2nd ed.");
 		    eventObj.setDateCreated((new Date()).toISOString());
 		    eventObj.setDateModified((new Date()).toISOString());
+		    eventObj.setDatePublished((new Date()).toISOString());
+		    eventObj.setIsPartOf(empty);
     	   
     		// The target object (frame) within the Event Object
 		    var target = new caliper.Frame("https://example.com/viewer/book/34843#epubcfi(/4/3/1)");
 		    target.setName("Key Figures: George Washington");
+		    target.setDescription("Key Figures: George Washington");
 		    target.setIsPartOf(eventObj)
 		    target.setVersion(eventObj.version);
 		    target.setIndex(1);
 		    target.setDateCreated((new Date()).toISOString());
 		    target.setDateModified((new Date()).toISOString());
+		    target.setDatePublished((new Date()).toISOString());
 		    
 		    done(null,target);
     	});
@@ -218,9 +228,12 @@ exports.caliper_send = function(req,res) {
     		// Specific to the Navigation Event - the location where the user navigated from
 		    var navigatedFrom = new caliper.WebPage("https://example.edu/politicalScience/2015/american-revolution-101/index.html");
 		    navigatedFrom.setName("American Revolution 101 Landing Page");
+		    navigatedFrom.setDescription("American Revolution 101 Landing Page");
 		    navigatedFrom.setVersion("1.0");
 		    navigatedFrom.setDateCreated((new Date()).toISOString());
 		    navigatedFrom.setDateModified((new Date()).toISOString());
+		    navigatedFrom.setDatePublished((new Date()).toISOString());
+		    navigatedFrom.setIsPartOf(empty);
 		    
 		    done(null,navigatedFrom);
     	});
@@ -229,6 +242,7 @@ exports.caliper_send = function(req,res) {
     		// The edApp that is part of the Learning Context
 		    var edApp = new caliper.SoftwareApplication("https://example.com/viewer");
 		    edApp.setName("ePub");
+		    edApp.setDescription("ePub");
 		    edApp.setDateCreated((new Date()).toISOString());
 		    edApp.setDateModified((new Date()).toISOString());
 		    
@@ -239,26 +253,32 @@ exports.caliper_send = function(req,res) {
     		// LIS Course Offering
 		    var courseOffering = new caliper.CourseOffering("https://example.edu/politicalScience/2015/american-revolution-101");
 		    courseOffering.setName("Political Science 101: The American Revolution");
+		    courseOffering.setDescription("Political Science 101: The American Revolution");
 		    courseOffering.setCourseNumber("POL101");
 		    courseOffering.setAcademicSession("Fall-2015");
 		    courseOffering.setSubOrganizationOf(null);
 		    courseOffering.setDateCreated((new Date("2015-08-01T06:00:00Z")).toISOString());
 		    courseOffering.setDateModified((new Date("2015-09-02T11:30:00Z")).toISOString());
+		    courseOffering.setSubOrganizationOf(empty);
     	  
     		// LIS Course Section
 		    var courseSection = new caliper.CourseSection(courseSectionId);
 		    courseSection.setName("American Revolution 101");
+		    courseSection.setDescription("American Revolution 101");
 		    courseSection.setCourseNumber("POL101");
 		    courseSection.setAcademicSession("Fall-2015");
 		    courseSection.setSubOrganizationOf(courseOffering);
 		    courseSection.setDateCreated((new Date()).toISOString());
 		    courseSection.setDateModified((new Date()).toISOString());
+		    courseSection.setCategory("History");
     	    
     		// LIS Group
 		    var group = new caliper.Group("https://example.edu/politicalScience/2015/american-revolution-101/section/001/group/001");
 		    group.setName("Discussion Group 001");
+		    group.setDescription("Discussion Group 001");
 		    group.setSubOrganizationOf(courseSection);
 		    group.setDateCreated((new Date()).toISOString());
+		    group.setDateModified((new Date()).toISOString());
 		    
 		    done(null,group);
     	});
@@ -273,6 +293,7 @@ exports.caliper_send = function(req,res) {
 		    membership.setRoles([caliper.Role.LEARNER]);
 		    membership.setStatus(caliper.Status.ACTIVE);
 		    membership.setDateCreated((new Date()).toISOString());
+		    membership.setDateModified((new Date()).toISOString());
 		    
 		    done(null,membership);
     	});
@@ -284,6 +305,7 @@ exports.caliper_send = function(req,res) {
 	        event.setObject(results['target'].isPartOf);
 	        event.setTarget(results['target']);
 	        event.setNavigatedFrom(results['navigatedFrom']);
+	        event.setGenerated((new Date()).toISOString());
 	        event.setEventTime((new Date()).toISOString());
 	        event.setEdApp(results['edApp']);
 	        event.setGroup(results['group']);
@@ -311,9 +333,9 @@ exports.caliper_send = function(req,res) {
         	console.log('Sensor: %O Actor: %O Action: %O Object: %O Target: %O NavigatedFrom: %O EdApp: %O Group: %O Membership: %O',results['sensor'],results['actor'],results['action'],results['eventObj'],results['target'],results['navigatedFrom'],results['edApp'],results['group'],results['membership']);
         	console.log('eventObj from target: %O', results['target'].isPartOf);
         	
-        	var content = util.inspect(envelope);
+        	var content = JSON.stringify(envelope, null, '\t');
         	
-        	console.log('Content1: ' + content);
+        	console.log('JSON: ' + content);
         	
         	res.render('lti', { title: 'Caliper event successfully sent!', content: content });
     });
