@@ -374,3 +374,62 @@ var send_outcomes = function(endpoint,sourced_id) {
 	    return Boolean(result);
 	  })
 };
+
+
+exports.rest_auth = function(req,res) {
+	var OAuth2 = require('oauth').OAuth2;
+    
+	
+	//build url from caliper profile url
+	var parts = url.parse(caliper_profile_url, true);
+    var oauth_host = parts.protocol + '//' + parts.host;
+    
+    var auth_hash = new Buffer(app_key + ":" + app_secret).toString('base64')
+    
+    var auth_string = '"Basic ' + auth_hash + '"';
+  
+    console.log("oauth_host: " + oauth_host + " auth_hash: " + auth_hash + " auth_string: " + auth_string);
+    
+    var options = {
+            hostname: parts.hostname,
+            path: '/learn/api/public/v1/oauth2/token',
+            method: 'POST',
+            headers: { "Authorization" : auth_string , "Content-Type" : "application/x-www-form-urlencoded" }
+    };
+    
+    console.log(options);
+    
+    var http_req = https.request(options, function(http_res) {
+    	http_res.setEncoding('utf-8');
+    	var responseString = '';
+    	http_res.on('data', function(data) {
+    		responseString += data;
+    	});
+    	http_res.on('end', function() {
+    		console.log(responseString);
+    		var json = JSON.parse(responseString);
+    		access_token = json['access_token'];
+    		token_type = json['token_type'];
+    		expires_in = json['expires_in'];
+    		
+    		console.log("Access Token: " + access_token + " Token Type: " + token_type + " Expires In: " + expires_in);
+    		
+    		res.render('lti', { title: 'REST Token Response Received!', content: JSON.stringify(json, null, '\t') });
+    	});
+    });
+    
+    http_req.body = _.omit(http_req.body, '__proto__');
+    http_req.body = "{ \"grant_type\" : \"client_credentials\" }";
+    http_req.write("grant_type=client_credentials");
+    console.log(http_req);
+    http_req.end();    
+
+};
+
+exports.rest_getuser = function(req,res) {
+	
+};
+
+exports.rest_getcourse = function(req,res) {
+	
+};

@@ -27,8 +27,11 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.post('/lti/caliper/send', lti.caliper_send);
-app.post('/lti/caliper', lti.caliper);
+app.post('/caliper/send', lti.caliper_send);
+app.post('/caliper', lti.caliper);
+app.post('/rest/auth', lti.rest_auth);
+app.post('/rest/user', lti.rest_getuser);
+app.post('/rest/course', lti.rest_getcourse);
 app.post('/lti/outcomes', lti.outcomes);
 app.post('/lti/send_outcomes', lti.send_outcomes);
 app.post('/lti', lti.got_launch);

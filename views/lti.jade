@@ -11,6 +11,12 @@ block content
       input(type="submit", value="Register Caliper")
     form(name="login", action="/lti/caliper/send", method="post")
       input(type="submit", value="Emit Event")
+    form(name="login", action="/rest/auth", method="post")
+      input(type="submit", value="Get REST Token")
+    form(name="login", action="/rest/user", method="post")
+      input(type="submit", value="Get User Info")
+    form(name="login", action="/rest/course", method="post")
+      input(type="submit", value="Get Course Info")
   p 
   p Here's the request body!
   p !{content}
