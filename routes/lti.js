@@ -10,12 +10,17 @@ var url = require('url');
 var uuid = require('uuid');
 const util = require('util');
 
+
+var LEARN_URI = "https://ultra-integ.int.bbpd.io"; //localhost
+
+//set false to allow self-signed certs with local Learn
+var rejectUnauthorized = true;
 //for testing
 var consumer_key = "12345";
 var consumer_secret = "secret";
 var lis_result_sourcedid = "bbgc46gi65";
-var lis_outcome_service_url="https://ultra-integ.int.bbpd.io/webapps/gradebook/lti11grade";
-var caliper_profile_url = "https://ultra-integ.int.bbpd.io/learn/api/v1/telemetry/caliper/profile/_268383_1";
+var lis_outcome_service_url= LEARN_URI + "/webapps/gradebook/lti11grade";
+var caliper_profile_url = LEARN_URI + "/learn/api/v1/telemetry/caliper/profile/_268383_1";
 var caliper_host = 'ultra-integ.int.bbpd.io';
 var caliper_path = '/learn/api/v1/telemetry/caliper/profile/_268383_1';
 var custom_caliper_federated_session_id = "https://caliper-mapping.cloudbb.blackboard.com/v1/sites/62bca10c-bad8-4aa7-be05-ae779ce67919/sessions/D9F03CA3CE92715F2ECE3928D0967081";
@@ -76,7 +81,7 @@ exports.caliper = function(req, res) {
 		options.caliper_profile_url=caliper_profile_url;
 		options.signer = (new HMAC_SHA1());
 		
-	    var parts = this.caliper_profile_url_parts = url.parse(options.caliper_profile_url, true);
+	    var parts = caliper_profile_url_parts = url.parse(options.caliper_profile_url, true);
 	    var caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname;
 		
 		  
@@ -95,6 +100,7 @@ exports.caliper = function(req, res) {
 	            hostname: caliper_profile_url_parts.hostname,
 	            path: caliper_profile_url_parts.path,
 	            method: 'GET',
+				rejectUnauthorized: rejectUnauthorized,
 	            headers: this._build_headers(options,parts)
 	    };
 	    
@@ -154,28 +160,24 @@ exports.caliper = function(req, res) {
 exports.caliper_send = function(req,res) {
 
     finish(function(async) {
-    	
-    	var empty = {};
-    	
     	var actorId = "https://example.edu/user/554433";
 		var courseSectionId = "https://example.edu/politicalScience/2015/american-revolution-101/section/001";
 		
 		var parts = url.parse(eventStoreUrl, true);
-	    
-		// Any asynchronous calls within this function will be captured 
+
+		// Any asynchronous calls within this function will be captured
     	// Just wrap each asynchronous call with function 'async'. 
     	// Each asynchronous call should invoke 'done' as its callback. 
     	// 'done' tasks two arguments: error and result. 
     	async('sensor', function(done) { 
     		// Initialize sensor with options
     	    var sensor = caliper.Sensor;
-    	    
+
     	    sensor.initialize(caliper_id,{
 		        hostname: parts.host,
 		        path: parts.path,
+				rejectUnauthorized: rejectUnauthorized,
 		        headers: { "Authorization" : apiKey }
-		
-		        
 		    });
 		    
 		    done(null,sensor);
@@ -208,19 +210,18 @@ exports.caliper_send = function(req,res) {
 		    eventObj.setDateCreated((new Date()).toISOString());
 		    eventObj.setDateModified((new Date()).toISOString());
 		    eventObj.setDatePublished((new Date()).toISOString());
-		    eventObj.setIsPartOf(empty);
-    	   
+
     		// The target object (frame) within the Event Object
 		    var target = new caliper.Frame("https://example.com/viewer/book/34843#epubcfi(/4/3/1)");
 		    target.setName("Key Figures: George Washington");
 		    target.setDescription("Key Figures: George Washington");
-		    target.setIsPartOf(eventObj)
+		    target.setIsPartOf(eventObj);
 		    target.setVersion(eventObj.version);
 		    target.setIndex(1);
 		    target.setDateCreated((new Date()).toISOString());
 		    target.setDateModified((new Date()).toISOString());
 		    target.setDatePublished((new Date()).toISOString());
-		    
+
 		    done(null,target);
     	});
     	
@@ -233,8 +234,7 @@ exports.caliper_send = function(req,res) {
 		    navigatedFrom.setDateCreated((new Date()).toISOString());
 		    navigatedFrom.setDateModified((new Date()).toISOString());
 		    navigatedFrom.setDatePublished((new Date()).toISOString());
-		    navigatedFrom.setIsPartOf(empty);
-		    
+
 		    done(null,navigatedFrom);
     	});
     	
@@ -256,11 +256,9 @@ exports.caliper_send = function(req,res) {
 		    courseOffering.setDescription("Political Science 101: The American Revolution");
 		    courseOffering.setCourseNumber("POL101");
 		    courseOffering.setAcademicSession("Fall-2015");
-		    courseOffering.setSubOrganizationOf(null);
 		    courseOffering.setDateCreated((new Date("2015-08-01T06:00:00Z")).toISOString());
 		    courseOffering.setDateModified((new Date("2015-09-02T11:30:00Z")).toISOString());
-		    courseOffering.setSubOrganizationOf(empty);
-    	  
+
     		// LIS Course Section
 		    var courseSection = new caliper.CourseSection(courseSectionId);
 		    courseSection.setName("American Revolution 101");
@@ -271,7 +269,7 @@ exports.caliper_send = function(req,res) {
 		    courseSection.setDateCreated((new Date()).toISOString());
 		    courseSection.setDateModified((new Date()).toISOString());
 		    courseSection.setCategory("History");
-    	    
+
     		// LIS Group
 		    var group = new caliper.Group("https://example.edu/politicalScience/2015/american-revolution-101/section/001/group/001");
 		    group.setName("Discussion Group 001");
@@ -279,7 +277,7 @@ exports.caliper_send = function(req,res) {
 		    group.setSubOrganizationOf(courseSection);
 		    group.setDateCreated((new Date()).toISOString());
 		    group.setDateModified((new Date()).toISOString());
-		    
+
 		    done(null,group);
     	});
     	
@@ -294,7 +292,7 @@ exports.caliper_send = function(req,res) {
 		    membership.setStatus(caliper.Status.ACTIVE);
 		    membership.setDateCreated((new Date()).toISOString());
 		    membership.setDateModified((new Date()).toISOString());
-		    
+
 		    done(null,membership);
     	});
     	
@@ -305,35 +303,25 @@ exports.caliper_send = function(req,res) {
 	        event.setObject(results['target'].isPartOf);
 	        event.setTarget(results['target']);
 	        event.setNavigatedFrom(results['navigatedFrom']);
-	        event.setGenerated((new Date()).toISOString());
 	        event.setEventTime((new Date()).toISOString());
 	        event.setEdApp(results['edApp']);
 	        event.setGroup(results['group']);
 	        event.setMembership(results['membership']);
 	        event.setFederatedSession(custom_caliper_federated_session_id);
 	
-	        console.log('created navigation event %O', event);
-	
-	        var currentTimeMillis = Date.now();
-	
-	        // Send the Event
-	        var envelope = new caliper.Envelope();
-	        envelope.setSensor(caliper_id);
-	        envelope.setSendTime(currentTimeMillis);
-	        envelope.setData(event);
-	
-	        console.log('created event envelope %O', envelope);
+			console.log('created navigation event %O', event);
+
 
 	        var sensor = results['sensor'];
-	        
-        	sensor.send(envelope);
+
+        	sensor.send(event);
         	// This callback is invoked after all asynchronous calls finish 
         	// or as soon as an error occurs 
         	// results is an array that contains result of each asynchronous call 
         	console.log('Sensor: %O Actor: %O Action: %O Object: %O Target: %O NavigatedFrom: %O EdApp: %O Group: %O Membership: %O',results['sensor'],results['actor'],results['action'],results['eventObj'],results['target'],results['navigatedFrom'],results['edApp'],results['group'],results['membership']);
         	console.log('eventObj from target: %O', results['target'].isPartOf);
         	
-        	var content = JSON.stringify(envelope, null, '\t');
+        	var content = JSON.stringify(event, null, '\t');
         	
         	console.log('JSON: ' + content);
         	
