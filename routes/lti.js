@@ -10,28 +10,33 @@ var url = require('url');
 var uuid = require('uuid');
 const util = require('util');
 
-
-var LEARN_URI = "https://ultra-integ.int.bbpd.io"; //localhost
-
 //set false to allow self-signed certs with local Learn
 var rejectUnauthorized = true;
-//for testing
-var consumer_key = "12345";
-var consumer_secret = "secret";
-var lis_result_sourcedid = "bbgc46gi65";
-var lis_outcome_service_url= LEARN_URI + "/webapps/gradebook/lti11grade";
-var caliper_profile_url = LEARN_URI + "/learn/api/v1/telemetry/caliper/profile/_268383_1";
-var caliper_host = 'ultra-integ.int.bbpd.io';
-var caliper_path = '/learn/api/v1/telemetry/caliper/profile/_268383_1';
-var custom_caliper_federated_session_id = "https://caliper-mapping.cloudbb.blackboard.com/v1/sites/62bca10c-bad8-4aa7-be05-ae779ce67919/sessions/D9F03CA3CE92715F2ECE3928D0967081";
-var caliper_id = "https://ultra-integ.int.bbpd.io/learn/api/v1/telemetry/caliper/profile";
-var eventStoreUrl = "https://ultra-integ.int.bbpd.io/telemetry/api/v1/sites/62bca10c-bad8-4aa7-be05-ae779ce67919/caliper/ingestion/172F31DB66A97F59E60077AF3461D396";
-var apiKey = "cb495bbe-365c-4e9b-ad80-bb1f9e405866";
 
-var oauth_consumer_key = '12345';
-var oauth_nonce = '2666261012817';
+//LTI Variables
+var consumer_key = "<insert LTI Key>";
+var consumer_secret = "<insert LTI Secret>";
+var lis_result_sourcedid = "";
+var lis_outcome_service_url= "";
+
+//Caliper Variables
+var caliper_profile_url = "";
+var caliper_host = "";
+var caliper_path = "";
+var custom_caliper_federated_session_id = "";
+var caliper_id = "";
+var eventStoreUrl = "";
+var apiKey = "";
 
 
+//REST
+var app_key = "<Insert REST Key>";
+var app_secret = "<Insert REST Secret>";
+var access_token = "";
+var token_type = "";
+var expires_in = "";
+var user_id = "";
+var course_id = "";
 
 /*
  * POST LTI Launch Received
@@ -66,6 +71,8 @@ exports.got_launch = function(req, res){
  	 custom_caliper_federated_session_id = req.body['custom_caliper_federated_session_id'];
  	 oauth_consumer_key = req.body['oauth_consumer_key'];
  	 oauth_nonce = req.body['oauth_nonce'];
+ 	 course_id = req.body['context_id'];
+ 	 user_id = req.body['user_id'];
  	 
  	 res.render('lti', { title: 'LTI Launch Received!', content: content });
      }
@@ -377,8 +384,6 @@ var send_outcomes = function(endpoint,sourced_id) {
 
 
 exports.rest_auth = function(req,res) {
-	var OAuth2 = require('oauth').OAuth2;
-    
 	
 	//build url from caliper profile url
 	var parts = url.parse(caliper_profile_url, true);
@@ -386,7 +391,7 @@ exports.rest_auth = function(req,res) {
     
     var auth_hash = new Buffer(app_key + ":" + app_secret).toString('base64')
     
-    var auth_string = '"Basic ' + auth_hash + '"';
+    var auth_string = 'Basic ' + auth_hash;
   
     console.log("oauth_host: " + oauth_host + " auth_hash: " + auth_hash + " auth_string: " + auth_string);
     
@@ -418,18 +423,87 @@ exports.rest_auth = function(req,res) {
     	});
     });
     
-    http_req.body = _.omit(http_req.body, '__proto__');
-    http_req.body = "{ \"grant_type\" : \"client_credentials\" }";
-    http_req.write("grant_type=client_credentials");
+    var grant = "grant_type=client_credentials";
+    
+    http_req.write(grant);
     console.log(http_req);
     http_req.end();    
 
 };
 
 exports.rest_getuser = function(req,res) {
-	
+	//build url from caliper profile url
+	var parts = url.parse(caliper_profile_url, true);
+    var oauth_host = parts.protocol + '//' + parts.host;
+    
+    var auth_string = 'Bearer ' + access_token;
+    
+    var user_path = '/learn/api/public/v1/users/uuid:' + user_id;
+   
+    var options = {
+            hostname: parts.hostname,
+            path: user_path,
+            method: 'GET',
+            headers: { "Authorization" : auth_string}
+    };
+    
+    console.log(options);
+    
+    var http_req = https.request(options, function(http_res) {
+    	http_res.setEncoding('utf-8');
+    	var responseString = '';
+    	http_res.on('data', function(data) {
+    		responseString += data;
+    	});
+    	http_res.on('end', function() {
+    		console.log(responseString);
+    		var json = JSON.parse(responseString);
+    		    		
+    		console.log("User Info: " + JSON.stringify(json,null,'\t'));
+    		
+    		res.render('lti', { title: 'REST User Info Received!', content: JSON.stringify(json, null, '\t') });
+    	});
+    });
+    
+    http_req.write("");
+    console.log(http_req);
+    http_req.end();
 };
 
 exports.rest_getcourse = function(req,res) {
-	
+	//build url from caliper profile url
+	var parts = url.parse(caliper_profile_url, true);
+    var oauth_host = parts.protocol + '//' + parts.host;
+    
+    var auth_string = 'Bearer ' + access_token;
+    var course_path = '/learn/api/public/v1/courses/uuid:' + course_id;
+   
+    var options = {
+            hostname: parts.hostname,
+            path: course_path,
+            method: 'GET',
+            headers: { "Authorization" : auth_string }
+    };
+    
+    console.log(options);
+    
+    var http_req = https.request(options, function(http_res) {
+    	http_res.setEncoding('utf-8');
+    	var responseString = '';
+    	http_res.on('data', function(data) {
+    		responseString += data;
+    	});
+    	http_res.on('end', function() {
+    		console.log(responseString);
+    		var json = JSON.parse(responseString);
+    		    		
+    		console.log("Course Info: " + JSON.stringify(json,null,'\t'));
+    		
+    		res.render('lti', { title: 'REST Course Info Received!', content: JSON.stringify(json, null, '\t') });
+    	});
+    });
+    
+    http_req.write("");
+    console.log(http_req);
+    http_req.end();
 };
