@@ -13,7 +13,7 @@ const util = require('util');
 
 var LEARN_URI = "https://ultra-integ.int.bbpd.io"; //localhost
 
-//set true to allow self-signed certs with local Learn
+//set false to allow self-signed certs with local Learn
 var rejectUnauthorized = true;
 //for testing
 var consumer_key = "12345";
