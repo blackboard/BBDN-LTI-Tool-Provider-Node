@@ -7,16 +7,18 @@ block content
   p
     form(name="login", action="/lti/outcomes", method="post")
       input(type="submit", value="Outcomes")
-    form(name="login", action="/caliper", method="post")
+    form(name="caliper", action="/caliper/register", method="post")
       input(type="submit", value="Register Caliper")
-    form(name="login", action="/caliper/send", method="post")
+    form(name="caliper_send", action="/caliper/send", method="post")
       input(type="submit", value="Emit Event")
-    form(name="login", action="/rest/auth", method="post")
+    form(name="rest_auth", action="/rest/auth", method="post")
       input(type="submit", value="Get REST Token")
-    form(name="login", action="/rest/user", method="post")
+    form(name="rest_user", action="/rest/user", method="post")
       input(type="submit", value="Get User Info")
-    form(name="login", action="/rest/course", method="post")
+    form(name="rest_course", action="/rest/course", method="post")
       input(type="submit", value="Get Course Info")
+    form(name="return", action="#{return_url}", method="post")
+      input(type="submit", value="Return to Learn")
   p 
   p Here's the request body!
   p !{content}

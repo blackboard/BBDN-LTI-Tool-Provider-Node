@@ -14,10 +14,11 @@ const util = require('util');
 var rejectUnauthorized = true;
 
 //LTI Variables
-var consumer_key = "<insert LTI Key>";
-var consumer_secret = "<insert LTI Secret>";
+var consumer_key = "<insert your key>";
+var consumer_secret = "<insert your secret>";
 var lis_result_sourcedid = "";
 var lis_outcome_service_url= "";
+var return_url = "https://community.blackboard.com/community/developers";
 
 //Caliper Variables
 var caliper_profile_url = "";
@@ -30,8 +31,8 @@ var apiKey = "";
 
 
 //REST
-var app_key = "<Insert REST Key>";
-var app_secret = "<Insert REST Secret>";
+var app_key = "<insert your REST API Key>";
+var app_secret = "<insert your REST API secret>";
 var access_token = "";
 var token_type = "";
 var expires_in = "";
@@ -73,8 +74,14 @@ exports.got_launch = function(req, res){
  	 oauth_nonce = req.body['oauth_nonce'];
  	 course_id = req.body['context_id'];
  	 user_id = req.body['user_id'];
+ 	 return_url = req.body['launch_presentation_return_url'];
  	 
- 	 res.render('lti', { title: 'LTI Launch Received!', content: content });
+ 	 if(return_url == undefined) {
+ 		var parts = url.parse(caliper_profile_url, true);
+	    return_url = parts.protocol + '//' + parts.host;
+ 	 }
+ 	 
+ 	 res.render('lti', { title: 'LTI Launch Received!', content: content, return_url: return_url });
      }
   });
 };
@@ -332,9 +339,25 @@ exports.caliper_send = function(req,res) {
         	
         	console.log('JSON: ' + content);
         	
-        	res.render('lti', { title: 'Caliper event successfully sent!', content: content });
+        	res.render('lti', { title: 'Caliper event successfully sent!', content: content, return_url: return_url });
     });
 };
+
+exports.got_caliper = function(req, res){
+
+	  console.log(req.headers);
+	  console.log(req.body);
+	  
+	  var content = "";
+	  
+	  var keys = Object.keys( req.body );
+	  for( var i = 0,length = keys.length; i < length; i++ ) {
+	     content += keys[i] + " = " + req.body[ keys[ i ] ] + "<br />";
+	  }
+	  
+	  res.render('lti', { title: 'Caliper Event Received!', content: content, return_url: return_url });
+
+	};
 
 exports.outcomes = function(req,res) {
 	res.render('outcomes', { title: 'Enter Grade', sourcedid: lis_result_sourcedid, endpoint: lis_outcome_service_url, key: consumer_key, secret: consumer_secret})
@@ -357,10 +380,10 @@ exports.send_outcomes = function(req,res) {
     console.log(result); //True or false
     
     if(result){
-        res.render('lti', { title: 'Outcome successfully sent!', content: result });
+        res.render('lti', { title: 'Outcome successfully sent!', content: result, return_url: return_url });
     }
     else{
-        res.render('lti', { title: 'Outcome Failed!', content: err });
+        res.render('lti', { title: 'Outcome Failed!', content: err, return_url: return_url });
     }
 
   });
@@ -419,7 +442,7 @@ exports.rest_auth = function(req,res) {
     		
     		console.log("Access Token: " + access_token + " Token Type: " + token_type + " Expires In: " + expires_in);
     		
-    		res.render('lti', { title: 'REST Token Response Received!', content: JSON.stringify(json, null, '\t') });
+    		res.render('lti', { title: 'REST Token Response Received!', content: JSON.stringify(json, null, '\t'), return_url: return_url });
     	});
     });
     
@@ -461,7 +484,7 @@ exports.rest_getuser = function(req,res) {
     		    		
     		console.log("User Info: " + JSON.stringify(json,null,'\t'));
     		
-    		res.render('lti', { title: 'REST User Info Received!', content: JSON.stringify(json, null, '\t') });
+    		res.render('lti', { title: 'REST User Info Received!', content: JSON.stringify(json, null, '\t'), return_url: return_url });
     	});
     });
     
@@ -499,7 +522,7 @@ exports.rest_getcourse = function(req,res) {
     		    		
     		console.log("Course Info: " + JSON.stringify(json,null,'\t'));
     		
-    		res.render('lti', { title: 'REST Course Info Received!', content: JSON.stringify(json, null, '\t') });
+    		res.render('lti', { title: 'REST Course Info Received!', content: JSON.stringify(json, null, '\t'), return_url: return_url });
     	});
     });
     
