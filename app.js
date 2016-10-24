@@ -30,6 +30,7 @@ if ('development' == app.get('env')) {
 app.post('/caliper/send', lti.caliper_send);
 app.post('/caliper/register', lti.caliper);
 app.post('/caliper', lti.got_caliper);
+app.post('/caliper', lti.got_caliper);
 app.post('/rest/auth', lti.rest_auth);
 app.post('/rest/user', lti.rest_getuser);
 app.post('/rest/course', lti.rest_getcourse);

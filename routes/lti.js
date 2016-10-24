@@ -14,8 +14,8 @@ const util = require('util');
 var rejectUnauthorized = true;
 
 //LTI Variables
-var consumer_key = "<insert your key>";
-var consumer_secret = "<insert your secret>";
+var consumer_key = "<insert your lti key>";
+var consumer_secret = "<insert your lti secret>";
 var lis_result_sourcedid = "";
 var lis_outcome_service_url= "";
 var return_url = "https://community.blackboard.com/community/developers";
@@ -31,8 +31,8 @@ var apiKey = "";
 
 
 //REST
-var app_key = "<insert your REST API Key>";
-var app_secret = "<insert your REST API secret>";
+var app_key = "<insert your rest application key>";
+var app_secret = "<insert your rest application secret>";
 var access_token = "";
 var token_type = "";
 var expires_in = "";
@@ -96,19 +96,7 @@ exports.caliper = function(req, res) {
 		options.signer = (new HMAC_SHA1());
 		
 	    var parts = caliper_profile_url_parts = url.parse(options.caliper_profile_url, true);
-	    var caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname;
-		
-		  
-		var now = + new Date();
-		var nonce = new Date().getTime() + '' + new Date().getMilliseconds();
-		
-		var parameters = {
-				'oauth_consumer_key' : oauth_consumer_key,
-				'oauth_nonce' : nonce,
-				'oauth_timestamp' : now,
-				'oauth_signature_method' : 'HMAC-SHA1',
-				'oauth_version' : '1.0'
-		};
+	    var caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname
 		
 	    var req_options = {
 	            hostname: caliper_profile_url_parts.hostname,
