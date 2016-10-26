@@ -7,7 +7,8 @@ var express = require('express')
   , routes = require('./routes')
   , lti = require('./routes/lti')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , eventstore = require('./routes/eventstore');
 
 var app = express();
 
@@ -29,8 +30,8 @@ if ('development' == app.get('env')) {
 
 app.post('/caliper/send', lti.caliper_send);
 app.post('/caliper/register', lti.caliper);
-app.post('/caliper', lti.got_caliper);
-app.post('/caliper', lti.got_caliper);
+app.post('/caliper', eventstore.got_caliper);
+app.get('/caliper', eventstore.show_events);
 app.post('/rest/auth', lti.rest_auth);
 app.post('/rest/user', lti.rest_getuser);
 app.post('/rest/course', lti.rest_getcourse);
@@ -42,3 +43,4 @@ app.get('/', routes.index);
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+

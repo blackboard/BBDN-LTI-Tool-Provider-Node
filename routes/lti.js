@@ -331,22 +331,6 @@ exports.caliper_send = function(req,res) {
     });
 };
 
-exports.got_caliper = function(req, res){
-
-	  console.log(req.headers);
-	  console.log(req.body);
-	  
-	  var content = "";
-	  
-	  var keys = Object.keys( req.body );
-	  for( var i = 0,length = keys.length; i < length; i++ ) {
-	     content += keys[i] + " = " + req.body[ keys[ i ] ] + "<br />";
-	  }
-	  
-	  res.render('lti', { title: 'Caliper Event Received!', content: content, return_url: return_url });
-
-	};
-
 exports.outcomes = function(req,res) {
 	res.render('outcomes', { title: 'Enter Grade', sourcedid: lis_result_sourcedid, endpoint: lis_outcome_service_url, key: consumer_key, secret: consumer_secret})
 };
