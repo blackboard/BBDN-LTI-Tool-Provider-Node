@@ -17,6 +17,8 @@ block content
       input(type="submit", value="Get User Info")
     form(name="rest_course", action="/rest/course", method="post")
       input(type="submit", value="Get Course Info")
+    form(name="show_events", action="/caliper", method="get")
+      input(type="submit", value="Display Caliper Events")
     form(name="return", action="#{return_url}", method="post")
       input(type="submit", value="Return to Learn")
   p 
