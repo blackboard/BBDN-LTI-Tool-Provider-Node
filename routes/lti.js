@@ -14,8 +14,8 @@ const util = require('util');
 var rejectUnauthorized = true;
 
 //LTI Variables
-var consumer_key = "<insert your lti key>";
-var consumer_secret = "<insert your lti secret>";
+var consumer_key = "12345";
+var consumer_secret = "secret";
 var lis_result_sourcedid = "";
 var lis_outcome_service_url= "";
 var return_url = "https://community.blackboard.com/community/developers";
@@ -31,8 +31,8 @@ var apiKey = "";
 
 
 //REST
-var app_key = "<insert your rest application key>";
-var app_secret = "<insert your rest application secret>";
+var app_key = "d03caa33-1095-47b9-bc67-f5cd634430b1";
+var app_secret = "QSFClAMu5KmoG8yFbHTi7pjhsseJl4uz";
 var access_token = "";
 var token_type = "";
 var expires_in = "";

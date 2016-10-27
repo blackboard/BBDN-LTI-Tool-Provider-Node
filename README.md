@@ -20,7 +20,7 @@ To access, you must launch into the application as a LTI Tool.
 ## Usage
 The application is very simple in its current iteration. Essentially there is one page with a bunch of buttons. Click the one you want. If you are testing caliper, ensure you click the register caliper button at least once. This registers your tool with Blackboard and provides the application with the API Key and Caliper end point. Also, if you wish to ingest Blackbaord's caliper events, you will need to register your application as a caliper event store, which is done in Blackboard Learn.
 
-See the community site for more details.
+See the <a href="https://community.blackboard.com/community/developers/standards" target="_blank">community site</a> for more details.
 
 
 ## Developing
@@ -37,3 +37,4 @@ This is not meant to be a Node.JS tutorial. It is simply an example of how one m
 - finish
 - oauth-signature
 - uuid
+- mongodb

@@ -16,14 +16,13 @@ exports.got_caliper = function(req, res){
 		console.log("Connected correctly to server");
 
 		// Insert a single document
-		db.collection('caliper').insertOne(req.body, function(err, r) {
+		db.collection('caliper').insertOne(req.body, {checkKeys:false}, function(err, r) {
 			if (err) console.log(err.message);
 			
 			console.log('Caliper event saved successfully!');
 		});
 		
 		db.close();
-		res.send(200);
 	});
 };
 
@@ -33,32 +32,38 @@ exports.show_events = function (req,res) {
 	MongoClient.connect(url, function(err, db) {
 		console.log("Connected correctly to server");
 
-		var events = [];
+		var events = "<table style=\"border: 1px solid\;\"><thead><tr style=\"border: 1px solid\;color: white\;background-color:blue\;\"><th style=\"border: 1px solid\;\"><b>SENSOR</b</th><th style=\"border: 1px solid\;\"><b>SENDTIME</b></th><th style=\"border: 1px solid\;\"><b>TYPE</b></th><th style=\"border: 1px solid\;\"><b>ACTOR</b></th><th style=\"border: 1px solid\;\"><b>SESSION</b></th></tr></thead><tbody>";
 		
 		// Insert a single document
-		db.collection('caliper').find().sort({"_id":-1}).limit(25).toArray(function(err, docs) {
-			if (err) console.log(err.message);
+		db.collection('caliper').find().sort({"_id":-1}).limit(25).each(function(err, doc) {
+			if (err) {
+				console.log("Error reading caliper events from database: " + err.message);
+				res.render('lti', { title: 'View Caliper Event Store!', content: "Error reading caliper events from database: " + err.message, return_url: return_url });
+				db.close();
+			}
 			
-			console.log(JSON.stringify(docs, null, '\t'));
+			if (!doc )
+			{
+        			db.close();
+				events += "</tbody></table>";
+				res.render('lti', { title: 'View Caliper Event Store!', content: events, return_url: return_url });
+        			return false;
+ 			}
+
+			console.log(JSON.stringify(doc, null, '\t'));
 			
-			docs.forEach(function(value) {
-				if (value.sensor) {
+			var date = new Date(doc['sendTime']);
 					
-					var date = new Date(value['sendTime']);
-					
-					events.push("<b>Sensor</b>: " + value['sensor'] +
-									"<b> Send Time</b>: " + date +
-									"<b> Type</b>: " + value['data']['@type'] +
-									"<b> Actor</b>: " + value['data']['actor']['@id'] +
-									"<b> Session</b>: " + value['data']['federatedSession'] + "<br />");
-				}  
-				console.log(value);
-			});
+			events += "<tr style=\"border: 1px solid\;\"><td style=\"border: 1px solid\;\">" + doc['sensor'] +
+					"</td><td style=\"border: 1px solid\;\">" + date +
+					"</td><td style=\"border: 1px solid\;\">" + doc['data'][0]['@type'] +
+					"</td><td style=\"border: 1px solid\;\">" + doc['data'][0]['actor']['@id'] +
+					"</td><td style=\"border: 1px solid\;\">" + doc['data'][0]['federatedSession'] + "</tr>";
+
+			console.log(events);
 			
-			res.render('lti', { title: 'View Caliper Event Store!', content: events, return_url: return_url });
 		});
-		
-		
-		db.close();
+
 	});
+
 };
