@@ -1,5 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 
+const MAX_RECORDS = 5;
+
 var return_url = "https://community.blackboard.com/community/developers";
 
 //Connection URL
@@ -15,14 +17,51 @@ exports.got_caliper = function(req, res){
 	MongoClient.connect(url, function(err, db) {
 		console.log("Connected correctly to server");
 
+		var event = JSON.parse(JSON.stringify(req.body).split('"bb:course.id":').join('"bb:course:id":'));
+		event = JSON.parse(JSON.stringify(event).split('"bb:course.externalId":').join('"bb:course:externalId":'));
+		event = JSON.parse(JSON.stringify(event).split('"bb:user.id":').join('"bb:user:id":'));
+		event = JSON.parse(JSON.stringify(event).split('"bb:user.externalId":').join('"bb:user:externalId":'));
+		
+		console.log(JSON.stringify(event, null, '\t'));
+		
 		// Insert a single document
-		db.collection('caliper').insertOne(req.body, {checkKeys:false}, function(err, r) {
-			if (err) console.log(err.message);
+		db.collection('caliper').insert(event, function(err, r) {
+			if (err) console.log("Error encountered during caliper event save: " + err.message);
 			
 			console.log('Caliper event saved successfully!');
+			
+			db.collection('caliper').count(function(err, count) {
+				if (err) console.log("Error counting records: " + err.message);
+				
+				console.log("The caliper database contains " + count + " records.");
+				
+				if(count > MAX_RECORDS) {
+					
+					var num_prune_recs = count - MAX_RECORDS;
+					
+					console.log("Record count exceeds the maximum number of records to store. Pruning the oldest " + num_prune_recs + " records." );
+					
+					db.collection('caliper').find().sort({"_id":1}).limit(num_prune_recs).each(function(err, doc) {
+						if (err) {
+							console.log("Error reading caliper events from database: " + err.message);
+							db.close();
+							return false;
+						}
+						
+						if (!doc ) {
+			        		db.close();
+			        		return false;	
+			 			}
+						
+						db.collection('caliper').remove({"_id": doc._id});
+					
+					});
+			
+					if (num_prune_recs <= 0 ) db.close();
+				}
+			
+			});
 		});
-		
-		db.close();
 	});
 };
 
@@ -40,14 +79,15 @@ exports.show_events = function (req,res) {
 				console.log("Error reading caliper events from database: " + err.message);
 				res.render('lti', { title: 'View Caliper Event Store!', content: "Error reading caliper events from database: " + err.message, return_url: return_url });
 				db.close();
+				return false;
 			}
 			
 			if (!doc )
 			{
-        			db.close();
+        		db.close();
 				events += "</tbody></table>";
 				res.render('lti', { title: 'View Caliper Event Store!', content: events, return_url: return_url });
-        			return false;
+        		return false;
  			}
 
 			console.log(JSON.stringify(doc, null, '\t'));
