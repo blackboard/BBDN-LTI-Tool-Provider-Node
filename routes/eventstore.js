@@ -7,6 +7,22 @@ var return_url = "https://community.blackboard.com/community/developers";
 //Connection URL
 var url = 'mongodb://localhost:27017/caliper';
 
+//replaces all "." in keys with ":"
+var processData = function(data){
+	if(!data){
+		return data;
+	} else if(Array.isArray(data)){
+		return data.map(processData);
+	} else if(typeof data === 'object'){
+		return Object.keys(data).reduce(function(obj, key){
+			var newKey = key.replace(/\./g,":");
+			obj[newKey] = processData(data[key]);
+			return obj;
+		}, {});
+	} else {
+		return data;
+	}
+};
 
 exports.got_caliper = function(req, res){
 
@@ -17,11 +33,8 @@ exports.got_caliper = function(req, res){
 	MongoClient.connect(url, function(err, db) {
 		console.log("Connected correctly to server");
 
-		var event = JSON.parse(JSON.stringify(req.body).split('"bb:course.id":').join('"bb:course:id":'));
-		event = JSON.parse(JSON.stringify(event).split('"bb:course.externalId":').join('"bb:course:externalId":'));
-		event = JSON.parse(JSON.stringify(event).split('"bb:user.id":').join('"bb:user:id":'));
-		event = JSON.parse(JSON.stringify(event).split('"bb:user.externalId":').join('"bb:user:externalId":'));
-		
+		var event = processData(req.body);
+
 		console.log(JSON.stringify(event, null, '\t'));
 		
 		// Insert a single document
