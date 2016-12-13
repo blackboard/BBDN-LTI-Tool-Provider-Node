@@ -1,7 +1,8 @@
 
 
 # BBDN-LTI-Tool-Provider-Node
-This project is a multi-purpose application designed to demonstrate several integration methods available with Blackboard Learn. The application is an LTI 1.1 Tool Provider. Upon launch, the user is given a few options:
+This project is a multi-purpose application designed to demonstrate several integration methods available with Blackboard Learn. The application is an LTI 1.1 and 2.0 Tool Provider.
+Upon launch of the LTI Tool, the user is given a few options:
 
 - Send Outcomes: Send a Grade to the Tool Consumer with LTI Outcomes
 - Caliper: Register your Tool as a Caliper Provider and then emit an event to the caliper service. In addition, an endpoint is provided to consume caliper events from the Blackboard Learn server.
@@ -11,14 +12,16 @@ This project is a multi-purpose application designed to demonstrate several inte
 ## How To Run the code
 All packages needed are in the package.json. 
 
-You should have node installed (built with v0.10.33). Then from the project directory at the command line, type npm install. This will install all of your dependencies.
+You should have node installed (built with v4.2.2). Then from the project directory at the command line, type npm start. This will install all of your dependencies and start the server.
 
-Then simply type node app.js and access the application via http://localhost:3000. If you want to run on an actual web server, you can change the port in the app.js file.
+Access the application via http://localhost:8008. You can customize the host name and port number by creating a config/config-override.json file (see the config/config.json file for a template)
 
-To access, you must launch into the application as a LTI Tool.
+To launch the LTI 1 tool, you must launch into the application as an LTI Tool with the url, http://localhost:8008/lti.
 
 ## Usage
-The application is very simple in its current iteration. Essentially there is one page with a bunch of buttons. Click the one you want. If you are testing caliper, ensure you click the register caliper button at least once. This registers your tool with Blackboard and provides the application with the API Key and Caliper end point. Also, if you wish to ingest Blackbaord's caliper events, you will need to register your application as a caliper event store, which is done in Blackboard Learn.
+The application is very simple in its current iteration. Essentially there is one page with a bunch of buttons. Click the one you want. I
+f you are testing caliper, ensure you click the register caliper button at least once. This registers your tool with Blackboard and provides the application with the API Key and Caliper end point.
+Also, if you wish to ingest Blackbaord's caliper events, you will need to register your application as a caliper event store, which is done in Blackboard Learn.
 
 See the <a href="https://community.blackboard.com/community/developers/standards" target="_blank">community site</a> for more details.
 
@@ -27,14 +30,19 @@ See the <a href="https://community.blackboard.com/community/developers/standards
 This is not meant to be a Node.JS tutorial. It is simply an example of how one might implement the various features therein. Pull requests are welcome!
 
 
-### Packages
+# LTI 2.0 Tool Provider
 
-- ims-lti
-- ims-caliper
-- express
-- jade
-- nodash
-- finish
-- oauth-signature
-- uuid
-- mongodb
+## Requirements
+
+- [Node and npm](http://nodejs.org)
+- [Redis](http:redis.io) - Optional if you want to persist the Tool Proxy that is generated
+
+## Installation
+
+1. Install Redis to store the tool proxies that are generated. On Mac it's easiest to `brew install redis`. The code assumes the default
+host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
+
+## LTI 2 Registration
+
+The LTI 2.0 registration URL is http://localhost:8008/registration
+

@@ -1,3 +1,10 @@
+.idea
+*.cer
+*.crt
+*.key
+/npm-debug.log
+/config/config_override.json
+bower_components
 
 # Created by https://www.gitignore.io/api/node,eclipse
 
