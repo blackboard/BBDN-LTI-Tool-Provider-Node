@@ -1,0 +1,21 @@
+{
+  "name": "lti-provider",
+  "description": "Demo LTI Tool Provider",
+  "version": "0.0.1",
+  "homepage": "https://github.com/foo",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "1.4.x",
+    "angular-mocks": "1.4.x",
+    "angular-route": "1.4.x",
+    "angular-resource": "1.4.x",
+    "angular-animate": "1.4.x",
+    "angular-sanitize": "1.4.x",
+    "bootstrap": "~3.1.1",
+    "foundation": "5.5.3",
+    "json-formatter": "0.6.0",
+    "jquery": "~2.1.1",
+    "requirejs": "2.2.0"
+  }
+}
