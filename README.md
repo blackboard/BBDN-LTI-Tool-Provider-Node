@@ -9,14 +9,17 @@ Upon launch of the LTI Tool, the user is given a few options:
 - Blackboard REST: Finally, the application provides a method to retrieve a REST token and then retrieve the user and course objects based on the UUID passed in the LTI launch.
 - Return to Learn: This will take the return URL in the LTI Launch and return the user to that place in Blackboard Learn. If no URL is provided, the user is returned to the top-level domain they came from.
 
+## Requirements
+- [Node and npm](http://nodejs.org)
+
 ## How To Run the code
 All packages needed are in the package.json. 
 
 You should have node installed (built with v4.2.2). Then from the project directory at the command line, type npm start. This will install all of your dependencies and start the server.
 
-Access the application via http://localhost:8008. You can customize the host name and port number by creating a config/config-override.json file (see the config/config.json file for a template)
+Access the application via http://localhost:3000. You can customize the host name and port number by creating a config/config_override.json file (see the config/config.json file for a template)
 
-To launch the LTI 1 tool, you must launch into the application as an LTI Tool with the url, http://localhost:8008/lti.
+To launch the LTI 1 tool, you must launch into the application as an LTI Tool with the url, http://localhost:3000/lti.
 
 ## Usage
 The application is very simple in its current iteration. Essentially there is one page with a bunch of buttons. Click the one you want. I
@@ -34,7 +37,6 @@ This is not meant to be a Node.JS tutorial. It is simply an example of how one m
 
 ## Requirements
 
-- [Node and npm](http://nodejs.org)
 - [Redis](http:redis.io) - Optional if you want to persist the Tool Proxy that is generated
 
 ## Installation
@@ -44,5 +46,5 @@ host and port (localhost:6379). If you need to run redis on a different host or 
 
 ## LTI 2 Registration
 
-The LTI 2.0 registration URL is http://localhost:8008/registration
+The LTI 2.0 registration URL is http://localhost:3000/registration
 
