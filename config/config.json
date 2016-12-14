@@ -1,6 +1,6 @@
 {
   "provider_domain": "http://localhost",
-  "provider_port": 8008,
+  "provider_port": 3000,
   "redis_host": "localhost",
   "redis_port": 6379
 }
