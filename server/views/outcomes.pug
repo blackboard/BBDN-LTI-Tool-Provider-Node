@@ -5,10 +5,10 @@ block content
   p Please enter the grade in the form below and click submit.
   p
     form(name="outcomes", action="/lti/send_outcomes", method="post")
-      input(type="text", value="#{key}", name="key")
-      input(type="text", value="#{secret}", name="secret")
-      input(type="text", value="#{endpoint}", name="url")
-      input(type="text", value="#{sourcedid}", name="sourcedid")
+      input(type="text", value=key, name="key")
+      input(type="text", value=secret, name="secret")
+      input(type="text", value=endpoint, name="url")
+      input(type="text", value=sourcedid, name="sourcedid")
       input(type="text" value="0.5", name="grade")
       input(type="submit", value="Submit")
   p 
