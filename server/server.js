@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var config = require('config');
+var config = require('../config/config.js');
 var app = express();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // don't validate ssl cert for posts to ssl sites
