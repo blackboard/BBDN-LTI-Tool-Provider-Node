@@ -3,8 +3,11 @@
 *.crt
 *.key
 /npm-debug.log
-/config/config_override.json
+/server/config/config_override.json
+/node_modules
 bower_components
+**/public/dist
+**/server/lib
 
 # Created by https://www.gitignore.io/api/node,eclipse
 

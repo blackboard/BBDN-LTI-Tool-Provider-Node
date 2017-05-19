@@ -1,0 +1,10 @@
+{
+  "presets": [
+    "env",
+    "react"
+  ],
+  "plugins": [
+    "transform-flow-strip-types",
+    "babel-plugin-relative-import"
+  ]
+}
