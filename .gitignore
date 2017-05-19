@@ -4,6 +4,7 @@
 *.key
 /npm-debug.log
 /config/config_override.json
+/node_modules
 bower_components
 
 # Created by https://www.gitignore.io/api/node,eclipse

@@ -43,8 +43,24 @@ This is not meant to be a Node.JS tutorial. It is simply an example of how one m
 
 1. Install Redis to store the tool proxies that are generated. On Mac it's easiest to `brew install redis`. The code assumes the default
 host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
+2. Install the application: `npm install`
+3. Start the server: `npm start`
+4. View in browser at http://localhost:8008
+
+## Configuration
+
+You can override the external domain and port for the server by creating config/config_override.json (see config/config.json)
 
 ## LTI 2 Registration
 
-The LTI 2.0 registration URL is http://localhost:3000/registration
+The registration URL is http://localhost:3000/registration
+
+## LTI 2 Tool Settings
+
+The tool settings UI can be reached at the root: 
+http://localhost:3000/
+
+## LTI 2 Outcomes
+
+The outcomes UI for getting and receiving results is part of the page is shown when an link is launched from Learn.
 
