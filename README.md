@@ -15,9 +15,9 @@ Upon launch of the LTI Tool, the user is given a few options:
 ## How To Run the code
 All packages needed are in the package.json. 
 
-You should have node installed (built with v4.2.2). Then from the project directory at the command line, type npm start. This will install all of your dependencies and start the server.
+You should have node installed (built with v7.1.0). Then from the project directory at the command line, type npm start. This will install all of your dependencies and start the server.
 
-Access the application via http://localhost:3000. You can customize the host name and port number by creating a config/config_override.json file (see the config/config.json file for a template)
+Access the application via http://localhost:3000. You can customize the host name and port number by creating a server/config/config_override.json file (see the server/config/config.json file for a template)
 
 To launch the LTI 1 tool, you must launch into the application as an LTI Tool with the url, http://localhost:3000/lti.
 
@@ -45,11 +45,11 @@ This is not meant to be a Node.JS tutorial. It is simply an example of how one m
 host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
 2. Install the application: `npm install`
 3. Start the server: `npm start`
-4. View in browser at http://localhost:8008
+4. View in browser at http://localhost:3000
 
 ## Configuration
 
-You can override the external domain and port for the server by creating config/config_override.json (see config/config.json)
+You can override the external domain and port for the server by creating server/config/config_override.json (see server/config/config.json)
 
 ## LTI 2 Registration
 

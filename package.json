@@ -49,7 +49,7 @@
     "build-server": "babel server/src -d server/lib --source-maps",
     "build-public": "webpack --display-error-details",
     "postinstall": "bower install",
-    "prestart": "npm run build-server; npm run build-public",
+    "prestart": "npm install; npm run build-server; npm run build-public",
     "start": "node server/lib/server.js"
   }
 }
