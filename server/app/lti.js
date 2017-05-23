@@ -81,8 +81,8 @@ exports.got_launch = function(req, res){
         return_url = parts.protocol + '//' + parts.host;
       }
 
-      console.log('Return URL is: ' + return_url);
-      res.render('lti', {title: 'LTI Launch Received!', content: content, return_url: return_url});
+
+      res.render('lti', {title: 'LTI Launch Received!', content: content, return_url: return_url, return_onclick: 'location.href=' + '\'' + return_url + '\';'});
     }
   });
 };

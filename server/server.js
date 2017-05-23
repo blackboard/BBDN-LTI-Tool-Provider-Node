@@ -1,7 +1,14 @@
+var fs = require('fs');
+var https = require('https');
 var express = require('express');
 var bodyParser = require('body-parser');
 var config = require('../config/config.js');
 var app = express();
+
+var options = {
+  key: fs.readFileSync('star.int.bbpd.io.key'),
+  cert: fs.readFileSync('star.int.bbpd.io.crt')
+};
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // don't validate ssl cert for posts to ssl sites
 
@@ -24,7 +31,17 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 require('./app/routes.js')(app);
 
 // listen (start app with node server.js) ======================================
-app.listen(config.provider_port);
-console.log("LTI 2 test provider listening at " + config.provider_domain + ":" + config.provider_port);
-console.log("Registration URL:  " + config.provider_domain + ":" + config.provider_port + "/registration");
+
+if (config.use_ssl) {
+  https.createServer(options, app).listen(config.provider_port, function () {
+    console.log("LTI 1 Tool Provider:  " + config.provider_domain + ":" + config.provider_port + "/lti");
+    console.log("LTI 2 Registration URL:  " + config.provider_domain + ":" + config.provider_port + "/registration");
+  });
+} else {
+  app.listen(config.provider_port);
+  console.log("LTI 1 Tool Provider:  " + config.provider_domain + ":" + config.provider_port + "/lti");
+  console.log("LTI 2 Registration URL:  " + config.provider_domain + ":" + config.provider_port + "/registration");
+}
+
+
 
