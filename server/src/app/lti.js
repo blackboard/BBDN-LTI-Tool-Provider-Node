@@ -61,32 +61,36 @@ exports.got_launch = function(req, res){
   for( var i = 0,length = keys.length; i < length; i++ ) {
      content += keys[i] + " = " + req.body[ keys[ i ] ] + "<br />";
   }
-  
+
   provider.valid_request(req, function (err, isValid) {
     if (err) {
-         console.log(err);
-	     res.send(403);
-     }
-     else {
- 	 if (!isValid) res.send(422);
- 	 
- 	 lis_result_sourcedid = req.body['lis_result_sourcedid'];
- 	 lis_outcome_service_url = req.body['lis_outcome_service_url'];
- 	 caliper_profile_url = req.body['custom_caliper_profile_url'];
- 	 custom_caliper_federated_session_id = req.body['custom_caliper_federated_session_id'];
- 	 oauth_consumer_key = req.body['oauth_consumer_key'];
- 	 oauth_nonce = req.body['oauth_nonce'];
- 	 course_id = req.body['context_id'];
- 	 user_id = req.body['user_id'];
- 	 return_url = req.body['launch_presentation_return_url'];
- 	 
+      console.log(err);
+      res.send(403);
+    }
+    else {
+      if (!isValid) res.send(422);
+
+      lis_result_sourcedid = req.body['lis_result_sourcedid'];
+      lis_outcome_service_url = req.body['lis_outcome_service_url'];
+      caliper_profile_url = req.body['custom_caliper_profile_url'];
+      custom_caliper_federated_session_id = req.body['custom_caliper_federated_session_id'];
+      oauth_consumer_key = req.body['oauth_consumer_key'];
+      oauth_nonce = req.body['oauth_nonce'];
+      course_id = req.body['context_id'];
+      user_id = req.body['user_id'];
+      return_url = req.body['launch_presentation_return_url'];
+
       if (return_url == undefined) {
- 		var parts = url.parse(caliper_profile_url, true);
-	    return_url = parts.protocol + '//' + parts.host;
- 	 }
+        var parts = url.parse(caliper_profile_url, true);
+        return_url = parts.protocol + '//' + parts.host;
+      }
 
-
-      res.render('lti', {title: 'LTI Launch Received!', content: content, return_url: return_url, return_onclick: 'location.href=' + '\'' + return_url + '\';'});
+      res.render('lti', {
+        title: 'LTI Launch Received!',
+        content: content,
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\';'
+      });
     }
   });
 };
