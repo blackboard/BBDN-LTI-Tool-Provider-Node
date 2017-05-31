@@ -1,0 +1,17 @@
+lti-tools:
+  image: lti-tools
+  links:
+    - redis
+  ports:
+    - "3000:3000"
+# Entry for /etc/hosts in container so the tool can make calls
+# out to the Learn instance. This is for developers when working
+# on one machine. The IP address will need to be changed to the
+# one currently assigned to the development machine.
+  environment:
+    HOST_ENTRY: 10.37.145.131  mylearn.int.bbpd.io
+
+redis:
+  image: redis
+  ports:
+    - "6379:6379"

@@ -64,3 +64,10 @@ http://localhost:3000/
 
 The outcomes UI for getting and receiving results is part of the page is shown when an link is launched from Learn.
 
+## Docker
+
+Docker specific files are included (Dockerfile, docker-compose.yml, launch.sh) 
+
+The docker image includes config_override.json to override the redis host name from localhost to redis so it can access the redis docker container
+
+If running the docker image on the same machine as the learn instance then the docker-compose.yml needs to contain the ip address of the machine being used.
