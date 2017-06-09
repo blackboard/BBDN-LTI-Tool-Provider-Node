@@ -1,10 +1,17 @@
 import express from "express";
 import bodyParser from "body-parser";
+import fs from "fs";
+import https from "https";
 import config from "./config/config.js";
 import routes from "./app/routes.js";
 import request from "request";
 var app = express();
 var httpProxy = express();
+
+var options = {
+  key: fs.readFileSync('star.int.bbpd.io.key'),
+  cert: fs.readFileSync('star.int.bbpd.io.crt')
+};
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // don't validate ssl cert for posts to ssl sites
 
@@ -79,8 +86,16 @@ httpProxy.all('/*', function (req, res, next) {
 routes(app);
 
 // listen (start app with node server.js) ======================================
-app.listen(config.provider_port);
-httpProxy.listen(8543);
-console.log("LTI 2 test provider listening at " + config.provider_domain + ":" + config.provider_port);
-console.log("Registration URL:  " + config.provider_domain + ":" + config.provider_port + "/registration");
 
+httpProxy.listen(8543);
+
+if (config.use_ssl) {
+  https.createServer(options, app).listen(config.provider_port, function () {
+    console.log("LTI 1 Tool Provider:  " + config.provider_domain + ":" + config.provider_port + "/lti");
+    console.log("LTI 2 Registration URL:  " + config.provider_domain + ":" + config.provider_port + "/registration");
+  });
+} else {
+  app.listen(config.provider_port);
+  console.log("LTI 1 Tool Provider:  " + config.provider_domain + ":" + config.provider_port + "/lti");
+  console.log("LTI 2 Registration URL:  " + config.provider_domain + ":" + config.provider_port + "/registration");
+}
