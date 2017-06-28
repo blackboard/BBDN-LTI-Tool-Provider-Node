@@ -39,6 +39,7 @@ module.exports = function (app) {
 
   let registrationData = new RegistrationData();
   let dataLoaded = false;
+  let provider = config.provider_domain + (config.provider_port != "NA" ? ":" + config.provider_port : "");
   var launchData = {};
 
   // LTI 1 provider and caliper stuff
@@ -128,7 +129,7 @@ module.exports = function (app) {
 
   app.post('/ltilaunchendpoint', (req, res) => {
     launchData.requestBody = req.body;
-    let redirectUrl = config.provider_domain + ":" + config.provider_port + '/ltilaunchendpoint';
+    let redirectUrl = provider + '/ltilaunchendpoint';
     redisUtil.redisGet(req.body.oauth_consumer_key).then((toolProxy) => {
       launchData.toolProxy = toolProxy;
       res.redirect(redirectUrl);
@@ -139,7 +140,7 @@ module.exports = function (app) {
     registration.handleRegistrationPost(req, res, registrationData).then(() => {
       redisUtil.redisSave(regdata_key, registrationData);
       dataLoaded = true;
-      let redirectUrl = config.provider_domain + ":" + config.provider_port + '/tp_registration';
+      let redirectUrl = provider + '/tp_registration';
 
       console.log('Redirecting to : ' + redirectUrl);
       res.redirect(redirectUrl);

@@ -66,8 +66,18 @@ The outcomes UI for getting and receiving results is part of the page is shown w
 
 ## Docker
 
-Docker specific files are included (Dockerfile, docker-compose.yml, launch.sh) 
+Docker specific files are included (Dockerfile, docker-compose.yml, launch.sh).
 
-The docker image includes config_override.json to override the redis host name from localhost to redis so it can access the redis docker container
+Use config_override.json (same entries as config.json) to override redis host name from localhost to redis so it can access the redis docker container.
 
-If running the docker image on the same machine as the learn instance then the docker-compose.yml needs to contain the ip address of the machine being used.
+If running the docker image on the same machine as the learn instance then the docker-compose.yml needs to contain the ip address of the machine being used. Start containers using __docker-compose up__
+
+## Marathon
+
+config_override.json needs to be included in the docker image that is loaded onto Marathon.
+
+These entries allow are required
+*  "provider_domain": "https://lti-tool.dev.bbpd.io",
+*  "provider_port": "NA",
+
+'NA' allows the call to the marathon instance to be portless. The marathon container translates the port to 3000 so the LTI tool can process the calls.

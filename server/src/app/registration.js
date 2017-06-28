@@ -107,8 +107,8 @@ module.exports = function () {
   function getToolConsumerProfile(url) {
     log.logStep('Calling TC Profile Endpoint', {url: url});
 
-    log.logStep("Sending Tool Proxy to TC at ", {uri: url});
-    console.log("Sending Tool Proxy to TC at " + url);
+    log.logStep("Requesting TC profile at ", {uri: url});
+    console.log("Requesting TC profile at " + url);
 
     return new Promise(function (resolve, reject) {
 

@@ -2,6 +2,7 @@ import config from '../config/config';
 
 module.exports = {
   constructToolProxy: function (tcToolProfileUrl : string) {
+    let provider = config.provider_domain + (config.provider_port != "NA" ? ":" + config.provider_port : "");
     var toolProxy = {
       "@context": ["http://purl.imsglobal.org/ctx/lti/v2/ToolProxy", {"tcp": "http://ultra-integ.int.bbpd.io/learn/api/v1/lti/profile#"}],
       "@type": "ToolProxy",
@@ -49,7 +50,7 @@ module.exports = {
             "timestamp": "2016-11-09T16:15:40+00:00"
           }
         },
-        "base_url_choice": [{"default_base_url": config.provider_domain + ":" + config.provider_port}],
+        "base_url_choice": [{"default_base_url": provider}],
         "resource_handler": [{
           "resource_type": {"code": "asmt"},
           "resource_name": {"default_value": "LTI2 Echo", "key": "endpoint.echo.name"},

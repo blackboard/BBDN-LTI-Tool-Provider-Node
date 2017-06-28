@@ -8,10 +8,13 @@ import request from "request";
 var app = express();
 var httpProxy = express();
 
-var options = {
+var options = (config.use_ssl) ? {
   key: fs.readFileSync('star.int.bbpd.io.key'),
   cert: fs.readFileSync('star.int.bbpd.io.crt')
-};
+} : { key: null, cert: null };
+
+let provider = config.provider_domain + (config.provider_port != "NA" ? ":" + config.provider_port : "");
+let listenPort = (config.provider_port != "NA" ? config.provider_port : 3000);
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // don't validate ssl cert for posts to ssl sites
 
@@ -41,8 +44,8 @@ httpProxy.use(function (err, req, res, next) {
 httpProxy.use(bodyParser.json({type:'*/*'}));
 httpProxy.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type,key,secret, Accept, Authorization");
-  res.header("Access-Control-Allow-Methods", "GET, POST,PUT, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, key, secret, Accept, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
   next();
 });
 
@@ -90,12 +93,13 @@ routes(app);
 httpProxy.listen(8543);
 
 if (config.use_ssl) {
-  https.createServer(options, app).listen(config.provider_port, function () {
-    console.log("LTI 1 Tool Provider:  " + config.provider_domain + ":" + config.provider_port + "/lti");
-    console.log("LTI 2 Registration URL:  " + config.provider_domain + ":" + config.provider_port + "/registration");
+  https.createServer(options, app).listen(listenPort, function () {
+    console.log("Configuring for SSL use");
+    console.log("LTI 1 Tool Provider:  " + provider + "/lti");
+    console.log("LTI 2 Registration URL:  " + provider + "/registration");
   });
 } else {
-  app.listen(config.provider_port);
-  console.log("LTI 1 Tool Provider:  " + config.provider_domain + ":" + config.provider_port + "/lti");
-  console.log("LTI 2 Registration URL:  " + config.provider_domain + ":" + config.provider_port + "/registration");
+  app.listen(listenPort);
+  console.log("LTI 1 Tool Provider:  " + provider + "/lti");
+  console.log("LTI 2 Registration URL:  " + provider + "/registration");
 }
