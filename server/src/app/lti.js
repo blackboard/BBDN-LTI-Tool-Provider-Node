@@ -61,13 +61,13 @@ exports.got_launch = function (req, res) {
     content += keys[i] + " = " + req.body[keys[i]] + "<br />";
   }
 
-  provider.valid_request(req, function (err, isValid) {
-    if (err) {
-      console.log(err);
-      res.send(403);
-    }
-    else {
-      if (!isValid) res.send(422);
+  // provider.valid_request(req, function (err, isValid) {
+  //   if (err) {
+  //     console.log(err);
+  //     res.send(403);
+  //   }
+  //   else {
+  //     if (!isValid) res.send(422);
 
       lis_result_sourcedid = req.body['lis_result_sourcedid'];
       lis_outcome_service_url = req.body['lis_outcome_service_url'];
@@ -90,8 +90,8 @@ exports.got_launch = function (req, res) {
         return_url: return_url,
         return_onclick: 'location.href=' + '\'' + return_url + '\';'
       });
-    }
-  });
+//    }
+//  });
 };
 
 
