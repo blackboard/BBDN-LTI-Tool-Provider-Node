@@ -1,15 +1,14 @@
-import log from './action_log.js';
+import log from "./action_log.js";
 
-import config from '../config/config';
-import request from 'request';
-import redisUtil from './redisutil';
-import _ from 'lodash';
-import tpGenerator from './tool_proxy_generator.js';
+import config from "../config/config";
+import request from "request";
+import redisUtil from "./redisutil";
+import _ from "lodash";
+import tpGenerator from "./tool_proxy_generator.js";
 
-import {TCProfileResponse} from '../common/restTypes';
+import {TCProfileResponse} from "../common/restTypes";
 let redisClient = redisUtil.redisInit(config.redis_host, config.redis_port);
 let toolProxy = {};
-
 
 module.exports = function () {
   const toolProxyMediaType = "application/vnd.ims.lti.v2.toolproxy+json";
@@ -31,7 +30,6 @@ module.exports = function () {
         log.logStep('Calling TC Profile Endpoint', {url: req.body.tc_profile_url + '/?lti_version=LTI-2p0'});
 
         getToolConsumerProfile(req.body.tc_profile_url + '/?lti_version=LTI-2p0').then(function (toolConsumerProfile) {
-
 
           registrationData.TCProfileResponse = new TCProfileResponse(toolConsumerProfile,
             req.body.launch_presentation_return_url);
@@ -57,10 +55,7 @@ module.exports = function () {
             // Register Tool Proxy
             registrationData.toolProxy = tpGenerator.constructToolProxy(req.body.tc_profile_url);
 
-
-
             sendToolProxy(service, registrationData.toolProxy, regKey, regSecret, registrationData).then(function () {
-
               resolve();
             });
 
@@ -73,7 +68,6 @@ module.exports = function () {
         });
       });
     }
-
   };
 
 

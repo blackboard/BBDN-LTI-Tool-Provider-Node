@@ -1,6 +1,6 @@
-import _ from  'lodash';
-import configJson from '../../config/config.json';
-import process from 'process'
+import _ from "lodash";
+import configJson from "../../config/config.json";
+import process from "process";
 
 /**
  * Load the customized config values from the config.json data.

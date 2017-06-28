@@ -11,7 +11,7 @@ var httpProxy = express();
 var options = (config.use_ssl) ? {
   key: fs.readFileSync('star.int.bbpd.io.key'),
   cert: fs.readFileSync('star.int.bbpd.io.crt')
-} : { key: null, cert: null };
+} : {key: null, cert: null};
 
 let provider = config.provider_domain + (config.provider_port != "NA" ? ":" + config.provider_port : "");
 let listenPort = (config.provider_port != "NA" ? config.provider_port : 3000);
@@ -41,7 +41,7 @@ httpProxy.use(function (err, req, res, next) {
 });
 
 //httpProxy.use(bodyParser.json());       // to support JSON-encoded bodies
-httpProxy.use(bodyParser.json({type:'*/*'}));
+httpProxy.use(bodyParser.json({type: '*/*'}));
 httpProxy.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, key, secret, Accept, Authorization");
@@ -53,12 +53,12 @@ httpProxy.all('/*', function (req, res, next) {
   //modify the url in any way you want
   let learnUrl = 'https://isthisthingon.hopto.org' + req.url;
 
-  let headers={};
-  if (req.header('content-type')){
+  let headers = {};
+  if (req.header('content-type')) {
     headers['Content-Type'] = req.header('content-type');
 
   }
-  if (req.header('accept')){
+  if (req.header('accept')) {
     headers['Accept'] = req.header('accept');
   }
 
@@ -66,8 +66,8 @@ httpProxy.all('/*', function (req, res, next) {
     if (req.method != 'OPTIONS') {
       console.log('body:' + req.body);
       request({
-        url:learnUrl,
-        method:req.method,
+        url: learnUrl,
+        method: req.method,
         oauth: {
           consumer_key: req.header('key'),
           consumer_secret: req.header('secret'),
@@ -75,7 +75,7 @@ httpProxy.all('/*', function (req, res, next) {
           token_secret: ""
         },
         headers: headers,
-        json:req.body
+        json: req.body
       }).pipe(res);
     } else {
       res.send();

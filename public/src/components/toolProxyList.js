@@ -4,7 +4,6 @@ import {DropdownButton, MenuItem} from 'react-bootstrap';
 
 class ToolProxyList extends React.Component {
 
-
   constructor(props) {
     super(props);
     this.state = {toolproxies: [], selected: ''};
@@ -63,8 +62,6 @@ class ToolProxyList extends React.Component {
         </table>
 
       </div>
-
-
     );
   }
 }
