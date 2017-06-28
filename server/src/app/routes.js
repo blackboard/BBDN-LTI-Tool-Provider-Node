@@ -1,5 +1,7 @@
 var _ = require('lodash');
-import config from '../config/config';
+import config from "../config/config";
+import path from "path";
+import {RegistrationData} from "../common/restTypes";
 var crypto = require('crypto');
 var registration = require('./registration.js');
 var redis = require('redis');
@@ -7,12 +9,8 @@ var redisClient = redis.createClient({"host": config.redis_host, "port": config.
 var redisUtil = require('./redisutil');
 var lti = require('./lti')
 var eventstore = require('./eventstore');
-import path from 'path';
-import {RegistrationData} from '../common/restTypes';
-
 
 const regdata_key = "registrationData";
-
 
 function getToolConsumerProfile(url) {
 
@@ -29,7 +27,6 @@ function getToolConsumerProfile(url) {
           console.error(error.message);
           reject();
         }
-
       });
   });
 }
@@ -39,35 +36,36 @@ module.exports = function (app) {
 
   let registrationData = new RegistrationData();
   let dataLoaded = false;
+  let provider = config.provider_domain + (config.provider_port != "NA" ? ":" + config.provider_port : "");
   var launchData = {};
 
   // LTI 1 provider and caliper stuff
   app.post('/caliper/send', (req, res) => {
-      lti.caliper_send(req, res);
+    lti.caliper_send(req, res);
   });
   app.post('/caliper/register', (req, res) => {
-      lti.caliper(req, res);
+    lti.caliper(req, res);
   });
   app.post('/caliper', (req, res) => {
-      eventstore.got_caliper(req, res);
+    eventstore.got_caliper(req, res);
   });
   app.get('/caliper', (req, res) => {
-      eventstore.show_events(req, res);
+    eventstore.show_events(req, res);
   });
   app.post('/rest/auth', (req, res) => {
-      lti.rest_auth(req, res);
+    lti.rest_auth(req, res);
   });
   app.post('/rest/user', (req, res) => {
-      lti.rest_getuser(req, res);
+    lti.rest_getuser(req, res);
   });
   app.post('/rest/course', (req, res) => {
-      lti.rest_getcourse(req, res);
+    lti.rest_getcourse(req, res);
   });
   app.post('/lti/outcomes', (req, res) => {
-      lti.outcomes(req, res);
+    lti.outcomes(req, res);
   });
   app.post('/lti/send_outcomes', (req, res) => {
-      lti.send_outcomes(req, res);
+    lti.send_outcomes(req, res);
   });
   app.post('/lti', (req, res) => {
     lti.got_launch(req, res);
@@ -101,7 +99,7 @@ module.exports = function (app) {
         res.send({
           "requestBody": launchData.requestBody,
           "registrationData": registrationData,
-          "toolProxy":launchData.toolProxy
+          "toolProxy": launchData.toolProxy
         });
       })
     }
@@ -109,7 +107,7 @@ module.exports = function (app) {
       res.send({
         "requestBody": launchData.requestBody,
         "registrationData": registrationData,
-        "toolProxy":launchData.toolProxy
+        "toolProxy": launchData.toolProxy
       });
     }
   });
@@ -128,7 +126,7 @@ module.exports = function (app) {
 
   app.post('/ltilaunchendpoint', (req, res) => {
     launchData.requestBody = req.body;
-    let redirectUrl = config.provider_domain + ":" + config.provider_port + '/ltilaunchendpoint';
+    let redirectUrl = provider + '/ltilaunchendpoint';
     redisUtil.redisGet(req.body.oauth_consumer_key).then((toolProxy) => {
       launchData.toolProxy = toolProxy;
       res.redirect(redirectUrl);
@@ -139,7 +137,7 @@ module.exports = function (app) {
     registration.handleRegistrationPost(req, res, registrationData).then(() => {
       redisUtil.redisSave(regdata_key, registrationData);
       dataLoaded = true;
-      let redirectUrl = config.provider_domain + ":" + config.provider_port + '/tp_registration';
+      let redirectUrl = provider + '/tp_registration';
 
       console.log('Redirecting to : ' + redirectUrl);
       res.redirect(redirectUrl);

@@ -1,7 +1,8 @@
-import config from '../config/config';
+import config from "../config/config";
 
 module.exports = {
-  constructToolProxy: function (tcToolProfileUrl : string) {
+  constructToolProxy: function (tcToolProfileUrl: string) {
+    let provider = config.provider_domain + (config.provider_port != "NA" ? ":" + config.provider_port : "");
     var toolProxy = {
       "@context": ["http://purl.imsglobal.org/ctx/lti/v2/ToolProxy", {"tcp": "http://ultra-integ.int.bbpd.io/learn/api/v1/lti/profile#"}],
       "@type": "ToolProxy",
@@ -49,7 +50,7 @@ module.exports = {
             "timestamp": "2016-11-09T16:15:40+00:00"
           }
         },
-        "base_url_choice": [{"default_base_url": config.provider_domain + ":" + config.provider_port}],
+        "base_url_choice": [{"default_base_url": provider}],
         "resource_handler": [{
           "resource_type": {"code": "asmt"},
           "resource_name": {"default_value": "LTI2 Echo", "key": "endpoint.echo.name"},
@@ -63,23 +64,24 @@ module.exports = {
             "enabled_capability": ["User.id", "Person.sourcedId", "Membership.role", "CourseSection.sourcedId"],
             "parameter": [
               {"name": "tc_profile_url", "variable": "ToolConsumerProfile.url"}, {
-              "name": "cert_given_name",
-              "variable": "Person.name.given"
-            }, {"name": "cert_family_name", "variable": "Person.name.family"}, {
-              "name": "cert_full_name",
-              "variable": "Person.name.full"
-            },
+                "name": "cert_given_name",
+                "variable": "Person.name.given"
+              }, {"name": "cert_family_name", "variable": "Person.name.family"}, {
+                "name": "cert_full_name",
+                "variable": "Person.name.full"
+              },
               {"name": "cert_email", "variable": "Person.email.primary"},
               {
-              "name": "cert_userid",
-              "variable": "User.id"
-            }, { "name" : "result_url",
-                "variable" : "Result.url"
+                "name": "cert_userid",
+                "variable": "User.id"
+              }, {
+                "name": "result_url",
+                "variable": "Result.url"
               },
               {"name": "cert_username", "variable": "User.username"}, {
-              "name": "simple_key",
-              "fixed": "custom_simple_value"
-            }, {"name": "Complex!@#$^*(){}[]KEY", "fixed": "Complex!@#$^*;(){}[]½Value"}]
+                "name": "simple_key",
+                "fixed": "custom_simple_value"
+              }, {"name": "Complex!@#$^*(){}[]KEY", "fixed": "Complex!@#$^*;(){}[]½Value"}]
           }],
           "icon_info": [{"default_location": {"path": "images/fallout_copy.png"}, "key": "iconStyle.default.path"}]
         }]

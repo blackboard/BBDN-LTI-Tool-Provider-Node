@@ -27,5 +27,3 @@ render((
     <Route path="/ltilaunchendpoint" component={LaunchEndpoint}/>
   </Router>
 ), document.getElementById('root'));
-
-

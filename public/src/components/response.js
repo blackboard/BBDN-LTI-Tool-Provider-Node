@@ -42,8 +42,6 @@ class Response extends React.Component {
             </tbody>
           </table>
         </div>
-
-
       );
     } else if (this.props.response.status == 200) {
       return (
@@ -65,11 +63,8 @@ class Response extends React.Component {
 
           </FormGroup>
         </div>
-
-
       );
     }
-
   }
 }
 

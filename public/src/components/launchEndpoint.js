@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
-import JSONTree from 'react-json-tree'
-import {Button, ButtonToolbar, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
-import Response from './response'
+import React from "react";
+import JSONTree from "react-json-tree";
+import {Button, ControlLabel, FormControl, FormGroup} from "react-bootstrap";
+import Response from "./response";
 const learnUrl = 'http://localhost:8543';
 
 class LaunchEndpoint extends React.Component {
@@ -64,10 +64,7 @@ class LaunchEndpoint extends React.Component {
           catch (error) {
             console.error(error);
           }
-
-        }
-      )
-    ;
+        });
   }
 
 
@@ -109,17 +106,15 @@ class LaunchEndpoint extends React.Component {
           </div>
         </div>
 
-
         <div className="row">
           <div className="large-9 columns"><JSONTree data={this.state.request} hideRoot={true}/></div>
         </div>
-
 
         <div className="row">
           <div className="large-9 columns">
             <b>Outcomes</b>
           </div>
-        < / div >
+        </div >
         <div className="row">
           <div className="large-9 columns">
             <FormGroup>

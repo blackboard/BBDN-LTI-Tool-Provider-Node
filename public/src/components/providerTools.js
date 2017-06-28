@@ -59,7 +59,6 @@ class ProviderTools extends React.Component {
         catch (error) {
           console.error(error);
         }
-
       });
   }
 
