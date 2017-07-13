@@ -47,6 +47,10 @@ class Registration extends React.Component {
     return (
       <div>
         <div className="row">
+          <div className="large-6 columns"><h2>LTI 2.0 Demo Tool Provider</h2></div>
+        </div>
+
+        <div className="row">
           <div className="large-2 columns">Activity</div>
           <div className="large-10 columns">
             <LogItemList logItems={this.state.logItems}/>

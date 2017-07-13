@@ -13,4 +13,14 @@ export class RegistrationData {
   }
 }
 
-
+export class ContentItem {
+  constructor() {
+    this.data = new Map([]);
+    this.consumer_key = "";
+    this.consumer_secret = "";
+    this.content_items = "";
+    this.oauth_nonce = "";
+    this.oauth_timestamp = "";
+    this.oauth_signature = "";
+  }
+}

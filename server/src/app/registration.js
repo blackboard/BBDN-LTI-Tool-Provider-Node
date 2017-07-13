@@ -147,7 +147,7 @@ module.exports = function () {
         function (error, response, body) {
           if (!error && response.statusCode === 201) {
             log.logStep("Tool Proxy Successfully Sent to TC", proxy);
-            log.logStep('toolproxy POST response header', response.headers)
+            log.logStep('toolproxy POST response header', response.headers);
             log.logStep("toolproxy POST response :  ", response.body);
 
             // Save the tool proxy so we can handle launches from this consumer

@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <style>
+    body { 
+      font-family: 'Helvetica Neue', Helvetica, Roboto, Aria, sans-serif;
+      font-size: 14px;
+    }
+    input {
+      font-family: 'Helvetica Neue', Helvetica, Roboto, Aria, sans-serif;
+      font-size: 14px;
+    }
+    .required {
+      background-color: lightgreen;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Content Item test page</h2>
+
+<h3>Post to http://localhost:3000/lti</h3>
+
+<form method="post" action="http://localhost:3000/lti" encType="application/x-www-form-urlencoded">
+    <table border="1">
+        <tr><td class="required">lti_message_type *</td><td><input class="required" type="text" name="lti_message_type" value="ContentItemSelectionRequest" size="50" /></td></tr>
+        <tr><td class="required">lti_version *</td><td><input class="required" type="text" name="lti_version" value="LTI-2p0" size="50" /></td></tr>
+        <tr><td>user_id</td><td><input type="text" name="user_id" value="29123" size="50" /></td></tr>
+        <tr><td>roles</td><td><input type="text" name="roles" value="Instructor" size="50" /></td></tr>
+        <tr><td>lis_person_name_full</td><td><input type="text" name="lis_person_name_full" value="John Logie Baird" size="50" /></td></tr>
+        <tr><td>lis_person_name_family</td><td><input type="text" name="lis_person_name_family" value="Baird" size="50" /></td></tr>
+        <tr><td>lis_person_name_given</td><td><input type="text" name="lis_person_name_given" value="John" size="50" /></td></tr>
+        <tr><td>lis_person_contact_email_primary</td><td><input type="text" name="lis_person_contact_email_primary" value="jbaird@uni.edu" size="50" /></td></tr>
+        <tr><td>context_id</td><td><input type="text" name="context_id" value="S3294476" size="50" /></td></tr>
+        <tr><td>context_type</td><td><input type="text" name="context_type" value="CourseSection" size="50" /></td></tr>
+        <tr><td>context_title</td><td><input type="text" name="context_title" value="Telecommunications 101" size="50" /></td></tr>
+        <tr><td>context_label</td><td><input type="text" name="context_label" value="ST101" size="50" /></td></tr>
+        <tr><td>lis_course_section_sourcedid</td><td><input type="text" name="lis_course_section_sourcedid" value="DD-ST101:C1" size="50" /></td></tr>
+        <tr><td>tool_consumer_info_product_family_code</td><td><input type="text" name="tool_consumer_info_product_family_code" value="ims" size="50" /></td></tr>
+        <tr><td>tool_consumer_info_version</td><td><input type="text" name="tool_consumer_info_version" value="1.2" size="50" /></td></tr>
+        <tr><td>tool_consumer_instance_guid</td><td><input type="text" name="tool_consumer_instance_guid" value="imsglobal.org" size="50" /></td></tr>
+        <tr><td>tool_consumer_instance_name</td><td><input type="text" name="tool_consumer_instance_name" value="Learning Impact Leadership Institute" size="50" /></td></tr>
+        <tr><td>launch_presentation_document_target</td><td><input type="text" name="launch_presentation_document_target" value="frame" size="50" /></td></tr>
+        <tr><td class="required">accept_media_types *</td><td><input class="required" type="text" name="accept_media_types" value="*/*" size="50" /></td></tr>
+        <tr><td class="required">accept_presentation_document_targets *</td><td><input class="required" type="text" name="accept_presentation_document_targets" value="none,embed,frame,iframe,window,popup,overlay" size="50" /></td></tr>
+        <tr><td class="required">content_item_return_url *</td><td><input class="required" type="text" name="content_item_return_url" value="https://mylearn.int.bbpd.io" size="50" /></td></tr>
+        <tr><td>accept_unsigned</td><td><input type="text" name="accept_unsigned" value="false" size="50" /></td></tr>
+        <tr><td>accept_multiple</td><td><input type="text" name="accept_multiple" value="true" size="50" /></td></tr>
+        <tr><td>auto_create</td><td><input type="text" name="auto_create" value="false" size="50" /></td></tr>
+        <tr><td>data</td><td><input type="text" name="data" value="Some opaque TC data" size="50" /></td></tr>
+        <tr><td>oauth_version</td><td><input type="text" name="oauth_version" value="1.0" size="50" /></td></tr>
+        <tr><td>oauth_nonce</td><td><input type="text" name="oauth_nonce" value="..." size="50" /></td></tr>
+        <tr><td>oauth_timestamp</td><td><input type="text" name="oauth_timestamp" value="..." size="50" /></td></tr>
+        <tr><td>oauth_consumer_key</td><td><input type="text" name="oauth_consumer_key" value="..." size="50" /></td></tr>
+        <tr><td>oauth_callback</td><td><input type="text" name="oauth_callback" value="about:blank" size="50" /></td></tr>
+        <tr><td>oauth_signature_method</td><td><input type="text" name="oauth_signature_method" value="HMAC-SHA1" size="50" /></td></tr>
+        <tr><td>oauth_signature</td><td><input type="text" name="oauth_signature" value="..." size="50" /></td></tr>
+    </table>
+    <br/>
+    <input type="submit" value="Submit" />
+</form>
+
+</body>
+</html>

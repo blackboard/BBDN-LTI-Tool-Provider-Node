@@ -87,6 +87,10 @@ class ProviderTools extends React.Component {
     return (
       <div >
         <div className="row">
+          <div className="large-6 columns"><h2>LTI 2.0 Demo Tool Provider</h2></div>
+        </div>
+
+        <div className="row">
           <div className="large-4 columns">Provider Tools</div>
         </div>
 
