@@ -106,3 +106,8 @@ input.ci, textarea.ci {
     margin-bottom: 0;
     padding: 1px;
 }
+
+li.reqd {
+    color: red;
+    font-weight: bold;
+}

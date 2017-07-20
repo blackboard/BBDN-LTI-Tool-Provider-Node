@@ -8,9 +8,18 @@ class DataItemList extends React.Component {
     const style = {
       listStyle: 'none'
     };
+    const required = [
+      'lti_version', 'lti_message_type', 'accept_media_types',
+      'accept_presentation_document_targets', 'content_item_return_url'
+    ];
 
     data.forEach((value, key, map) => {
-      items.push(<li>{key} : {value}</li>);
+      if (required.indexOf(key) >= 0) {
+        items.push(<li className="reqd">{key} : {value}</li>);
+      }
+      else {
+        items.push(<li>{key} : {value}</li>)
+      }
     });
 
     return (
