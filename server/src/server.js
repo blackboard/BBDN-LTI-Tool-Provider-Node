@@ -13,8 +13,8 @@ var options = (config.use_ssl) ? {
   cert: fs.readFileSync('star.int.bbpd.io.crt')
 } : {key: null, cert: null};
 
-let provider = config.provider_domain + (config.provider_port != "NA" ? ":" + config.provider_port : "");
-let listenPort = (config.provider_port != "NA" ? config.provider_port : 3000);
+let provider = config.provider_domain + (config.provider_port !== "NA" ? ":" + config.provider_port : "");
+let listenPort = (config.provider_port !== "NA" ? config.provider_port : 3000);
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // don't validate ssl cert for posts to ssl sites
 
@@ -63,7 +63,7 @@ httpProxy.all('/*', function (req, res, next) {
   }
 
   try {
-    if (req.method != 'OPTIONS') {
+    if (req.method !== 'OPTIONS') {
       console.log('body:' + req.body);
       request({
         url: learnUrl,
@@ -97,9 +97,11 @@ if (config.use_ssl) {
     console.log("Configuring for SSL use");
     console.log("LTI 1 Tool Provider:  " + provider + "/lti");
     console.log("LTI 2 Registration URL:  " + provider + "/registration");
+    console.log("LTI Content Item: " + provider + "/lti");
   });
 } else {
   app.listen(listenPort);
   console.log("LTI 1 Tool Provider:  " + provider + "/lti");
   console.log("LTI 2 Registration URL:  " + provider + "/registration");
+  console.log("LTI Content Item: " + provider + "/lti");
 }

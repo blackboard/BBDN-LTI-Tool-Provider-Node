@@ -1,16 +1,18 @@
 var _ = require('lodash');
 import config from "../config/config";
 import path from "path";
-import {RegistrationData} from "../common/restTypes";
+import {RegistrationData, ContentItem} from "../common/restTypes";
 var crypto = require('crypto');
 var registration = require('./registration.js');
 var redis = require('redis');
 var redisClient = redis.createClient({"host": config.redis_host, "port": config.redis_port});
 var redisUtil = require('./redisutil');
-var lti = require('./lti')
+var lti = require('./lti');
+var content_item = require('./content-item');
 var eventstore = require('./eventstore');
 
 const regdata_key = "registrationData";
+const contentitem_key = "contentItemData";
 
 function getToolConsumerProfile(url) {
 
@@ -36,8 +38,11 @@ module.exports = function (app) {
 
   let registrationData = new RegistrationData();
   let dataLoaded = false;
-  let provider = config.provider_domain + (config.provider_port != "NA" ? ":" + config.provider_port : "");
+  let provider = config.provider_domain + (config.provider_port !== "NA" ? ":" + config.provider_port : "");
   var launchData = {};
+
+  let contentItemData = new ContentItem();
+  let ciLoaded = false;
 
   // LTI 1 provider and caliper stuff
   app.post('/caliper/send', (req, res) => {
@@ -68,7 +73,20 @@ module.exports = function (app) {
     lti.send_outcomes(req, res);
   });
   app.post('/lti', (req, res) => {
-    lti.got_launch(req, res);
+    if (req.body['lti_message_type'] === 'ContentItemSelectionRequest') {
+      content_item.got_launch(req, res, contentItemData).then(() => {
+        redisUtil.redisSave(contentitem_key, contentItemData);
+        ciLoaded = true;
+
+        let redirectUrl = provider + '/content_item';
+        console.log('Redirecting to : ' + redirectUrl);
+        res.redirect(redirectUrl);
+      });
+    }
+
+    if (req.body['lti_message_type'] === 'basic-lti-launch-request') {
+      lti.got_launch(req, res);
+    }
   });
 
   // LTI 2 registration stuff
@@ -142,6 +160,17 @@ module.exports = function (app) {
       console.log('Redirecting to : ' + redirectUrl);
       res.redirect(redirectUrl);
     });
+  });
+
+  app.get('/contentitemdata', (req, res) => {
+    if (!ciLoaded) {
+      redisUtil.redisGet(contentitem_key).then((contentData) => {
+        contentItemData = contentData;
+        res.send(contentItemData);
+      })
+    } else {
+      res.send(contentItemData);
+    }
   });
 
   app.get('*', (req, res) => {

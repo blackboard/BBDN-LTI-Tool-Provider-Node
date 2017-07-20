@@ -97,3 +97,17 @@ ul.specs dt {
 h1 {
     border-bottom: 1px solid gray;
 }
+
+td.ci {
+    padding: 1px;
+}
+
+input.ci, textarea.ci {
+    margin-bottom: 0;
+    padding: 1px;
+}
+
+li.reqd {
+    color: red;
+    font-weight: bold;
+}
