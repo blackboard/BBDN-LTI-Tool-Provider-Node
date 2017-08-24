@@ -13,18 +13,7 @@ var returnUrl = "";
 exports.got_launch = function (req, res, contentItemData) {
 
   returnUrl = req.body.content_item_return_url;
-
-  // Setup and create oauth components
-  let options = {
-    consumer_key: consumerKey,
-    consumer_secret: consumerSecret,
-    return_url: returnUrl,
-    signer: (new HMAC_SHA1())
-  };
-
-  let parts = url.parse(options.return_url, true);
-
-  let headers = _build_headers(options, parts);
+//  returnUrl = "about:blank";
 
   // Populate contentItemData
   contentItemData.data = req.body;
@@ -32,16 +21,25 @@ exports.got_launch = function (req, res, contentItemData) {
   contentItemData.consumer_secret = consumerSecret;
   contentItemData.content_items = lti_content_items.constructLTIContentItem();
 
-  // This is ugly but I have not found a better way to strip out the values from a string
-  let tempNonce = headers.Authorization.split(",")[2].split("=")[1];
-  contentItemData.oauth_nonce = tempNonce.substring(1, tempNonce.length - 1);
+  // Setup and create oauth components
+  let options = {
+    consumer_key: consumerKey,
+    consumer_secret: consumerSecret,
+    return_url: returnUrl,
+    signer: (new HMAC_SHA1()),
+    params: req.body,
+    content_items: contentItemData.content_items
+  };
 
-  let tempTimeStamp = headers.Authorization.split(",")[3].split("=")[1];
-  contentItemData.oauth_timestamp = tempTimeStamp.substring(1, tempTimeStamp.length - 1);
+  // Use internal HMAC_SHA1 processing
+  let parts = url.parse(options.return_url, true);
+  let headers = _build_headers(options, parts);
 
-  let tempSig = headers.Authorization.split(",")[6].split("=")[1];
-  contentItemData.oauth_signature = tempSig.substring(1, tempSig.length -1);
+  contentItemData.oauth_nonce = get_value('oauth_nonce', headers.Authorization);
+  contentItemData.oauth_timestamp = get_value('oauth_timestamp', headers.Authorization);
+  contentItemData.oauth_signature = get_value('oauth_signature', headers.Authorization);
 
+  console.log('--- Content Item ---');
   console.log(contentItemData);
 
   return new Promise(function (resolve, reject) {
@@ -52,6 +50,11 @@ exports.got_launch = function (req, res, contentItemData) {
 var _build_headers = function (options, parts) {
   var headers, key, val;
   headers = {
+    content_items: JSON.stringify(options.content_items),
+    data: options.params.data,
+    lti_message_type: 'ContentItemSelection',
+    lti_version: options.params.lti_version,
+    oauth_callback: 'about:blank',
     oauth_version: '1.0',
     oauth_nonce: uuid.v4(),
     oauth_timestamp: Math.round(Date.now() / 1000),
@@ -65,7 +68,7 @@ var _build_headers = function (options, parts) {
       results = [];
       for (key in headers) {
         val = headers[key];
-        results.push(key + "=\"" + (utils.special_encode(val)) + "\"");
+        results.push(key + "=\"" + val + "\"");
       }
       return results;
     })()).join(','),
@@ -73,3 +76,12 @@ var _build_headers = function (options, parts) {
     'Content-Length': 0
   };
 };
+
+var get_value = function (key, source) {
+  var offset1, offset2;
+
+  key = key + '=';
+  offset1 = source.indexOf(key) + key.length + 1;
+  offset2 = source.indexOf('"', offset1);
+  return source.substring(offset1, offset2);
+}
