@@ -95,7 +95,7 @@ module.exports = {
           "action": ["GET"]
         }, {
           "@type": "RestServiceProfile",
-          "service": "tcp:ToolProxy",
+          "service": "tcp:ToolProxy.collection",
           "action": ["GET", "POST"]
         }, {"@type": "RestServiceProfile", "service": "tcp:CaliperProfile.collection", "action": ["GET"]}]
       }
