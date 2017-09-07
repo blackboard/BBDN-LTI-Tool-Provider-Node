@@ -82,8 +82,33 @@ module.exports = {
                 "name": "simple_key",
                 "fixed": "custom_simple_value"
               }, {"name": "Complex!@#$^*(){}[]KEY", "fixed": "Complex!@#$^*;(){}[]½Value"}]
-          }],
-          "icon_info": [{"default_location": {"path": "images/fallout_copy.png"}, "key": "iconStyle.default.path"}]
+          }, {
+            "message_type" : "ContentItemSelectionRequest",
+            "path" : "/lti",
+            "enabled_capability": ["User.id", "Person.sourcedId", "Membership.role", "Context.id",
+                "CourseSection.sourcedId"],
+            "parameter" : [
+                {"name": "tc_profile_url", "variable": "ToolConsumerProfile.url"}, {
+                    "name": "cert_given_name",
+                    "variable": "Person.name.given"
+                }, {"name": "cert_family_name", "variable": "Person.name.family"}, {
+                    "name": "cert_full_name",
+                    "variable": "Person.name.full"
+                },
+                {"name": "cert_email", "variable": "Person.email.primary"},
+                {
+                    "name": "cert_userid",
+                    "variable": "User.id"
+                }, {
+                    "name": "result_url",
+                    "variable": "Result.url"
+                },
+                {"name": "cert_username", "variable": "User.username"}, {
+                    "name": "simple_key",
+                    "fixed": "custom_simple_value"
+                }, {"name": "Complex!@#$^*(){}[]KEY", "fixed": "Complex!@#$^*;(){}[]½Value"}]
+              }],
+            "icon_info": [{"default_location": {"path": "images/fallout_copy.png"}, "key": "iconStyle.default.path"}]
         }]
       },
       "custom": {"id": "id58234b1eaa416"},
