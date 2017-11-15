@@ -39,7 +39,7 @@ module.exports = function (app) {
   let registrationData = new RegistrationData();
   let dataLoaded = false;
   let provider = config.provider_domain + (config.provider_port !== "NA" ? ":" + config.provider_port : "");
-  var launchData = {};
+  let launchData = {};
 
   let contentItemData = new ContentItem();
   let ciLoaded = false;
@@ -72,8 +72,11 @@ module.exports = function (app) {
   app.post('/lti/send_outcomes', (req, res) => {
     lti.send_outcomes(req, res);
   });
+  app.get('/lti/membership', (req, res) => {
+    lti.get_membership(req, res);
+  });
   app.post('/lti', (req, res) => {
-    if (req.body['lti_message_type'] === 'ContentItemSelectionRequest') {
+    if (req.body.lti_message_type === 'ContentItemSelectionRequest') {
       content_item.got_launch(req, res, contentItemData).then(() => {
         redisUtil.redisSave(contentitem_key, contentItemData);
         ciLoaded = true;
@@ -84,7 +87,7 @@ module.exports = function (app) {
       });
     }
 
-    if (req.body['lti_message_type'] === 'basic-lti-launch-request') {
+    if (req.body.lti_message_type === 'basic-lti-launch-request') {
       lti.got_launch(req, res);
     }
   });
