@@ -6,7 +6,9 @@ Upon launch of the LTI Tool, the user is given a few options:
 
 - Send Outcomes: Send a Grade to the Tool Consumer with LTI Outcomes
 - Caliper: Register your Tool as a Caliper Provider and then emit an event to the caliper service. In addition, an endpoint is provided to consume caliper events from the Blackboard Learn server.
-- Blackboard REST: Finally, the application provides a method to retrieve a REST token and then retrieve the user and course objects based on the UUID passed in the LTI launch.
+- Blackboard REST: The application provides a method to retrieve a REST token and then retrieve the user and course objects based on the UUID passed in the LTI launch.
+- Content Item Message: The application provides a method to send Content Item Messages back to Learn simulating a Content provider. This provides a menu of predefined message loads as well as the option to add a custom load.
+- Membership Service: Request members for course that launched the tool.
 - Return to Learn: This will take the return URL in the LTI Launch and return the user to that place in Blackboard Learn. If no URL is provided, the user is returned to the top-level domain they came from.
 
 ## Requirements
@@ -15,11 +17,17 @@ Upon launch of the LTI Tool, the user is given a few options:
 ## How To Run the code
 All packages needed are in the package.json. 
 
-You should have node installed (built with v7.1.0). Then from the project directory at the command line, type npm start. This will install all of your dependencies and start the server.
+You should have node installed (built with v7.1.0). Then from the project directory at the command line, type `npm start`. This will install all of your dependencies and start the server.
 
 Access the application via http://localhost:3000. You can customize the host name and port number by creating a server/config/config_override.json file (see the server/config/config.json file for a template)
 
+### Base LTI 1.x functionality and Membership service
 To launch the LTI 1 tool, you must launch into the application as an LTI Tool with the url, http://localhost:3000/lti.
+
+### Content Item Message
+To launch the Content Provider simulation call the tool with this url, http://localhost:3000/CIMRequest.
+Add the parameter "custom_option" with a value of 1 - 5 (e.g. CIMRequest?custom_option=1) and the corresponding predefined message load from the menu
+
 
 ## Usage
 The application is very simple in its current iteration. Essentially there is one page with a bunch of buttons. Click the one you want. I
@@ -64,7 +72,7 @@ http://localhost:3000/
 
 The outcomes UI for getting and receiving results is part of the page is shown when an link is launched from Learn.
 
-## Docker
+# Docker
 
 Docker specific files are included (Dockerfile, docker-compose.yml, launch.sh).
 
