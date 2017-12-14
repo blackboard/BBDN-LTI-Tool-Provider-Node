@@ -70,16 +70,16 @@ exports.got_launch = function (req, res) {
   user_id = req.body.user_id;
   return_url = req.body.launch_presentation_return_url;
 
-  // let start = req.body.launch_presentation_return_url.indexOf("course_id");
-  // let end = req.body.launch_presentation_return_url.indexOf("&", start);
-  // course_id = req.body.launch_presentation_return_url.substring(start + 10, end);
-
-  // let tempStr = req.body.custom_context_memberships_url;
-  // membership_url = tempStr.replace("{context_id}", course_id);
-  //  placement_parm = tempStr.substring(tempStr.indexOf("=") + 1);
-
-  membership_url = req.body.custom_context_memberships_url;
-  placement_parm = membership_url.substring(membership_url.indexOf("=") + 1);
+  if ( req.body.custom_context_memberships_url !== undefined )
+  {
+    membership_url = req.body.custom_context_memberships_url;
+    placement_parm = membership_url.substring(membership_url.indexOf("=") + 1);
+  }
+  else
+  {
+    membership_url = "";
+    placement_parm = "";
+  }
 
   if (return_url === undefined) {
     var parts = url.parse(caliper_profile_url, true);
