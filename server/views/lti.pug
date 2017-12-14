@@ -19,6 +19,8 @@ block content
       input(type="submit", value="Get Course Info")
     form(name="show_events", action="/caliper", method="get")
       input(type="submit", value="Display Caliper Events")
+    form(name="show_membership", action="/lti/membership", method="get")
+      input(type="submit", value="Get Membership")
     form(name="return", action=return_url, method="get")
       input(type="button", onclick=return_onclick, value="Return to Learn")
   p 

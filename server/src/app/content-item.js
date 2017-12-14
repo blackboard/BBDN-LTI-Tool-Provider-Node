@@ -13,13 +13,40 @@ var returnUrl = "";
 exports.got_launch = function (req, res, contentItemData) {
 
   returnUrl = req.body.content_item_return_url;
-//  returnUrl = "about:blank";
 
   // Populate contentItemData
   contentItemData.data = req.body;
   contentItemData.consumer_key = consumerKey;
   contentItemData.consumer_secret = consumerSecret;
-  contentItemData.content_items = lti_content_items.constructLTIContentItem();
+  switch (req.body.custom_option) {
+    case '1':
+      contentItemData.content_items = lti_content_items.constructLTIContentItem1();
+      break;
+
+    case '2':
+      contentItemData.content_items = lti_content_items.constructLTIContentItem2();
+      break;
+
+    case '3':
+      contentItemData.content_items = lti_content_items.constructLTIContentItem3();
+      break;
+
+    case '4':
+      contentItemData.content_items = lti_content_items.constructLTIContentItem4();
+      break;
+
+    case '5':
+      contentItemData.content_items = lti_content_items.constructLTIContentItem5();
+      break;
+
+    case '6':
+      contentItemData.content_items = JSON.parse(req.body.custom_content);
+      break;
+
+    default:
+      contentItemData.content_items = lti_content_items.constructLTIContentItem1();
+      break;
+  }
 
   // Setup and create oauth components
   let options = {
@@ -84,4 +111,4 @@ var get_value = function (key, source) {
   offset1 = source.indexOf(key) + key.length + 1;
   offset2 = source.indexOf('"', offset1);
   return source.substring(offset1, offset2);
-}
+};

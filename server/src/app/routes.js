@@ -39,7 +39,7 @@ module.exports = function (app) {
   let registrationData = new RegistrationData();
   let dataLoaded = false;
   let provider = config.provider_domain + (config.provider_port !== "NA" ? ":" + config.provider_port : "");
-  var launchData = {};
+  let launchData = {};
 
   let contentItemData = new ContentItem();
   let ciLoaded = false;
@@ -72,8 +72,11 @@ module.exports = function (app) {
   app.post('/lti/send_outcomes', (req, res) => {
     lti.send_outcomes(req, res);
   });
+  app.get('/lti/membership', (req, res) => {
+    lti.get_membership(req, res);
+  });
   app.post('/lti', (req, res) => {
-    if (req.body['lti_message_type'] === 'ContentItemSelectionRequest') {
+    if (req.body.lti_message_type === 'ContentItemSelectionRequest') {
       content_item.got_launch(req, res, contentItemData).then(() => {
         redisUtil.redisSave(contentitem_key, contentItemData);
         ciLoaded = true;
@@ -84,7 +87,7 @@ module.exports = function (app) {
       });
     }
 
-    if (req.body['lti_message_type'] === 'basic-lti-launch-request') {
+    if (req.body.lti_message_type === 'basic-lti-launch-request') {
       lti.got_launch(req, res);
     }
   });
@@ -100,26 +103,26 @@ module.exports = function (app) {
       });
 
       res.send(toolProxiesJSON);
-    })
+    });
   });
 
   app.get('/toolproxy/:tool_proxy_guid', (req, res) => {
     let tool_proxy_guid = req.params.tool_proxy_guid;
     redisUtil.redisGet(tool_proxy_guid).then((toolProxy) => {
       res.send(toolProxy);
-    })
+    });
   });
 
   app.get('/launchendpointactivity', (req, res) => {
     if (_.isEmpty(registrationData)) {
-      redisGet(regdata_key).then(function (regData) {
+      redisUtil.redisGet(regdata_key).then(function (regData) {
         registrationData = regData;
         res.send({
           "requestBody": launchData.requestBody,
           "registrationData": registrationData,
           "toolProxy": launchData.toolProxy
         });
-      })
+      });
     }
     else {
       res.send({
@@ -136,7 +139,7 @@ module.exports = function (app) {
       redisUtil.redisGet(regdata_key).then((regData) => {
         registrationData = regData;
         res.send(registrationData);
-      })
+      });
     } else {
       res.send(registrationData);
     }
@@ -148,7 +151,7 @@ module.exports = function (app) {
     redisUtil.redisGet(req.body.oauth_consumer_key).then((toolProxy) => {
       launchData.toolProxy = toolProxy;
       res.redirect(redirectUrl);
-    })
+    });
   });
 
   app.post('/registration', (req, res) => {
@@ -162,12 +165,49 @@ module.exports = function (app) {
     });
   });
 
+  // Content Item Message processing
+  let passthru_req;
+  let passthru_res;
+  let passthru = false;
+
+  app.post('/CIMRequest', (req, res) => {
+    if (req.body.custom_option === undefined) {
+      // no custom_option set so go to CIM request menu and save req and res to pass through
+      // after custom_option has been selected
+      passthru_req = req;
+      passthru_res = res;
+      passthru = true;
+      res.redirect("/cim_request");
+    }
+    else {
+      if (!passthru) {
+        // custom_option was set in call from TC so use current req and res
+        passthru_req = req;
+        passthru_res = res;
+        passthru = false;
+      }
+      else {
+        // custom_option was set from menu so add option and content (if available) to passthru_req
+        passthru_req.body.custom_option = req.body.custom_option;
+        passthru_req.body.custom_content = req.body.custom_content;
+      }
+      content_item.got_launch(passthru_req, passthru_res, contentItemData).then(() => {
+        redisUtil.redisSave(contentitem_key, contentItemData);
+        ciLoaded = true;
+
+        let redirectUrl = provider + '/content_item';
+        console.log('Redirecting to : ' + redirectUrl);
+        res.redirect(redirectUrl);
+      });
+    }
+  });
+
   app.get('/contentitemdata', (req, res) => {
     if (!ciLoaded) {
       redisUtil.redisGet(contentitem_key).then((contentData) => {
         contentItemData = contentData;
         res.send(contentItemData);
-      })
+      });
     } else {
       res.send(contentItemData);
     }

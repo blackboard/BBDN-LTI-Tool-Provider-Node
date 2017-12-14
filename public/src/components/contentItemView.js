@@ -1,9 +1,9 @@
-import React, {Componenet} from "react";
+import React from "react";
 
 class DataItemList extends React.Component {
 
   render() {
-    var items = [];
+    let items = [];
     const data = this.props.dataItems;
     const style = {
       listStyle: 'none'
@@ -65,7 +65,7 @@ class ContentItemView extends React.Component {
   }
 
   getEntry(obj, findKey) {
-    var retVal = 'Not found';
+    let retVal = 'Not found';
     Object.keys(obj).forEach(key => {
       if (key === findKey) {
         retVal = obj[key];

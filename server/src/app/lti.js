@@ -19,6 +19,8 @@ var consumer_secret = "secret";
 var lis_result_sourcedid = "";
 var lis_outcome_service_url = "";
 var return_url = "https://community.blackboard.com/community/developers";
+var membership_url = "";
+var placement_parm = "";
 
 //Caliper Variables
 var caliper_profile_url = "";
@@ -51,9 +53,6 @@ exports.got_launch = function (req, res) {
   var provider = new lti.Provider(consumer_key, consumer_secret);
   req.body = _.omit(req.body, '__proto__');
 
-  console.log(req.headers);
-  console.log(req.body);
-
   var content = "";
 
   var keys = Object.keys(req.body);
@@ -61,37 +60,38 @@ exports.got_launch = function (req, res) {
     content += keys[i] + " = " + req.body[keys[i]] + "<br />";
   }
 
-  // provider.valid_request(req, function (err, isValid) {
-  //   if (err) {
-  //     console.log(err);
-  //     res.send(403);
-  //   }
-  //   else {
-  //     if (!isValid) res.send(422);
+  lis_result_sourcedid = req.body.lis_result_sourcedid;
+  lis_outcome_service_url = req.body.lis_outcome_service_url;
+  caliper_profile_url = req.body.custom_caliper_profile_url;
+  custom_caliper_federated_session_id = req.body.custom_caliper_federated_session_id;
+  oauth_consumer_key = req.body.oauth_consumer_key;
+  oauth_nonce = req.body.oauth_nonce;
+  course_id = req.body.context_id;
+  user_id = req.body.user_id;
+  return_url = req.body.launch_presentation_return_url;
 
-      lis_result_sourcedid = req.body['lis_result_sourcedid'];
-      lis_outcome_service_url = req.body['lis_outcome_service_url'];
-      caliper_profile_url = req.body['custom_caliper_profile_url'];
-      custom_caliper_federated_session_id = req.body['custom_caliper_federated_session_id'];
-      oauth_consumer_key = req.body['oauth_consumer_key'];
-      oauth_nonce = req.body['oauth_nonce'];
-      course_id = req.body['context_id'];
-      user_id = req.body['user_id'];
-      return_url = req.body['launch_presentation_return_url'];
+  if ( req.body.custom_context_memberships_url !== undefined )
+  {
+    membership_url = req.body.custom_context_memberships_url;
+    placement_parm = membership_url.substring(membership_url.indexOf("=") + 1);
+  }
+  else
+  {
+    membership_url = "";
+    placement_parm = "";
+  }
 
-      if (return_url == undefined) {
-        var parts = url.parse(caliper_profile_url, true);
-        return_url = parts.protocol + '//' + parts.host;
-      }
+  if (return_url === undefined) {
+    var parts = url.parse(caliper_profile_url, true);
+    return_url = parts.protocol + '//' + parts.host;
+  }
 
-      res.render('lti', {
-        title: 'LTI Launch Received!',
-        content: content,
-        return_url: return_url,
-        return_onclick: 'location.href=' + '\'' + return_url + '\';'
-      });
-//    }
-//  });
+  res.render('lti', {
+    title: 'LTI Launch Received!',
+    content: content,
+    return_url: return_url,
+    return_onclick: 'location.href=' + '\'' + return_url + '\';'
+  });
 };
 
 
@@ -101,10 +101,10 @@ exports.caliper = function (req, res) {
 
   options.consumer_key = consumer_key;
   options.consumer_secret = consumer_secret;
-  options.caliper_profile_url = caliper_profile_url;
+  options.url = caliper_profile_url;
   options.signer = (new HMAC_SHA1());
 
-  var parts = caliper_profile_url_parts = url.parse(options.caliper_profile_url, true);
+  var parts = caliper_profile_url_parts = url.parse(options.url, true);
   var caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname;
 
   var req_options = {
@@ -132,38 +132,16 @@ exports.caliper = function (req, res) {
 
       console.log("ID: " + caliper_id + " eventStoreUrl: " + eventStoreUrl + " apiKey: " + apiKey);
 
-      res.render('lti', {title: 'Caliper Response Received!', content: JSON.stringify(json, null, '\t')});
+      res.render('lti', {
+        title: 'Caliper Response Received!',
+        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>'
+      });
     });
   });
 
   http_req.body = _.omit(http_req.body, '__proto__');
   http_req.write("");
   http_req.end();
-};
-
-var _build_headers = function (options, parts) {
-  var headers, key, val;
-  headers = {
-    oauth_version: '1.0',
-    oauth_nonce: uuid.v4(),
-    oauth_timestamp: Math.round(Date.now() / 1000),
-    oauth_consumer_key: options.consumer_key,
-    oauth_signature_method: 'HMAC-SHA1'
-  };
-  headers.oauth_signature = options.signer.build_signature_raw(caliper_profile_url, parts, 'GET', headers, options.consumer_secret);
-  return {
-    Authorization: 'OAuth realm="",' + ((function () {
-      var results;
-      results = [];
-      for (key in headers) {
-        val = headers[key];
-        results.push(key + "=\"" + (utils.special_encode(val)) + "\"");
-      }
-      return results;
-    })()).join(','),
-    'Content-Type': 'application/xml',
-    'Content-Length': 0
-  };
 };
 
 
@@ -330,11 +308,16 @@ exports.caliper_send = function (req, res) {
     console.log('Sensor: %O Actor: %O Action: %O Object: %O Target: %O NavigatedFrom: %O EdApp: %O Group: %O Membership: %O', results['sensor'], results['actor'], results['action'], results['eventObj'], results['target'], results['navigatedFrom'], results['edApp'], results['group'], results['membership']);
     console.log('eventObj from target: %O', results['target'].isPartOf);
 
-    var content = JSON.stringify(event, null, '\t');
+    var content = '<pre>' + JSON.stringify(event, null, '  ') + '</pre>';
 
     console.log('JSON: ' + content);
 
-    res.render('lti', {title: 'Caliper event successfully sent!', content: content, return_url: return_url});
+    res.render('lti', {
+      title: 'Caliper event successfully sent!',
+      content: content,
+      return_url: return_url,
+      return_onclick: 'location.href=' + '\'' + return_url + '\';'
+    });
   });
 };
 
@@ -367,29 +350,22 @@ exports.send_outcomes = function (req, res) {
     console.log(result); //True or false
 
     if (result) {
-      res.render('lti', {title: 'Outcome successfully sent!', content: result, return_url: return_url});
+      res.render('lti', {
+        title: 'Outcome successfully sent!',
+        content: result,
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\';'
+      });
     }
     else {
-      res.render('lti', {title: 'Outcome Failed!', content: err, return_url: return_url});
+      res.render('lti', {
+        title: 'Outcome Failed!',
+        content: err,
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\';'
+      });
     }
   });
-};
-
-
-var send_outcomes = function (endpoint, sourced_id) {
-  var options = {};
-
-  options.consumer_key = consumer_key;
-  options.consumer_secret = consumer_secret;
-  options.service_url = endpoint;
-  options.source_did = sourced_id;
-
-  var outcomes_service = new lti.OutcomeService(options);
-
-  outcomes_service.send_replace_result(.5, function (err, result) {
-    console.log(result); //True or false
-    return Boolean(result);
-  })
 };
 
 
@@ -431,8 +407,9 @@ exports.rest_auth = function (req, res) {
 
       res.render('lti', {
         title: 'REST Token Response Received!',
-        content: JSON.stringify(json, null, '\t'),
-        return_url: return_url
+        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\';'
       });
     });
   });
@@ -473,12 +450,13 @@ exports.rest_getuser = function (req, res) {
       console.log(responseString);
       var json = JSON.parse(responseString);
 
-      console.log("User Info: " + JSON.stringify(json, null, '\t'));
+      console.log("User Info: " + JSON.stringify(json, null, '  '));
 
       res.render('lti', {
         title: 'REST User Info Received!',
-        content: JSON.stringify(json, null, '\t'),
-        return_url: return_url
+        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\';'
       });
     });
   });
@@ -516,12 +494,13 @@ exports.rest_getcourse = function (req, res) {
       console.log(responseString);
       var json = JSON.parse(responseString);
 
-      console.log("Course Info: " + JSON.stringify(json, null, '\t'));
+      console.log("Course Info: " + JSON.stringify(json, null, '  '));
 
       res.render('lti', {
         title: 'REST Course Info Received!',
-        content: JSON.stringify(json, null, '\t'),
-        return_url: return_url
+        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\';'
       });
     });
   });
@@ -529,4 +508,75 @@ exports.rest_getcourse = function (req, res) {
   http_req.write("");
   console.log(http_req);
   http_req.end();
+};
+
+
+exports.get_membership = function (req, res) {
+  let parts = url.parse(membership_url, true);
+
+  let options = {
+    consumer_key: consumer_key,
+    consumer_secret: consumer_secret,
+    url: parts.protocol + "//" + parts.host + parts.pathname, // Rebuild url without parameters
+    signer: new HMAC_SHA1()
+  };
+
+  let req_options = {
+    hostname: parts.hostname,
+    path: parts.path,
+    method: 'GET',
+    headers: _build_headers(options, parts)
+  };
+
+  let http_req = https.request(req_options, function (http_res) {
+    http_res.setEncoding('utf-8');
+    let responseString = '';
+
+    http_res.on('data', function (data) {
+      responseString += data;
+    });
+
+    http_res.on('end', function () {
+      let json = JSON.parse(responseString);
+
+      res.render('lti', {
+        title: 'Membership Info Received',
+        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\';'
+      });
+    });
+  });
+
+  http_req.write("");
+  http_req.end();
+};
+
+
+let _build_headers = function (options, parts) {
+  let headers, key, val;
+
+  headers = {
+    oauth_version: '1.0',
+    oauth_nonce: uuid.v4(),
+    oauth_timestamp: Math.round(Date.now() / 1000),
+    oauth_consumer_key: options.consumer_key,
+    oauth_signature_method: 'HMAC-SHA1'
+  };
+
+  headers.oauth_signature = options.signer.build_signature_raw(options.url, parts, 'GET', headers, options.consumer_secret);
+
+  return {
+    Authorization: 'OAuth realm="",' + ((function () {
+      let results;
+      results = [];
+      for (key in headers) {
+        val = headers[key];
+        results.push(key + "=\"" + (utils.special_encode(val)) + "\"");
+      }
+      return results;
+    })()).join(','),
+    'Content-Type': 'application/xml',
+    'Content-Length': 0
+  };
 };
