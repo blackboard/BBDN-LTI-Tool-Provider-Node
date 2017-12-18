@@ -70,20 +70,19 @@ exports.got_launch = function (req, res) {
   user_id = req.body.user_id;
   return_url = req.body.launch_presentation_return_url;
 
-  if ( req.body.custom_context_memberships_url !== undefined )
-  {
+  if ( req.body.custom_context_memberships_url !== undefined ) {
     membership_url = req.body.custom_context_memberships_url;
     placement_parm = membership_url.substring(membership_url.indexOf("=") + 1);
-  }
-  else
-  {
+  } else {
     membership_url = "";
     placement_parm = "";
   }
 
-  if (return_url === undefined) {
+  if (return_url === undefined && caliper_profile_url !== undefined) {
     var parts = url.parse(caliper_profile_url, true);
     return_url = parts.protocol + '//' + parts.host;
+  } else {
+    return_url = "http://google.com";
   }
 
   res.render('lti', {
