@@ -70,7 +70,7 @@ exports.got_launch = function (req, res) {
   user_id = req.body.user_id;
   return_url = req.body.launch_presentation_return_url;
 
-  if ( req.body.custom_context_memberships_url !== undefined ) {
+  if (req.body.custom_context_memberships_url !== undefined) {
     membership_url = req.body.custom_context_memberships_url;
     placement_parm = membership_url.substring(membership_url.indexOf("=") + 1);
   } else {
@@ -81,7 +81,7 @@ exports.got_launch = function (req, res) {
   if (return_url === undefined && caliper_profile_url !== undefined) {
     var parts = url.parse(caliper_profile_url, true);
     return_url = parts.protocol + '//' + parts.host;
-  } else {
+  } else if (return_url === undefined) {
     return_url = "http://google.com";
   }
 
@@ -133,7 +133,9 @@ exports.caliper = function (req, res) {
 
       res.render('lti', {
         title: 'Caliper Response Received!',
-        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>'
+        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\''
       });
     });
   });
@@ -511,44 +513,54 @@ exports.rest_getcourse = function (req, res) {
 
 
 exports.get_membership = function (req, res) {
-  let parts = url.parse(membership_url, true);
+  if (membership_url !== '') {
+    let parts = url.parse(membership_url, true);
 
-  let options = {
-    consumer_key: consumer_key,
-    consumer_secret: consumer_secret,
-    url: parts.protocol + "//" + parts.host + parts.pathname, // Rebuild url without parameters
-    signer: new HMAC_SHA1()
-  };
+    let options = {
+      consumer_key: consumer_key,
+      consumer_secret: consumer_secret,
+      url: parts.protocol + "//" + parts.host + parts.pathname, // Rebuild url without parameters
+      signer: new HMAC_SHA1()
+    };
 
-  let req_options = {
-    hostname: parts.hostname,
-    path: parts.path,
-    method: 'GET',
-    headers: _build_headers(options, parts)
-  };
+    let req_options = {
+      hostname: parts.hostname,
+      path: parts.path,
+      method: 'GET',
+      headers: _build_headers(options, parts)
+    };
 
-  let http_req = https.request(req_options, function (http_res) {
-    http_res.setEncoding('utf-8');
-    let responseString = '';
+    let http_req = https.request(req_options, function (http_res) {
+      http_res.setEncoding('utf-8');
+      let responseString = '';
 
-    http_res.on('data', function (data) {
-      responseString += data;
-    });
+      http_res.on('data', function (data) {
+        responseString += data;
+      });
 
-    http_res.on('end', function () {
-      let json = JSON.parse(responseString);
+      http_res.on('end', function () {
+        let json = JSON.parse(responseString);
 
-      res.render('lti', {
-        title: 'Membership Info Received',
-        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
-        return_url: return_url,
-        return_onclick: 'location.href=' + '\'' + return_url + '\';'
+        res.render('lti', {
+          title: 'Membership Info Received',
+          content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
+          return_url: return_url,
+          return_onclick: 'location.href=' + '\'' + return_url + '\';'
+        });
       });
     });
-  });
 
-  http_req.write("");
-  http_req.end();
+    http_req.write("");
+    http_req.end();
+  }
+  else {
+    res.render('lti', {
+      title: 'Membership service not supported',
+      content: '<h2>Membership service not supported</h2>',
+      return_url: return_url,
+      return_onclick: 'location.href=' + '\'' + return_url + '\';'
+    });
+  }
 };
 
 
