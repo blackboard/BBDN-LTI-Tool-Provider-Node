@@ -87,37 +87,52 @@ exports.show_events = function (req, res) {
 
     var events = "<table style=\"border: 1px solid\;\"><thead><tr style=\"border: 1px solid\;color: white\;background-color:blue\;\"><th style=\"border: 1px solid\;\"><b>SENSOR</b</th><th style=\"border: 1px solid\;\"><b>SENDTIME</b></th><th style=\"border: 1px solid\;\"><b>TYPE</b></th><th style=\"border: 1px solid\;\"><b>ACTOR</b></th><th style=\"border: 1px solid\;\"><b>SESSION</b></th></tr></thead><tbody>";
 
-    // Insert a single document
-    db.collection('caliper').find().sort({"_id": -1}).limit(25).each(function (err, doc) {
-      if (err) {
-        console.log("Error reading caliper events from database: " + err.message);
-        res.render('lti', {
-          title: 'View Caliper Event Store!',
-          content: "Error reading caliper events from database: " + err.message,
-          return_url: return_url
-        });
-        db.close();
-        return false;
-      }
+    if (db !== null) {
+      // Insert a single document
+      db.collection('caliper').find().sort({"_id": -1}).limit(25).each(function (err, doc) {
+        if (err) {
+          console.log("Error reading caliper events from database: " + err.message);
+          res.render('lti', {
+            title: 'View Caliper Event Store!',
+            content: "Error reading caliper events from database: " + err.message,
+            return_url: return_url,
+            return_onclick: 'location.href=' + '\'' + return_url + '\''
+          });
+          db.close();
+          return false;
+        }
 
-      if (!doc) {
-        db.close();
-        events += "</tbody></table>";
-        res.render('lti', {title: 'View Caliper Event Store!', content: events, return_url: return_url});
-        return false;
-      }
+        if (!doc) {
+          db.close();
+          events += "</tbody></table>";
+          res.render('lti', {
+            title: 'View Caliper Event Store!',
+            content: events,
+            return_url: return_url,
+            return_onclick: 'location.href=' + '\'' + return_url + '\''
+          });
+          return false;
+        }
 
-      console.log(JSON.stringify(doc, null, '\t'));
+        console.log(JSON.stringify(doc, null, '\t'));
 
-      var date = new Date(doc['sendTime']);
+        var date = new Date(doc['sendTime']);
 
-      events += "<tr style=\"border: 1px solid\;\"><td style=\"border: 1px solid\;\">" + doc['sensor'] +
-        "</td><td style=\"border: 1px solid\;\">" + date +
-        "</td><td style=\"border: 1px solid\;\">" + doc['data'][0]['@type'] +
-        "</td><td style=\"border: 1px solid\;\">" + doc['data'][0]['actor']['@id'] +
-        "</td><td style=\"border: 1px solid\;\">" + doc['data'][0]['federatedSession'] + "</tr>";
+        events += "<tr style=\"border: 1px solid\;\"><td style=\"border: 1px solid\;\">" + doc['sensor'] +
+          "</td><td style=\"border: 1px solid\;\">" + date +
+          "</td><td style=\"border: 1px solid\;\">" + doc['data'][0]['@type'] +
+          "</td><td style=\"border: 1px solid\;\">" + doc['data'][0]['actor']['@id'] +
+          "</td><td style=\"border: 1px solid\;\">" + doc['data'][0]['federatedSession'] + "</tr>";
 
-      console.log(events);
-    });
+        console.log(events);
+      });
+    } else {
+      res.render('lti', {
+        title: 'View Caliper Event Store|',
+        content: '<h2>DB not available</h2>',
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\''
+      });
+    }
   });
 };

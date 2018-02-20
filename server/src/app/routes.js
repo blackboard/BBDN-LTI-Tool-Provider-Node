@@ -76,6 +76,7 @@ module.exports = function (app) {
     lti.get_membership(req, res);
   });
   app.post('/lti', (req, res) => {
+    console.log('--------------------\nlti');
     if (req.body.lti_message_type === 'ContentItemSelectionRequest') {
       content_item.got_launch(req, res, contentItemData).then(() => {
         redisUtil.redisSave(contentitem_key, contentItemData);
@@ -171,6 +172,7 @@ module.exports = function (app) {
   let passthru = false;
 
   app.post('/CIMRequest', (req, res) => {
+    console.log('--------------------\nCIMRequest');
     if (req.body.custom_option === undefined) {
       // no custom_option set so go to CIM request menu and save req and res to pass through
       // after custom_option has been selected
@@ -214,6 +216,7 @@ module.exports = function (app) {
   });
 
   app.get('*', (req, res) => {
+    console.log('catchall - (' + req.url + ')');
     res.sendFile(path.resolve('./public', 'index.html'));
   });
 };

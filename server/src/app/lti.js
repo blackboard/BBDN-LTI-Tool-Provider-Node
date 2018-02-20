@@ -4,7 +4,7 @@ var _ = require('lodash');
 var oauth = require('oauth-signature');
 var https = require('https');
 var finish = require('finish');
-var HMAC_SHA1 = require('./hmac-sha1');
+var HMAC_SHA = require('./hmac-sha1');
 var utils = require('./utils');
 var url = require('url');
 var uuid = require('uuid');
@@ -21,6 +21,7 @@ var lis_outcome_service_url = "";
 var return_url = "https://community.blackboard.com/community/developers";
 var membership_url = "";
 var placement_parm = "";
+var sha_version = "";
 
 //Caliper Variables
 var caliper_profile_url = "";
@@ -69,8 +70,10 @@ exports.got_launch = function (req, res) {
   course_id = req.body.context_id;
   user_id = req.body.user_id;
   return_url = req.body.launch_presentation_return_url;
+  sha_version = req.body.oauth_signature_method;
+  console.log("Signature Method: " + sha_version);
 
-  if ( req.body.custom_context_memberships_url !== undefined ) {
+  if (req.body.custom_context_memberships_url !== undefined) {
     membership_url = req.body.custom_context_memberships_url;
     placement_parm = membership_url.substring(membership_url.indexOf("=") + 1);
   } else {
@@ -81,7 +84,7 @@ exports.got_launch = function (req, res) {
   if (return_url === undefined && caliper_profile_url !== undefined) {
     var parts = url.parse(caliper_profile_url, true);
     return_url = parts.protocol + '//' + parts.host;
-  } else {
+  } else if (return_url === undefined) {
     return_url = "http://google.com";
   }
 
@@ -95,13 +98,14 @@ exports.got_launch = function (req, res) {
 
 
 exports.caliper = function (req, res) {
-
-  var options = {};
-
-  options.consumer_key = consumer_key;
-  options.consumer_secret = consumer_secret;
-  options.url = caliper_profile_url;
-  options.signer = (new HMAC_SHA1());
+  let options = {
+    consumer_key: consumer_key,
+    consumer_secret: consumer_secret,
+    url: caliper_profile_url,
+    signer: new HMAC_SHA.HMAC_SHA1(),
+    oauth_version: '1.0',
+    oauth_signature_method: 'HMAC-SHA1'
+  };
 
   var parts = caliper_profile_url_parts = url.parse(options.url, true);
   var caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname;
@@ -133,7 +137,9 @@ exports.caliper = function (req, res) {
 
       res.render('lti', {
         title: 'Caliper Response Received!',
-        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>'
+        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\''
       });
     });
   });
@@ -511,44 +517,63 @@ exports.rest_getcourse = function (req, res) {
 
 
 exports.get_membership = function (req, res) {
-  let parts = url.parse(membership_url, true);
+  if (membership_url !== '') {
+    let parts = url.parse(membership_url, true);
 
-  let options = {
-    consumer_key: consumer_key,
-    consumer_secret: consumer_secret,
-    url: parts.protocol + "//" + parts.host + parts.pathname, // Rebuild url without parameters
-    signer: new HMAC_SHA1()
-  };
+    let options = {
+      consumer_key: consumer_key,
+      consumer_secret: consumer_secret,
+      url: parts.protocol + "//" + parts.host + parts.pathname, // Rebuild url without parameters
+      oauth_version: '1.0',
+      oauth_signature_method: sha_version
+    };
 
-  let req_options = {
-    hostname: parts.hostname,
-    path: parts.path,
-    method: 'GET',
-    headers: _build_headers(options, parts)
-  };
+    if (sha_version === 'HMAC-SHA256') {
+      options.signer = new HMAC_SHA.HMAC_SHA2();
+    } else {
+      options.signer = new HMAC_SHA.HMAC_SHA1();
+    }
 
-  let http_req = https.request(req_options, function (http_res) {
-    http_res.setEncoding('utf-8');
-    let responseString = '';
+    let req_options = {
+      hostname: parts.hostname,
+      path: parts.path,
+      method: 'GET',
+      headers: _build_headers(options, parts)
+    };
 
-    http_res.on('data', function (data) {
-      responseString += data;
-    });
+    console.log(req_options);
 
-    http_res.on('end', function () {
-      let json = JSON.parse(responseString);
+    let http_req = https.request(req_options, function (http_res) {
+      http_res.setEncoding('utf-8');
+      let responseString = '';
 
-      res.render('lti', {
-        title: 'Membership Info Received',
-        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
-        return_url: return_url,
-        return_onclick: 'location.href=' + '\'' + return_url + '\';'
+      http_res.on('data', function (data) {
+        responseString += data;
+      });
+
+      http_res.on('end', function () {
+        let json = JSON.parse(responseString);
+
+        res.render('lti', {
+          title: 'Membership Info Received',
+          content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
+          return_url: return_url,
+          return_onclick: 'location.href=' + '\'' + return_url + '\';'
+        });
       });
     });
-  });
 
-  http_req.write("");
-  http_req.end();
+    http_req.write("");
+    http_req.end();
+  }
+  else {
+    res.render('lti', {
+      title: 'Membership service not supported',
+      content: '<h2>Membership service not supported</h2>',
+      return_url: return_url,
+      return_onclick: 'location.href=' + '\'' + return_url + '\';'
+    });
+  }
 };
 
 
@@ -556,14 +581,15 @@ let _build_headers = function (options, parts) {
   let headers, key, val;
 
   headers = {
-    oauth_version: '1.0',
+    oauth_version: options.oauth_version,
     oauth_nonce: uuid.v4(),
     oauth_timestamp: Math.round(Date.now() / 1000),
     oauth_consumer_key: options.consumer_key,
-    oauth_signature_method: 'HMAC-SHA1'
+    oauth_signature_method: options.oauth_signature_method
   };
 
   headers.oauth_signature = options.signer.build_signature_raw(options.url, parts, 'GET', headers, options.consumer_secret);
+//  console.log(options.oauth_signature_method + " signature: " + headers.oauth_signature);
 
   return {
     Authorization: 'OAuth realm="",' + ((function () {
