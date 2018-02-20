@@ -4,7 +4,7 @@ var _ = require('lodash');
 var oauth = require('oauth-signature');
 var https = require('https');
 var finish = require('finish');
-var HMAC_SHA1 = require('./hmac-sha1');
+var HMAC_SHA = require('./hmac-sha1');
 var utils = require('./utils');
 var url = require('url');
 var uuid = require('uuid');
@@ -21,6 +21,7 @@ var lis_outcome_service_url = "";
 var return_url = "https://community.blackboard.com/community/developers";
 var membership_url = "";
 var placement_parm = "";
+var sha_version = "";
 
 //Caliper Variables
 var caliper_profile_url = "";
@@ -69,6 +70,8 @@ exports.got_launch = function (req, res) {
   course_id = req.body.context_id;
   user_id = req.body.user_id;
   return_url = req.body.launch_presentation_return_url;
+  sha_version = req.body.oauth_signature_method;
+  console.log("Signature Method: " + sha_version);
 
   if (req.body.custom_context_memberships_url !== undefined) {
     membership_url = req.body.custom_context_memberships_url;
@@ -95,13 +98,14 @@ exports.got_launch = function (req, res) {
 
 
 exports.caliper = function (req, res) {
-
-  var options = {};
-
-  options.consumer_key = consumer_key;
-  options.consumer_secret = consumer_secret;
-  options.url = caliper_profile_url;
-  options.signer = (new HMAC_SHA1());
+  let options = {
+    consumer_key: consumer_key,
+    consumer_secret: consumer_secret,
+    url: caliper_profile_url,
+    signer: new HMAC_SHA.HMAC_SHA1(),
+    oauth_version: '1.0',
+    oauth_signature_method: 'HMAC-SHA1'
+  };
 
   var parts = caliper_profile_url_parts = url.parse(options.url, true);
   var caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname;
@@ -520,8 +524,15 @@ exports.get_membership = function (req, res) {
       consumer_key: consumer_key,
       consumer_secret: consumer_secret,
       url: parts.protocol + "//" + parts.host + parts.pathname, // Rebuild url without parameters
-      signer: new HMAC_SHA1()
+      oauth_version: '1.0',
+      oauth_signature_method: sha_version
     };
+
+    if (sha_version === 'HMAC-SHA256') {
+      options.signer = new HMAC_SHA.HMAC_SHA2();
+    } else {
+      options.signer = new HMAC_SHA.HMAC_SHA1();
+    }
 
     let req_options = {
       hostname: parts.hostname,
@@ -529,6 +540,8 @@ exports.get_membership = function (req, res) {
       method: 'GET',
       headers: _build_headers(options, parts)
     };
+
+    console.log(req_options);
 
     let http_req = https.request(req_options, function (http_res) {
       http_res.setEncoding('utf-8');
@@ -568,14 +581,15 @@ let _build_headers = function (options, parts) {
   let headers, key, val;
 
   headers = {
-    oauth_version: '1.0',
+    oauth_version: options.oauth_version,
     oauth_nonce: uuid.v4(),
     oauth_timestamp: Math.round(Date.now() / 1000),
     oauth_consumer_key: options.consumer_key,
-    oauth_signature_method: 'HMAC-SHA1'
+    oauth_signature_method: options.oauth_signature_method
   };
 
   headers.oauth_signature = options.signer.build_signature_raw(options.url, parts, 'GET', headers, options.consumer_secret);
+//  console.log(options.oauth_signature_method + " signature: " + headers.oauth_signature);
 
   return {
     Authorization: 'OAuth realm="",' + ((function () {
