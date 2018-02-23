@@ -22,5 +22,6 @@ export class ContentItem {
     this.oauth_nonce = "";
     this.oauth_timestamp = "";
     this.oauth_signature = "";
+    this.oauth_signature_method = "";
   }
 }

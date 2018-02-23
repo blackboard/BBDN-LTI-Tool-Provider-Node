@@ -51,7 +51,8 @@ class ContentItemView extends React.Component {
           returnUrl: this.getEntry(contentItemData.data, 'content_item_return_url'),
           oauth_nonce: contentItemData.oauth_nonce,
           oauth_timestamp: contentItemData.oauth_timestamp,
-          oauth_signature: contentItemData.oauth_signature
+          oauth_signature: contentItemData.oauth_signature,
+          oauth_signature_method: contentItemData.oauth_signature_method
         });
       })
   }
@@ -96,7 +97,7 @@ class ContentItemView extends React.Component {
               <tr><td className="ci">oauth_timestamp</td><td className="ci"><input className="ci" type="text" name="oauth_timestamp" value={this.state.oauth_timestamp} /></td></tr>
               <tr><td className="ci">oauth_consumer_key</td><td className="ci"><input className="ci" type="text" name="oauth_consumer_key" value={this.state.consumerKey} /></td></tr>
               <tr><td className="ci">oauth_callback</td><td className="ci"><input className="ci" type="text" name="oauth_callback" value="about:blank" /></td></tr>
-              <tr><td className="ci">oauth_signature_method</td><td className="ci"><input className="ci" type="text" name="oauth_signature_method" value="HMAC-SHA1" /></td></tr>
+              <tr><td className="ci">oauth_signature_method</td><td className="ci"><input className="ci" type="text" name="oauth_signature_method" value={this.state.oauth_signature_method} /></td></tr>
               <tr><td className="ci">oauth_signature</td><td className="ci"><input className="ci" type="text" name="oauth_signature" value={this.state.oauth_signature} /></td></tr>
               </tbody>
             </table>
