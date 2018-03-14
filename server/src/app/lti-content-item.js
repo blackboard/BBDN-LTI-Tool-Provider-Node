@@ -7,15 +7,16 @@ module.exports = {
           "@type": "LtiLinkItem",
           "mediaType": "application/vnd.ims.lti.v1.ltilink",
           "icon": {
-            "@id": "https://www.server.com/path/animage.png",
+            "@id": "https://www.wpclipart.com/animals/F/ferret/.cache/Ferret_black-footed.jpg",
             "width": 50,
             "height": 50
           },
-          "title": "Week 1 reading",
+          "title": "Week 1 reading LTI + Link",
           "text": "Read this section prior to your tutorial.",
           "custom": {
             "chapter": "12",
-            "section": "3"
+            "section": "3",
+            "duedate": "2018-03-31T11:15:00+01:00"
           },
           "placementAdvice": {
             "displayHeight": 100,
@@ -26,15 +27,16 @@ module.exports = {
           "@type": "LtiLinkItem",
           "mediaType": "application/vnd.ims.lti.v1.ltilink",
           "icon": {
-            "@id": "https://www.server.com/path/animage.png",
+            "@id": "https://www.wpclipart.com/animals/F/frogs/.cache/Frog_eyeing_dinner.png",
             "width": 50,
             "height": 50
           },
-          "title": "Week 2 reading",
+          "title": "Week 2 reading LTI",
           "text": "Read this section prior to your tutorial.",
           "custom": {
             "chapter": "12",
-            "section": "4"
+            "section": "4",
+            "duedate": "2019-05-24T23:15:00+01:00"
           },
           "placementAdvice": {
             "displayHeight": 100,
@@ -157,11 +159,11 @@ module.exports = {
           "@type": "LtiLinkItem",
           "mediaType": "application/vnd.ims.lti.v1.ltilink",
           "icon": {
-            "@id": "https://www.server.com/path/animage.png",
+            "@id": "https://www.wpclipart.com/animals/F/ferret/.cache/Ferret_black-footed.jpg",
             "width": 50,
             "height": 50
           },
-          "title": "Week 1 reading",
+          "title": "Week 1 reading LTI",
           "text": "Read this section prior to your tutorial.",
           "custom": {
             "chapter": "12",
@@ -176,11 +178,11 @@ module.exports = {
           "@type": "LtiLinkItem",
           "mediaType": "application/vnd.ims.lti.v1.ltilink",
           "icon": {
-            "@id": "https://www.server.com/path/animage.png",
+            "@id": "https://www.wpclipart.com/animals/F/frogs/.cache/Frog_eyeing_dinner.png",
             "width": 50,
             "height": 50
           },
-          "title": "Week 2 reading",
+          "title": "Week 2 reading LTI",
           "text": "Read this section prior to your tutorial.",
           "custom": {
             "chapter": "12",
@@ -315,11 +317,11 @@ module.exports = {
           "@type": "LtiLinkItem",
           "mediaType": "application/vnd.ims.lti.v1.ltilink",
           "icon": {
-            "@id": "https://www.server.com/path/animage.png",
+            "@id": "https://www.wpclipart.com/animals/F/ferret/.cache/Ferret_black-footed.jpg",
             "width": 50,
             "height": 50
           },
-          "title": "Week 1 reading",
+          "title": "Week 1 reading LTI",
           "text": "Read this section prior to your tutorial.",
           "custom": {
             "chapter": "12",
@@ -334,11 +336,11 @@ module.exports = {
           "@type": "LtiLinkItem",
           "mediaType": "application/vnd.ims.lti.v1.ltilink",
           "icon": {
-            "@id": "https://www.server.com/path/animage.png",
+            "@id": "https://www.wpclipart.com/animals/F/frogs/.cache/Frog_eyeing_dinner.png",
             "width": 50,
             "height": 50
           },
-          "title": "Week 2 reading",
+          "title": "Week 2 reading LTI",
           "text": "Read this section prior to your tutorial.",
           "custom": {
             "chapter": "12",
@@ -383,7 +385,7 @@ module.exports = {
           }
         }, {
           "@type": "ContentItem",
-          "url": "http://www.imageserver.com/path/image.jpg",
+          "url": "https://www.wpclipart.com/animals/F/ferret/.cache/Ferret_black-footed.jpg",
           "mediaType" : "image/jpg",
           "title" : "Title for my picture",
           "placementAdvice" : {
