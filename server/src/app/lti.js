@@ -21,7 +21,7 @@ var lis_outcome_service_url = "";
 var return_url = "https://community.blackboard.com/community/developers";
 var membership_url = "";
 var placement_parm = "";
-var sha_version = "";
+var sha_method = "";
 
 //Caliper Variables
 var caliper_profile_url = "";
@@ -70,8 +70,8 @@ exports.got_launch = function (req, res) {
   course_id = req.body.context_id;
   user_id = req.body.user_id;
   return_url = req.body.launch_presentation_return_url;
-  sha_version = req.body.oauth_signature_method;
-  console.log("Signature Method: " + sha_version);
+  sha_method = req.body.oauth_signature_method;
+  console.log("Signature Method: " + sha_method);
 
   if (req.body.custom_context_memberships_url !== undefined) {
     membership_url = req.body.custom_context_memberships_url;
@@ -525,10 +525,10 @@ exports.get_membership = function (req, res) {
       consumer_secret: consumer_secret,
       url: parts.protocol + "//" + parts.host + parts.pathname, // Rebuild url without parameters
       oauth_version: '1.0',
-      oauth_signature_method: sha_version
+      oauth_signature_method: sha_method
     };
 
-    if (sha_version === 'HMAC-SHA256') {
+    if (sha_method === 'HMAC-SHA256') {
       options.signer = new HMAC_SHA.HMAC_SHA2();
     } else {
       options.signer = new HMAC_SHA.HMAC_SHA1();
