@@ -11,8 +11,8 @@ module.exports = {
             "width": 50,
             "height": 50
           },
-          "title": "Week 1 reading LTI + Link",
-          "text": "Read this section prior to your tutorial.",
+          "title": "Week 1 reading LTI + Link<script>alert('help me');</script>&nbsp;<span style=\"font-family: Garamond; font-weight: bold; font-size: 24px\">Hello</span>",
+          "text": "Read this section prior to your tutorial. <script>alert('help me');</script>&nbsp;<span style=\"font-family: Garamond; font-weight: bold; font-size: 24px\">This should be large and bold</span>",
           "custom": {
             "chapter": "12",
             "section": "3",
@@ -23,7 +23,8 @@ module.exports = {
             "displayWidth": 100,
             "windowTarget": "_blank"
           }
-        }, {
+        },
+        {
           "@type": "LtiLinkItem",
           "mediaType": "application/vnd.ims.lti.v1.ltilink",
           "icon": {
@@ -59,7 +60,15 @@ module.exports = {
               "totalMaximum": 110
             }
           }
-        }, {
+        },
+        {
+          "@type": "LtiLinkItem",
+          "mediaType": "application/vnd.ims.lti.v1.ltilink",
+          "title": "Cross-domain LTI link",
+          "text": "This link should be gently rejected",
+          "url": "https://google.com"
+        },
+        {
           "@type": "ContentItem",
           "@id": ":item1",
           "title": "Assignment: Assignment Specification",
@@ -75,7 +84,8 @@ module.exports = {
             "width": 64,
             "height": 64
           }
-        }, {
+        },
+        {
           "@type": "ContentItem",
           "url": "http://www.imageserver.com/path/image.jpg",
           "mediaType" : "image/jpg",
