@@ -1,7 +1,7 @@
 {
-  "provider_domain": "https://localhost",
+  "provider_domain": "http://localhost",
   "provider_port": 3000,
   "redis_host": "localhost",
   "redis_port": 6379,
-  "use_ssl": true
+  "use_ssl": false
 }

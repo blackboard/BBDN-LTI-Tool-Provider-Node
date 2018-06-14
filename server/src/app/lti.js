@@ -56,7 +56,7 @@ exports.got_launch = function (req, res) {
 
   var content = "";
 
-  var keys = Object.keys(req.body);
+  var keys = Object.keys(req.body).sort();
   for (var i = 0, length = keys.length; i < length; i++) {
     content += keys[i] + " = " + req.body[keys[i]] + "<br />";
   }
