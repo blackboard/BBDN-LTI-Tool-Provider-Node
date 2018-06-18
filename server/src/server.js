@@ -36,8 +36,8 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 httpProxy.use(function (err, req, res, next) {
-  console.error(err.stack)
-  res.status(500).send('Something broke!')
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 //httpProxy.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -59,7 +59,7 @@ httpProxy.all('/*', function (req, res, next) {
 
   }
   if (req.header('accept')) {
-    headers['Accept'] = req.header('accept');
+    headers.accept = req.header('accept');
   }
 
   try {
@@ -96,12 +96,14 @@ if (config.use_ssl) {
   https.createServer(options, app).listen(listenPort, function () {
     console.log("Configuring for SSL use");
     console.log("LTI 1 Tool Provider:  " + provider + "/lti");
+    console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
+    console.log("LTI 1.3 Launch: " + provider + "/lti13");
     console.log("LTI 2 Registration URL:  " + provider + "/registration");
-    console.log("LTI Content Item: " + provider + "/lti");
   });
 } else {
   app.listen(listenPort);
   console.log("LTI 1 Tool Provider:  " + provider + "/lti");
+  console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
+  console.log("LTI 1.3 Launch: " + provider + "/lti13");
   console.log("LTI 2 Registration URL:  " + provider + "/registration");
-  console.log("LTI Content Item: " + provider + "/lti");
 }

@@ -34,7 +34,9 @@
     "request": "^2.76.0",
     "serve-favicon": "~2.2.1",
     "ssl-root-cas": "*",
-    "uuid": "^2.0.3"
+    "uuid": "^2.0.3",
+    "jsonwebtoken": "^8.2.2",
+    "jwk-to-pem": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",

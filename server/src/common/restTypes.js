@@ -25,3 +25,12 @@ export class ContentItem {
     this.oauth_signature_method = "";
   }
 }
+
+export class JWTPayload {
+  constructor() {
+    this.header = Object;
+    this.body = Object;
+    this.verified = false;
+    this.return_url = "";
+  }
+}
