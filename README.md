@@ -21,7 +21,7 @@ You should have node installed (built with v7.1.0). Then from the project direct
 
 Access the application via http://localhost:3000. You can customize the host name and port number by creating a server/config/config_override.json file (see the server/config/config.json file for a template)
 
-### Base LTI 1.x functionality and Membership service
+### Base LTI 1.1.x functionality and Membership service
 To launch the LTI 1 tool, you must launch into the application as an LTI Tool with the url, http://localhost:3000/lti.
 
 ### Content Item Message
@@ -41,11 +41,42 @@ See the <a href="https://community.blackboard.com/community/developers/standards
 This is not meant to be a Node.JS tutorial. It is simply an example of how one might implement the various features therein. Pull requests are welcome!
 
 
+# LTI 1.3 Tool
+
+Implementation of IMS Global LTI v1.3 and LTI Advantage
+
+## Requirements
+
+Connection access to a copy of the Blackboard Developer's Portal (devportal) to register this node application as a tool.
+
+**_Note_:** Make sure you copy all important information provided during registation
+- Issuer
+- Public Keyset URL
+- Auth Token Endpoint
+- Tool Private Key ( this **CANNOT** be retrieved at a later date as it is not stored in the devportal )
+
+## How To Run the code
+
+In addition to the instructions above
+- in the config_override.json dev_portal must contain the host for the devportal required above.
+
+### Base LTI 1.3 tool launch
+To launch the LTI 1.3 tool, you must launch into the application with the url, http://localhost:3000/lti13.
+
+### Assignment and Grade Services 2.0
+TBD
+
+### Names and Roles Provisioning Services 2.0
+TBD
+
+### Deep Linking 2.0
+TBD
+
 # LTI 2.0 Tool Provider
 
 ## Requirements
 
-- [Redis](http:redis.io) - Optional if you want to persist the Tool Proxy that is generated
+- [Redis](http:redis.io) - Required to persist the Tool Proxy that is generated
 
 ## Installation
 

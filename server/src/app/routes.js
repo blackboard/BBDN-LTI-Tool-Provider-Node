@@ -1,7 +1,7 @@
 var _ = require('lodash');
 import config from "../config/config";
 import path from "path";
-import {RegistrationData, ContentItem} from "../common/restTypes";
+import {RegistrationData, ContentItem, JWTPayload} from "../common/restTypes";
 var crypto = require('crypto');
 var registration = require('./registration.js');
 var redis = require('redis');
@@ -10,6 +10,7 @@ var redisUtil = require('./redisutil');
 var lti = require('./lti');
 var content_item = require('./content-item');
 var eventstore = require('./eventstore');
+var lti13 = require('./lti13');
 
 const regdata_key = "registrationData";
 const contentitem_key = "contentItemData";
@@ -32,7 +33,6 @@ function getToolConsumerProfile(url) {
       });
   });
 }
-
 
 module.exports = function (app) {
 
@@ -215,6 +215,20 @@ module.exports = function (app) {
     }
   });
 
+  // LTI 1.3 Message processing
+  let jwtPayload = new JWTPayload();
+
+  app.post('/lti13', (req, res) => {
+    console.log('--------------------\nlti 1.3');
+    lti13.got_launch(req, res, jwtPayload);
+    res.redirect('/jwt_payload');
+  });
+
+  app.get('/jwtPayloadData', (req, res) => {
+    res.send(jwtPayload);
+  });
+
+  // Catch all
   app.get('*', (req, res) => {
     console.log('catchall - (' + req.url + ')');
     res.sendFile(path.resolve('./public', 'index.html'));

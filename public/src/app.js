@@ -9,6 +9,7 @@ import LaunchEndpoint from './components/launchEndpoint';
 import ProviderTools from './components/providerTools';
 import ContentItemView from './components/contentItemView';
 import CIMRequestView from './components/cimRequestView';
+import LTI13PayloadView from './components/lti13PayloadView';
 
 const None = React.createClass({
   render() {
@@ -28,5 +29,6 @@ render((
     <Route path="/ltilaunchendpoint" component={LaunchEndpoint}/>
     <Route path="/content_item" component={ContentItemView}/>
     <Route path="/cim_request" component={CIMRequestView}/>
+    <Route path="/jwt_payload" component={LTI13PayloadView}/>
   </Router>
 ), document.getElementById('root'));

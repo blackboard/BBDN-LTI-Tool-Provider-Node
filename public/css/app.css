@@ -111,3 +111,15 @@ li.reqd {
     color: red;
     font-weight: bold;
 }
+
+.verified {
+    color: green;
+    font-weight: bold;
+    font-size: large;
+}
+
+.notverified {
+    color: red;
+    font-weight: bold;
+    font-size: large;
+}

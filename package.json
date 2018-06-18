@@ -14,6 +14,7 @@
     "exports-loader": "^0.6.4",
     "express": "^4.13.4",
     "finish": "^0.6.3",
+    "hoek": "^5.0.3",
     "ims-caliper": "^1.0.0",
     "ims-lti": "^3.0.2",
     "jquery": "^3.1.1",
@@ -33,7 +34,9 @@
     "request": "^2.76.0",
     "serve-favicon": "~2.2.1",
     "ssl-root-cas": "*",
-    "uuid": "^2.0.3"
+    "uuid": "^2.0.3",
+    "jsonwebtoken": "^8.2.2",
+    "jwk-to-pem": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
