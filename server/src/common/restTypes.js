@@ -32,5 +32,17 @@ export class JWTPayload {
     this.body = Object;
     this.verified = false;
     this.return_url = "";
+    this.jwt = "";
+    this.return_json = "";
+  }
+}
+
+export class SetupParameters {
+  constructor() {
+    this.privateKey = "";
+    this.tokenEndPoint = "";
+    this.issuer = "";
+    this.applicationId = "";
+    this.devPortalHost = "";
   }
 }

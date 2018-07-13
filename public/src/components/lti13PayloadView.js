@@ -22,27 +22,34 @@ class LTI13PayloadView extends React.Component {
   }
 
   render() {
-    const header = JSON.stringify( this.state.header, null, '  ' );
-    const body = JSON.stringify( this.state.body, null, '  ' );
+    const header = JSON.stringify(this.state.header, null, '  ');
+    const body = JSON.stringify(this.state.body, null, '  ');
     const verified = (this.state.verified) ? <span className="verified">Verified</span> : <span className="notverified">Verify failed</span>;
     const msgReturn = this.state.returnUrl + "&lti_msg=" + encodeURI("I have a message for you");
     const errorReturn = this.state.returnUrl + "&lti_errormsg=" + encodeURI("An error has occurred");
 
-    return (
+    return(
       <div>
-        <div className="row">
-          <div className="large-6 columns"><h2>LTI 1.3 Payload</h2></div>
-        </div>
+        <div><h3>LTI 1.3 Launch</h3></div>
 
         <div>
-          <a href={this.state.returnUrl}><button>Return<br/>&nbsp;</button></a>&nbsp;&nbsp;
-          <a href={errorReturn}><button>Error<br/>return</button></a>&nbsp;&nbsp;
-          <a href={msgReturn}><button>Message<br/>return</button></a><br/>
-          {verified}<br/>
-          <b>JWT Header</b>
-          <pre>{header}</pre>
-          <b>JWT Body</b>
-          <pre>{body}</pre>
+          <p>We have received your LTI launch. You can view the JSON below.</p>
+          <p>
+            What would you like to do?<br/>
+            <form action="getNamesAndRoles" method="post"><input type="submit" value="Names and Roles" /></form>
+            <form action={this.state.returnUrl} method="post"><input type="submit" value="Return to Learn" /></form>
+            <form action={msgReturn} method="post"><input type="submit" value="Return with message" /></form>
+            <form action={errorReturn} method="post"><input type="submit" value="Return with error" /></form>
+          </p>
+          <p>{verified}</p>
+          <p>
+            <b>JWT Header</b>
+            <pre>{header}</pre>
+          </p>
+          <p>
+            <b>JWT Body</b>
+            <pre>{body}</pre>
+          </p>
         </div>
       </div>
     )

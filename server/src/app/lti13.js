@@ -6,9 +6,14 @@ let request = require('request');
 let jwt = require('jsonwebtoken');
 let jwk = require('jwk-to-pem');
 
-exports.got_launch = function (req, res, jwtPayload) {
+exports.toolLaunch = function (req, res, jwtPayload) {
   let id_token = req.body.id_token;
 
+  this.verifyToken(id_token, jwtPayload);
+};
+
+// Pass in JWT and jwtPayload will be populated with results
+exports.verifyToken = function (id_token, jwtPayload) {
   let parts = id_token.split( "." );
 
   // Parse and store payload data from launch
