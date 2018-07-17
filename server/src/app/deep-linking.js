@@ -8,8 +8,9 @@ exports.deepLink = function (req, res, dlPayload, setup) {
 
   lti13.verifyToken(id_token, dlPayload);
 
+  let deploy = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/deployment_id"];
   let data = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].data;
-  let json = deepLinking1(setup.applicationId, data);
+  let json = deepLinking1(setup.applicationId, deploy, data);
   dlPayload.jwt = jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});
   dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].return_url;
   dlPayload.return_json = json;
@@ -18,12 +19,12 @@ exports.deepLink = function (req, res, dlPayload, setup) {
 };
 
 // need to flesh this out a bit still
-let deepLinking1 = function(iss, data) {
+let deepLinking1 = function(iss, deploy, data) {
   return {
     "iss": iss,
     "aud": "http://blackboard.com",
     "locale": "en_US",
-    "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "5a038fdc-1827-4dd6-aae1-4ab5cdcf51ac",
+    "https://purl.imsglobal.org/spec/lti/claim/deployment_id": deploy,
     "https://purl.imsglobal.org/spec/lti/claim/message_type": "LTIDeepLinkingResponse",
     "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
     "https://purl.imsglobal.org/spec/lti-dl/claim/content_items": [
@@ -32,14 +33,9 @@ let deepLinking1 = function(iss, data) {
         "title": "A title",
         "text": "A description",
         "url": "https://localhost:3000/lti13",
-        "presentation": {
-          "documentTarget": "embed",
-          "width": 500,
-          "height": 600
-        },
         "available": {
-          "startDateTime": "2018-08-01T04:00:00",
-          "endDateTime": "2018-09-01T04:00:00"
+          "startDateTime": "2018-08-01T04:00:00Z",
+          "endDateTime": "2018-09-01T04:00:00Z"
         },
         "submission": {
           "endDateTime": "2018-08-30T04:00:00Z"

@@ -251,7 +251,6 @@ module.exports = function (app) {
   //=======================================================
   // Deep Linking
   let dlPayload = new JWTPayload();
-  let token = {};
 
   app.post('/deepLink', (req, res) => {
     console.log('--------------------\ndeepLink');
