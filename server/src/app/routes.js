@@ -262,6 +262,18 @@ module.exports = function (app) {
     res.send(dlPayload);
   });
 
+  app.post('/deepLinkOptions', (req, res) => {
+    console.log('--------------------\ndeepLinkOptions');
+    lti13.verifyToken(req.body.id_token, dlPayload);
+    res.redirect('/deep_link_options');
+  });
+
+  app.post('/deepLinkContent', (req, res) => {
+    console.log('--------------------\ndeepLinkContent');
+    deepLinking.deepLinkContent(req, res, dlPayload, setup);
+    res.redirect('/deep_link');
+  });
+
   //=======================================================
   // Setup processing
 

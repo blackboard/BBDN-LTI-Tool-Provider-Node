@@ -35,13 +35,13 @@ class DeepLinkPayloadView extends React.Component {
         <div>
           <p>We have received your Deep Linking launch. You can view the JSON below.</p>
 
+          <form action={this.state.returnUrl} method="POST">
+            <input type="hidden" name="JWT" value={this.state.jwt}/>
+            <input type="submit" value="Return Deep Linking" />
+          </form>
           <p>
             <b>Return JSON</b>
             <pre>{returnJSON}</pre>
-            <form action={this.state.returnUrl} method="POST">
-              <input type="hidden" name="JWT" value={this.state.jwt}/>
-              <input type="submit" value="Return Deep Linking" />
-            </form>
           </p>
           <h4>Deep Linking Request</h4>
           <p>{verified}</p>
