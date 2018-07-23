@@ -293,6 +293,7 @@ module.exports = function (app) {
     setup.applicationId = req.body.applicationId;
     setup.devPortalHost = req.body.devPortalHost;
     redisUtil.redisSave(setup_key, setup);
+    config.dev_portal = setup.devPortalHost;
     res.redirect('/setup_page');
   });
 

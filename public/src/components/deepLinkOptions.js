@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 class DeepLinkOptions extends React.Component {
   render() {
@@ -10,14 +10,16 @@ class DeepLinkOptions extends React.Component {
           <form action="deepLinkContent" method="POST">
             <table>
               <tbody>
-              <tr><td>&nbsp;</td><td>Deep Linking Payloads</td></tr>
+              <tr><td>&nbsp;</td><td><h5>Deep Linking Payloads</h5></td></tr>
               <tr><td><input type="radio" name="custom_option" value="1" /></td><td>1) 1 LTI Link</td></tr>
               <tr><td><input type="radio" name="custom_option" value="2" /></td><td>2) 1 Content Link</td></tr>
-              <tr><td><input type="radio" name="custom_option" value="5" /></td><td>5) Build-a-Payload<br/>
+              <tr><td><input type="radio" name="custom_option" value="3" /></td><td>3) 1 File</td></tr>
+              <tr><td><input type="radio" name="custom_option" value="5" /></td><td>5) Build-a-Payload<br/><br/>
                 <table>
                   <tbody>
                   <tr><td className="ci">LTI Links: </td><td className="ci"><input className="ci" type="text" size="2" name="custom_ltilinks" /></td></tr>
                   <tr><td className="ci">Content Links: </td><td className="ci"><input className="ci" type="text" size="2" name="custom_contentlinks" /></td></tr>
+                  <tr><td className="ci">Files: </td><td className="ci"><input className="ci" type="text" size="2" name="custom_files" /></td></tr>
                   </tbody>
                 </table>
                 </td></tr>

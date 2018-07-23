@@ -32,6 +32,7 @@ export class JWTPayload {
     this.body = Object;
     this.verified = false;
     this.return_url = "";
+    this.error_url = "";
     this.jwt = "";
     this.return_json = "";
   }

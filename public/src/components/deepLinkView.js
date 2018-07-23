@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import JSONTree from 'react-json-tree';
 
 class DeepLinkPayloadView extends React.Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class DeepLinkPayloadView extends React.Component {
           header: dlPayload.header,
           body: dlPayload.body,
           returnUrl: dlPayload.return_url,
+          errorUrl: dlPayload.error_url,
           verified: dlPayload.verified,
           jwt: dlPayload.jwt,
           returnJSON: dlPayload.return_json
@@ -22,11 +24,7 @@ class DeepLinkPayloadView extends React.Component {
   }
 
   render() {
-    const header = JSON.stringify(this.state.header, null, '  ');
-    const body = JSON.stringify(this.state.body, null, '  ');
-    const returnJSON = JSON.stringify(this.state.returnJSON, null, '  ');
     const verified = (this.state.verified) ? <span className="verified">Verified</span> : <span className="notverified">Verify failed</span>;
-
 
     return(
       <div>
@@ -41,17 +39,17 @@ class DeepLinkPayloadView extends React.Component {
           </form>
           <p>
             <b>Return JSON</b>
-            <pre>{returnJSON}</pre>
+            <JSONTree data={this.state.returnJSON} hideRoot={true} />
           </p>
           <h4>Deep Linking Request</h4>
           <p>{verified}</p>
           <p>
             <b>JWT Header</b>
-            <pre>{header}</pre>
+            <JSONTree data={this.state.header} hideRoot={true} />
           </p>
           <p>
             <b>JWT Body</b>
-            <pre>{body}</pre>
+            <JSONTree data={this.state.body} hideRoot={true} />
           </p>
         </div>
       </div>

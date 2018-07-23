@@ -1,4 +1,5 @@
 import React from "react";
+import JSONTree from 'react-json-tree';
 
 class LTI13PayloadView extends React.Component {
   constructor(props) {
@@ -16,17 +17,16 @@ class LTI13PayloadView extends React.Component {
           header: jwtPayload.header,
           body: jwtPayload.body,
           returnUrl: jwtPayload.return_url,
+          errorUrl: jwtPayload.error_url,
           verified: jwtPayload.verified
         });
       });
   }
 
   render() {
-    const header = JSON.stringify(this.state.header, null, '  ');
-    const body = JSON.stringify(this.state.body, null, '  ');
     const verified = (this.state.verified) ? <span className="verified">Verified</span> : <span className="notverified">Verify failed</span>;
     const msgReturn = this.state.returnUrl + "&lti_msg=" + encodeURI("I have a message for you");
-    const errorReturn = this.state.returnUrl + "&lti_errormsg=" + encodeURI("An error has occurred");
+    const errorReturn = this.state.errorUrl + "&lti_errormsg=" + encodeURI("An error has occurred");
 
     return(
       <div>
@@ -44,11 +44,11 @@ class LTI13PayloadView extends React.Component {
           <p>{verified}</p>
           <p>
             <b>JWT Header</b>
-            <pre>{header}</pre>
+            <JSONTree data={this.state.header} hideRoot={true} />
           </p>
           <p>
             <b>JWT Body</b>
-            <pre>{body}</pre>
+            <JSONTree data={this.state.body}  hideRoot={true} />
           </p>
         </div>
       </div>

@@ -20,6 +20,7 @@ exports.verifyToken = function (id_token, jwtPayload) {
   jwtPayload.header = JSON.parse( Buffer.from(parts[0], 'base64').toString() );
   jwtPayload.body = JSON.parse( Buffer.from(parts[1], 'base64').toString() );
   jwtPayload.return_url = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
+  jwtPayload.error_url = jwtPayload.return_url;
   jwtPayload.verified = false;
 
   // Verify launch is from correct party
@@ -36,7 +37,8 @@ exports.verifyToken = function (id_token, jwtPayload) {
     }
 
     try {
-      jwt.verify(id_token, jwk(body));
+//      jwt.verify(id_token, jwk(body));
+      jwt.verify(id_token, jwk(body.keys[0]));
       jwtPayload.verified = true;
     } catch(err) {
       console.log('Verify Error - verify failed: ' + err);

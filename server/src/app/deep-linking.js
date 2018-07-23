@@ -13,6 +13,7 @@ exports.deepLink = function (req, res, dlPayload, setup) {
   let json = deepLinkingFixed(setup.applicationId, deploy, data);
   dlPayload.jwt = jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});
   dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].return_url;
+  dlPayload.error_url = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
   dlPayload.return_json = json;
 
   // additional validation of message
@@ -32,6 +33,9 @@ exports.deepLinkContent = function (req, res, dlPayload, setup) {
       items[0] = deepLinkingContentLink();
       break;
 
+    case '3':
+      items[0] = deepLInkingFile();
+
     case '5':
       let total = 0;
       for ( let i = 0; i < req.body.custom_ltilinks; i++, total++ ) {
@@ -40,10 +44,15 @@ exports.deepLinkContent = function (req, res, dlPayload, setup) {
       for ( let i = 0; i < req.body.custom_contentlinks; i++, total++ ) {
         items[total] = deepLinkingContentLink();
       }
+      for ( let i = 0; i < req.body.custom_files; i++, total++ ) {
+        items[total] = deepLInkingFile();
+      }
       break;
 
     case '6':
-      items[0] = JSON.parse(req.body.custom_content);
+      if (req.body.custom_content !== '') {
+        items[0] = JSON.parse(req.body.custom_content);
+      }
       break;
   }
   let json = deepLinkingFrame(setup.applicationId, deploy, data, items);
@@ -114,6 +123,21 @@ let deepLinkingContentLink = function() {
       "url": "https://lti.example.com/thumb.jpg",
       "width": 90,
       "height": 90
+    }
+  };
+};
+
+let deepLInkingFile = function() {
+  return {
+    "type": "file",
+    "title": "A file like a PDF that is my assignment submissions",
+    "url": "https://my.example.com/assignment1.pdf",
+    "mediaType": "application/pdf",
+    "expiresAt": "2018-03-06T20:05:02Z",
+    "thumbnail": {
+      "url": "https://lti.example.com/thumb.jpg",
+      "width": 50,
+      "height": 50
     }
   };
 };
