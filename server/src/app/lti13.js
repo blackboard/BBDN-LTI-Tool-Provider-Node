@@ -1,7 +1,5 @@
 'use strict';
 
-import config from "../config/config";
-
 let request = require('request');
 let jwt = require('jsonwebtoken');
 let jwk = require('jwk-to-pem');
@@ -13,7 +11,7 @@ exports.toolLaunch = function (req, res, jwtPayload) {
 };
 
 // Pass in JWT and jwtPayload will be populated with results
-exports.verifyToken = function (id_token, jwtPayload) {
+exports.verifyToken = function (id_token, jwtPayload, setup) {
   let parts = id_token.split( "." );
 
   // Parse and store payload data from launch
@@ -25,7 +23,8 @@ exports.verifyToken = function (id_token, jwtPayload) {
 
   // Verify launch is from correct party
   let clientId = jwtPayload.body.aud;
-  let url = config.dev_portal + '/api/v1/management/applications/' + clientId + '/jwks.json';
+  let url = setup.devPortalHost + '/api/v1/management/applications/' + clientId + '/jwks.json';
+
   request(url, {json : true}, (err, res, body) => {
     if (err) {
       return console.log('Verify Error - request call failed: ' + err);
@@ -37,9 +36,9 @@ exports.verifyToken = function (id_token, jwtPayload) {
     }
 
     try {
-//      jwt.verify(id_token, jwk(body));
       jwt.verify(id_token, jwk(body.keys[0]));
       jwtPayload.verified = true;
+      console.log("JWT verified " + jwtPayload.verified);
     } catch(err) {
       console.log('Verify Error - verify failed: ' + err);
       jwtPayload.verified = false;

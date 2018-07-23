@@ -98,11 +98,10 @@ redisUtil.redisGet(setup_key).then((setupData) => {
     setup.tokenEndPoint = 'Need Oauth2 token endpoint';
     setup.privateKey = 'Need private key';
     setup.applicationId = 'Need application id';
-    setup.devPortalHost = config.dev_portal;
+    setup.devPortalHost = "Need dev portal url";
     redisUtil.redisSave(setup_key, setup);
     console.log('Initialize setup parameters');
   } else {
-    config.dev_portal = setupData.devPortalHost;
     console.log('Setup parameters');
     console.log(setupData.issuer);
     console.log(setupData.tokenEndPoint);

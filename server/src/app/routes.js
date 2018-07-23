@@ -240,7 +240,7 @@ module.exports = function (app) {
 
   app.post('/lti13', (req, res) => {
     console.log('--------------------\nlti 1.3');
-    lti13.toolLaunch(req, res, jwtPayload);
+    lti13.verifyToken(req.body.id_token, jwtPayload, setup);
     res.redirect('/jwt_payload');
   });
 
@@ -254,6 +254,7 @@ module.exports = function (app) {
 
   app.post('/deepLink', (req, res) => {
     console.log('--------------------\ndeepLink');
+    lti13.verifyToken(req.body.id_token, dlPayload, setup);
     deepLinking.deepLink(req, res, dlPayload, setup);
     res.redirect('/deep_link');
   });
@@ -264,7 +265,7 @@ module.exports = function (app) {
 
   app.post('/deepLinkOptions', (req, res) => {
     console.log('--------------------\ndeepLinkOptions');
-    lti13.verifyToken(req.body.id_token, dlPayload);
+    lti13.verifyToken(req.body.id_token, dlPayload, setup);
     res.redirect('/deep_link_options');
   });
 
@@ -293,7 +294,6 @@ module.exports = function (app) {
     setup.applicationId = req.body.applicationId;
     setup.devPortalHost = req.body.devPortalHost;
     redisUtil.redisSave(setup_key, setup);
-    config.dev_portal = setup.devPortalHost;
     res.redirect('/setup_page');
   });
 

@@ -1,13 +1,8 @@
 'use strict';
 
 let jwt = require('jsonwebtoken');
-let lti13 = require('./lti13');
 
 exports.deepLink = function (req, res, dlPayload, setup) {
-  let id_token = req.body.id_token;
-
-  lti13.verifyToken(id_token, dlPayload);
-
   let deploy = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/deployment_id"];
   let data = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].data;
   let json = deepLinkingFixed(setup.applicationId, deploy, data);
@@ -15,8 +10,6 @@ exports.deepLink = function (req, res, dlPayload, setup) {
   dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].return_url;
   dlPayload.error_url = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
   dlPayload.return_json = json;
-
-  // additional validation of message
 };
 
 exports.deepLinkContent = function (req, res, dlPayload, setup) {
