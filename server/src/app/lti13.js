@@ -22,7 +22,16 @@ exports.verifyToken = function (id_token, jwtPayload, setup) {
   jwtPayload.verified = false;
 
   // Verify launch is from correct party
-  let clientId = jwtPayload.body.aud;
+  // aud could be an array or a single entry
+  let clientId;
+  if ( jwtPayload.body.aud instanceof Array )
+  {
+    clientId = jwtPayload.body.aud[0];
+  }
+  else
+  {
+    clientId = jwtPayload.body.aud;
+  }
   let url = setup.devPortalHost + '/api/v1/management/applications/' + clientId + '/jwks.json';
 
   request(url, {json : true}, (err, res, body) => {

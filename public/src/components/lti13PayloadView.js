@@ -25,8 +25,8 @@ class LTI13PayloadView extends React.Component {
 
   render() {
     const verified = (this.state.verified) ? <span className="verified">Verified</span> : <span className="notverified">Verify failed</span>;
-    const msgReturn = this.state.returnUrl + "&lti_msg=" + encodeURI("I have a message for you");
-    const errorReturn = this.state.errorUrl + "&lti_errormsg=" + encodeURI("An error has occurred");
+    const msgReturn = this.state.returnUrl + "&lti_msg=" + encodeURI("I have a message for you") + "&lti_log=" + encodeURI("Log this message");
+    const errorReturn = this.state.errorUrl + "&lti_errormsg=" + encodeURI("An error has occurred") + "&lti_errorlog=" + encodeURI("Log this error");
 
     return(
       <div>
