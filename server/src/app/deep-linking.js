@@ -7,7 +7,7 @@ exports.deepLink = function (req, res, dlPayload, setup) {
   let data = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].data;
   let json = deepLinkingFrame(setup.applicationId, deploy, data, deepLinkingFixed());
   dlPayload.jwt = jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});
-  dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].return_url;
+  dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].deep_link_return_url;
   dlPayload.error_url = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
   dlPayload.return_json = json;
 };
@@ -65,7 +65,7 @@ exports.deepLinkContent = function (req, res, dlPayload, setup) {
   }
   let json = deepLinkingFrame(setup.applicationId, deploy, data, items);
   dlPayload.jwt = jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});
-  dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].return_url;
+  dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].deep_link_return_url;
   dlPayload.return_json = json;
 };
 
