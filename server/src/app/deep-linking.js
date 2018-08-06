@@ -6,6 +6,7 @@ exports.deepLink = function (req, res, dlPayload, setup) {
   let deploy = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/deployment_id"];
   let data = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].data;
   let json = deepLinkingFrame(setup.applicationId, deploy, data, deepLinkingFixed());
+
   dlPayload.jwt = jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});
   dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].deep_link_return_url;
   dlPayload.error_url = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
@@ -15,30 +16,10 @@ exports.deepLink = function (req, res, dlPayload, setup) {
 exports.deepLinkContent = function (req, res, dlPayload, setup) {
   let deploy = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/deployment_id"];
   let data = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].data;
-  let items = [];
 
+  let items = [];
   switch( req.body.custom_option) {
     case '1':
-      items[0] = deepLinkingLTILink();
-      break;
-
-    case '2':
-      items[0] = deepLinkingContentLink();
-      break;
-
-    case '3':
-      items[0] = deepLinkingFile();
-      break;
-
-    case '4':
-      items[0] = deepLinkingHTML();
-      break;
-
-    case '5':
-      items[0] = deepLinkingImage();
-      break;
-
-    case '9':
       let total = 0;
       for ( let i = 0; i < req.body.custom_ltilinks; i++, total++ ) {
         items[total] = deepLinkingLTILink();
@@ -57,13 +38,38 @@ exports.deepLinkContent = function (req, res, dlPayload, setup) {
       }
       break;
 
-    case '0':
+    case '2':
       if (req.body.custom_content !== '') {
         items[0] = JSON.parse(req.body.custom_content);
       }
       break;
   }
+
   let json = deepLinkingFrame(setup.applicationId, deploy, data, items);
+
+  if ( req.body.custom_message !== '' )
+  {
+    if ( req.body.custom_message_msg )
+    {
+      json['https://purl.imsglobal.org/spec/lti-dl/claim/msg']  = req.body.custom_message;
+    }
+    if ( req.body.custom_message_log )
+    {
+      json['https://purl.imsglobal.org/spec/lti-dl/claim/log']  = req.body.custom_message;
+    }
+  }
+  if ( req.body.custom_error !== '' )
+  {
+    if ( req.body.custom_error_msg )
+    {
+      json['https://purl.imsglobal.org/spec/lti-dl/claim/errormsg']  = req.body.custom_error;
+    }
+    if ( req.body.custom_error_log )
+    {
+      json['https://purl.imsglobal.org/spec/lti-dl/claim/errorlog']  = req.body.custom_error;
+    }
+  }
+
   dlPayload.jwt = jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});
   dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].deep_link_return_url;
   dlPayload.return_json = json;
