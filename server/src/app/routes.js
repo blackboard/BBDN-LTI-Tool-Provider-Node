@@ -276,6 +276,13 @@ module.exports = function (app) {
   });
 
   //=======================================================
+  // Test for now
+  app.get('/tokenGrab', (req, res) => {
+    console.log('--------------------\ntokenGrab');
+    res.send(lti13.getOauth2Token(setup));
+  });
+
+  //=======================================================
   // Setup processing
 
   app.get('/setup', (req, res) => {
