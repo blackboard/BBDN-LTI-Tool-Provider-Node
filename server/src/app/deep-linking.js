@@ -1,5 +1,6 @@
 'use strict';
 
+import config from "../config/config.js";
 let jwt = require('jsonwebtoken');
 
 exports.deepLink = function (req, res, dlPayload, setup) {
@@ -96,17 +97,23 @@ let deepLinkingFixed = function() {
 };
 
 let deepLinkingLTILink = function() {
+  let start =  new Date();
+  start.setHours(8, 0, 0, 0);
+  let end = new Date();
+  end.setHours(8, 0, 0, 0);
+  end.setDate(start.getDate() + 30);
+
   return {
     "type": "ltiLink",
-    "title": "A title",
+    "title": "A title for LTI Link",
     "text": "A description",
-    "url": "https://localhost:3000/lti13",
+    "url": config.provider_domain + ":" + config.provider_port + "/lti13",
     "available": {
-      "startDateTime": "2018-08-01T04:00:00Z",
-      "endDateTime": "2018-09-01T04:00:00Z"
+      "startDateTime": start,
+      "endDateTime": end
     },
     "submission": {
-      "endDateTime": "2018-08-30T04:00:00Z"
+      "endDateTime": end
     },
     "icon": {
       "url": "https://lti.example.com/image.jpg",

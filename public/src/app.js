@@ -12,7 +12,7 @@ import CIMRequestView from './components/cimRequestView';
 import LTI13PayloadView from './components/lti13PayloadView';
 import SetupView from './components/setupView';
 import DeepLinkView from './components/deepLinkView';
-import DeepLinkOptions from './components/deepLinkOptions';
+import {DeepLinkOptions} from './components/deepLinkOptions';
 
 const None = React.createClass({
   render() {

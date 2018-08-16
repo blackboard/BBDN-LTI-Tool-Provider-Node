@@ -3,6 +3,7 @@
 let srequest = require('sync-request');
 let jwt = require('jsonwebtoken');
 let jwk = require('jwk-to-pem');
+let crypto = require('crypto');
 
 exports.toolLaunch = function (req, res, jwtPayload) {
   let id_token = req.body.id_token;
@@ -99,7 +100,7 @@ let oauth2JWT = function(setup) {
     aud: setup.tokenEndPoint,
     iat: now,
     exp: now + (5 * 60),
-    jti: '3'
+    jti: crypto.randomBytes(16).toString('hex')
   };
 
   return jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});

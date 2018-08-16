@@ -13,28 +13,8 @@ var eventstore = require('./eventstore');
 let lti13 = require('./lti13');
 let deepLinking = require('./deep-linking');
 
-
 const regdata_key = "registrationData";
 const contentitem_key = "contentItemData";
-
-function getToolConsumerProfile(url) {
-
-  return new Promise(function (resolve, reject) {
-
-    request({
-        url: url,
-        timeouts: 10000,
-      },
-      function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-          resolve(JSON.parse(body));
-        } else {
-          console.error(error.message);
-          reject();
-        }
-      });
-  });
-}
 
 module.exports = function (app) {
 
