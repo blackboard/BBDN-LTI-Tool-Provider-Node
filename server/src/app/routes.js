@@ -1,7 +1,7 @@
 var _ = require('lodash');
 import config from "../config/config";
 import path from "path";
-import {RegistrationData, ContentItem, JWTPayload} from "../common/restTypes";
+import {RegistrationData, ContentItem, JWTPayload, SetupParameters} from "../common/restTypes";
 var crypto = require('crypto');
 var registration = require('./registration.js');
 var redis = require('redis');
@@ -10,29 +10,11 @@ var redisUtil = require('./redisutil');
 var lti = require('./lti');
 var content_item = require('./content-item');
 var eventstore = require('./eventstore');
-var lti13 = require('./lti13');
+let lti13 = require('./lti13');
+let deepLinking = require('./deep-linking');
 
 const regdata_key = "registrationData";
 const contentitem_key = "contentItemData";
-
-function getToolConsumerProfile(url) {
-
-  return new Promise(function (resolve, reject) {
-
-    request({
-        url: url,
-        timeouts: 10000,
-      },
-      function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-          resolve(JSON.parse(body));
-        } else {
-          console.error(error.message);
-          reject();
-        }
-      });
-  });
-}
 
 module.exports = function (app) {
 
@@ -44,6 +26,21 @@ module.exports = function (app) {
   let contentItemData = new ContentItem();
   let ciLoaded = false;
 
+  //=======================================================
+  let setupLoaded = false;
+  let setup = new SetupParameters();
+  let setup_key = "setupParameters";
+
+  if (!setupLoaded) {
+    redisUtil.redisGet(setup_key).then((setupData) => {
+      if (setupData !== null) {
+        setup = setupData;
+        setupLoaded = true;
+      }
+    });
+  }
+
+  //=======================================================
   // LTI 1 provider and caliper stuff
   app.post('/caliper/send', (req, res) => {
     lti.caliper_send(req, res);
@@ -93,6 +90,7 @@ module.exports = function (app) {
     }
   });
 
+  //=======================================================
   // LTI 2 registration stuff
   app.get('/toolproxy', (req, res) => {
     redisUtil.getToolProxy().then((toolProxies) => {
@@ -166,6 +164,7 @@ module.exports = function (app) {
     });
   });
 
+  //=======================================================
   // Content Item Message processing
   let passthru_req;
   let passthru_res;
@@ -215,12 +214,13 @@ module.exports = function (app) {
     }
   });
 
+  //=======================================================
   // LTI 1.3 Message processing
   let jwtPayload = new JWTPayload();
 
   app.post('/lti13', (req, res) => {
     console.log('--------------------\nlti 1.3');
-    lti13.got_launch(req, res, jwtPayload);
+    lti13.verifyToken(req.body.id_token, jwtPayload, setup);
     res.redirect('/jwt_payload');
   });
 
@@ -228,6 +228,63 @@ module.exports = function (app) {
     res.send(jwtPayload);
   });
 
+  //=======================================================
+  // Deep Linking
+  let dlPayload = new JWTPayload();
+
+  app.post('/deepLink', (req, res) => {
+    console.log('--------------------\ndeepLink');
+    lti13.verifyToken(req.body.id_token, dlPayload, setup);
+    deepLinking.deepLink(req, res, dlPayload, setup);
+    res.redirect('/deep_link');
+  });
+
+  app.get('/DLPayloadData', (req, res) => {
+    res.send(dlPayload);
+  });
+
+  app.post('/deepLinkOptions', (req, res) => {
+    console.log('--------------------\ndeepLinkOptions');
+    lti13.verifyToken(req.body.id_token, dlPayload, setup);
+    res.redirect('/deep_link_options');
+  });
+
+  app.post('/deepLinkContent', (req, res) => {
+    console.log('--------------------\ndeepLinkContent');
+    deepLinking.deepLinkContent(req, res, dlPayload, setup);
+    res.redirect('/deep_link');
+  });
+
+  //=======================================================
+  // Test for now
+  app.get('/tokenGrab', (req, res) => {
+    console.log('--------------------\ntokenGrab');
+    res.send(lti13.getOauth2Token(setup));
+  });
+
+  //=======================================================
+  // Setup processing
+
+  app.get('/setup', (req, res) => {
+    console.log('--------------------\nsetup');
+    res.redirect('/setup_page');
+  });
+
+  app.get('/getSetup', (req, res) => {
+    res.send(setup);
+  });
+
+  app.post('/saveSetup', (req, res) => {
+    setup.privateKey = req.body.privateKey;
+    setup.tokenEndPoint = req.body.tokenEndPoint;
+    setup.issuer = req.body.issuer;
+    setup.applicationId = req.body.applicationId;
+    setup.devPortalHost = req.body.devPortalHost;
+    redisUtil.redisSave(setup_key, setup);
+    res.redirect('/setup_page');
+  });
+
+  //=======================================================
   // Catch all
   app.get('*', (req, res) => {
     console.log('catchall - (' + req.url + ')');

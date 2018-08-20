@@ -55,13 +55,18 @@ Connection access to a copy of the Blackboard Developer's Portal (devportal) to 
 - Auth Token Endpoint
 - Tool Private Key ( this **CANNOT** be retrieved at a later date as it is not stored in the devportal )
 
-## How To Run the code
+Additional data
+- Dev portal host
 
-In addition to the instructions above
-- in the config_override.json dev_portal must contain the host for the devportal required above.
+This data can be entered using http://localhost:3000/setup
+
+[Redis](http:redis.io) - Required to persist the tool data
+
+- Install Redis to store the tool proxies that are generated. On Mac it's easiest to `brew install redis`. The code assumes the default
+host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
 
 ### Base LTI 1.3 tool launch
-To launch the LTI 1.3 tool, you must launch into the application with the url, http://localhost:3000/lti13.
+The normal LTI Resource link should launch to http://localhost:3000/lti13.
 
 ### Assignment and Grade Services 2.0
 TBD
@@ -70,7 +75,16 @@ TBD
 TBD
 
 ### Deep Linking 2.0
-TBD
+The Deep Linking Request should launch to http://localhost:3000/deeoLinkkOptions to be able to select content items and counts to return. Possible content items are:
+- LTI Link
+- Content Link
+- File
+- Image
+- HTML fragment
+
+The Deep Linking Request should launch to http://localhost:3000/deepLinkContent to return fixed content containing:
+- 1 LTI Link
+- 1 Content Link
 
 # LTI 2.0 Tool Provider
 

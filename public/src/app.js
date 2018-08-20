@@ -10,6 +10,9 @@ import ProviderTools from './components/providerTools';
 import ContentItemView from './components/contentItemView';
 import CIMRequestView from './components/cimRequestView';
 import LTI13PayloadView from './components/lti13PayloadView';
+import SetupView from './components/setupView';
+import DeepLinkView from './components/deepLinkView';
+import {DeepLinkOptions} from './components/deepLinkOptions';
 
 const None = React.createClass({
   render() {
@@ -30,5 +33,8 @@ render((
     <Route path="/content_item" component={ContentItemView}/>
     <Route path="/cim_request" component={CIMRequestView}/>
     <Route path="/jwt_payload" component={LTI13PayloadView}/>
+    <Route path="/setup_page" component={SetupView}/>
+    <Route path="/deep_link" component={DeepLinkView}/>
+    <Route path="/deep_link_options" component={DeepLinkOptions}/>
   </Router>
 ), document.getElementById('root'));

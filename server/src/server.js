@@ -5,8 +5,11 @@ import https from "https";
 import config from "./config/config.js";
 import routes from "./app/routes.js";
 import request from "request";
+import {SetupParameters} from "./common/restTypes";
 var app = express();
 var httpProxy = express();
+let redisUtil = require('./app/redisutil');
+
 
 var options = (config.use_ssl) ? {
   key: fs.readFileSync('star.int.bbpd.io.key'),
@@ -84,6 +87,30 @@ httpProxy.all('/*', function (req, res, next) {
     console.error(err.toString());
   }
 });
+
+// setup parameters ============================================================
+let setup_key = 'setupParameters';
+redisUtil.redisGet(setup_key).then((setupData) => {
+  console.log('--------------------');
+  if (setupData === null) {
+    let setup = new SetupParameters();
+    setup.issuer = 'https://blackboard.com';
+    setup.tokenEndPoint = 'Need Oauth2 token endpoint';
+    setup.privateKey = 'Need private key';
+    setup.applicationId = 'Need application id';
+    setup.devPortalHost = "Need dev portal url";
+    redisUtil.redisSave(setup_key, setup);
+    console.log('Initialize setup parameters');
+  } else {
+    console.log('Setup parameters');
+    console.log(setupData.issuer);
+    console.log(setupData.tokenEndPoint);
+    console.log(setupData.applicationId);
+    console.log(setupData.devPortalHost);
+  }
+  console.log('--------------------');
+});
+
 
 // routes ======================================================================
 routes(app);
