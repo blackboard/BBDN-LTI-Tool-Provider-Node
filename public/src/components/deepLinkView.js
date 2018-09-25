@@ -8,7 +8,7 @@ class DeepLinkPayloadView extends React.Component {
   }
 
   componentDidMount() {
-    fetch('DLPayloadData')
+    fetch('dlPayloadData')
       .then(result => result.json())
       .then((dlPayload) => {
         this.setState({

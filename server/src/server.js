@@ -125,6 +125,7 @@ if (config.use_ssl) {
     console.log("LTI 1 Tool Provider:  " + provider + "/lti");
     console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
     console.log("LTI 1.3 Launch: " + provider + "/lti13");
+    console.log("LTI Deep Linking: " + provider + "/deepLinkOptions");
     console.log("LTI 2 Registration URL:  " + provider + "/registration");
   });
 } else {
@@ -132,5 +133,6 @@ if (config.use_ssl) {
   console.log("LTI 1 Tool Provider:  " + provider + "/lti");
   console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
   console.log("LTI 1.3 Launch: " + provider + "/lti13");
+  console.log("LTI Deep Linking: " + provider + "/deepLinkOptions");
   console.log("LTI 2 Registration URL:  " + provider + "/registration");
 }

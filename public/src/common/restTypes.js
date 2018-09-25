@@ -36,6 +36,8 @@ class JWTPayload {
     this.error_url = "";
     this.jwt = "";
     this.return_json = "";
+    this.namesRoles = false;
+    this.grading = false;
   }
 }
 

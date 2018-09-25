@@ -10,8 +10,10 @@ var redisUtil = require('./redisutil');
 var lti = require('./lti');
 var content_item = require('./content-item');
 var eventstore = require('./eventstore');
-let lti13 = require('./lti13');
+let ltiAdv = require('./lti-adv');
 let deepLinking = require('./deep-linking');
+let namesRoles = require('./names-roles');
+let assignGrades = require('./assign-grades');
 
 const regdata_key = "registrationData";
 const contentitem_key = "contentItemData";
@@ -215,13 +217,13 @@ module.exports = function (app) {
   });
 
   //=======================================================
-  // LTI 1.3 Message processing
+  // LTI Advantage Message processing
   let jwtPayload = new JWTPayload();
 
   app.post('/lti13', (req, res) => {
-    console.log('--------------------\nlti 1.3');
-    lti13.verifyToken(req.body.id_token, jwtPayload, setup);
-    res.redirect('/jwt_payload');
+    console.log('--------------------\nltiAdvantage');
+    ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+    res.redirect('/lti_adv_view');
   });
 
   app.get('/jwtPayloadData', (req, res) => {
@@ -234,18 +236,18 @@ module.exports = function (app) {
 
   app.post('/deepLink', (req, res) => {
     console.log('--------------------\ndeepLink');
-    lti13.verifyToken(req.body.id_token, dlPayload, setup);
+    ltiAdv.verifyToken(req.body.id_token, dlPayload, setup);
     deepLinking.deepLink(req, res, dlPayload, setup);
     res.redirect('/deep_link');
   });
 
-  app.get('/DLPayloadData', (req, res) => {
+  app.get('/dlPayloadData', (req, res) => {
     res.send(dlPayload);
   });
 
   app.post('/deepLinkOptions', (req, res) => {
     console.log('--------------------\ndeepLinkOptions');
-    lti13.verifyToken(req.body.id_token, dlPayload, setup);
+    ltiAdv.verifyToken(req.body.id_token, dlPayload, setup);
     res.redirect('/deep_link_options');
   });
 
@@ -256,10 +258,30 @@ module.exports = function (app) {
   });
 
   //=======================================================
-  // Test for now
+  // Names and Roles
+  let nrPayload = {};
+
+  app.post('/namesAndRoles', (req, res) => {
+    console.log('--------------------\nnamesAndRoles');
+    namesRoles.namesRoles(req, res, nrPayload, setup);
+    res.redirect('/names_roles_view');
+  });
+
+  //=======================================================
+  // Assignments and Grades
+
+  app.post('/assignAndGrades', (req, res) => {
+    console.log('--------------------\nassignAndGrades');
+//    assignGrades.assignGrades(req, res, setup);
+    res.redirect('/assign_grades_view');
+  });
+
+  //=======================================================
+  // Grab a token and display it
+
   app.get('/tokenGrab', (req, res) => {
     console.log('--------------------\ntokenGrab');
-    res.send(lti13.getOauth2Token(setup));
+    res.send(ltiAdv.tokenGrab(req, res, jwtPayload, setup));
   });
 
   //=======================================================
@@ -270,7 +292,7 @@ module.exports = function (app) {
     res.redirect('/setup_page');
   });
 
-  app.get('/getSetup', (req, res) => {
+  app.get('/setupData', (req, res) => {
     res.send(setup);
   });
 
