@@ -5,18 +5,20 @@ let jwt = require('jsonwebtoken');
 
 exports.deepLink = function (req, res, dlPayload, setup) {
   let deploy = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/deployment_id"];
-  let data = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].data;
+  let deepLink = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"];
+  let data = deepLink.data;
   let json = deepLinkingFrame(setup.applicationId, deploy, data, deepLinkingFixed());
 
   dlPayload.jwt = jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});
-  dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].deep_link_return_url;
+  dlPayload.return_url = deepLink.deep_link_return_url;
   dlPayload.error_url = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
   dlPayload.return_json = json;
 };
 
 exports.deepLinkContent = function (req, res, dlPayload, setup) {
   let deploy = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/deployment_id"];
-  let data = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].data;
+  let deepLink = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"];
+  let data = deepLink.data;
 
   let items = [];
   switch( req.body.custom_option) {
@@ -72,14 +74,19 @@ exports.deepLinkContent = function (req, res, dlPayload, setup) {
   }
 
   dlPayload.jwt = jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});
-  dlPayload.return_url = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"].deep_link_return_url;
+  dlPayload.return_url = deepLink.deep_link_return_url;
   dlPayload.return_json = json;
 };
 
 let deepLinkingFrame = function(iss, deploy, data, items) {
+  let now = Math.trunc(new Date().getTime() / 1000);
+
   return {
     "iss": iss,
-    "aud": [ "http://blackboard.com" ],
+    "aud": "http://blackboard.com",
+    "sub": iss,
+    "iat": now,
+    "exp": now + (5 * 60),
     "locale": "en_US",
     "https://purl.imsglobal.org/spec/lti/claim/deployment_id": deploy,
     "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiDeepLinkingResponse",

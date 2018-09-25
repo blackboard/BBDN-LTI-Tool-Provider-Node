@@ -8,7 +8,7 @@ class DeepLinkPayloadView extends React.Component {
   }
 
   componentDidMount() {
-    fetch('DLPayloadData')
+    fetch('dlPayloadData')
       .then(result => result.json())
       .then((dlPayload) => {
         this.setState({
@@ -34,7 +34,7 @@ class DeepLinkPayloadView extends React.Component {
           <p>We have received your Deep Linking launch. You can view the JSON below.</p>
 
           <form action={this.state.returnUrl} method="POST">
-            <input type="hidden" name="id_token" value={this.state.jwt}/>
+            <input type="hidden" name="JWT" value={this.state.jwt}/>
             <input type="submit" value="Return Deep Linking" />
           </form>
           <p>

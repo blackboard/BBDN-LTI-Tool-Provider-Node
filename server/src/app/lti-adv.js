@@ -18,9 +18,18 @@ exports.verifyToken = function (id_token, jwtPayload, setup) {
   // Parse and store payload data from launch
   jwtPayload.header = JSON.parse( Buffer.from(parts[0], 'base64').toString() );
   jwtPayload.body = JSON.parse( Buffer.from(parts[1], 'base64').toString() );
-  jwtPayload.return_url = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
-  jwtPayload.error_url = jwtPayload.return_url;
   jwtPayload.verified = false;
+
+  if (jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"] !== undefined) {
+    jwtPayload.return_url = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
+    jwtPayload.error_url = jwtPayload.return_url;
+  }
+  if (jwtPayload.body["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"] !== undefined) {
+    jwtPayload.namesRoles = true;
+  }
+  if (jwtPayload.body["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"] !== undefined) {
+    jwtPayload.grading = true;
+  }
 
   // Verify launch is from correct party
   // aud could be an array or a single entry
@@ -33,6 +42,11 @@ exports.verifyToken = function (id_token, jwtPayload, setup) {
   {
     clientId = jwtPayload.body.aud;
   }
+
+  if ( clientId === undefined ) {
+    clientId = setup.applicationId;
+  }
+
   let url = setup.devPortalHost + '/api/v1/management/applications/' + clientId + '/jwks.json';
 
   // Do a synchoneous call to dev portal
@@ -72,24 +86,44 @@ exports.getOauth2Token = function (setup) {
     "&scope=test";
 
   // Do a synchroneous call to dev portal
-  let res;
+  let response;
   try {
-    res = srequest('POST', url, {headers, body});
+    response = srequest('POST', url, {headers, body});
   } catch(err) {
     return console.log('Get Token Error - request call failed: %s', err);
   }
 
-  if (res.statusCode !== 200) {
+  if (response.statusCode !== 200) {
     let errorMsg;
     try {
-      errorMsg = res.getBody("UTF-8");
+      errorMsg = response.getBody("UTF-8");
     } catch(err) {
       errorMsg = err.body;
     }
-    return console.log('Get Token Error - jwttoken call failed: %s\n%s\n%s', res.statusCode, errorMsg, url);
+    return console.log('Get Token Error - jwttoken call failed: %s\n%s\n%s', response.statusCode, errorMsg, url);
   }
 
-  return res.getBody('UTF-8');
+  return response.getBody('UTF-8');
+};
+
+exports.tokenGrab = function (req, res, jwtPayload, setup) {
+  let token;
+
+  token = this.getOauth2Token(setup);
+  try {
+    this.verifyToken(token, jwtPayload, setup);
+  } catch (err) {
+    return console.log('Get Token Error - verify failed\n%s', err);
+  }
+
+  let view =
+    "<h2>JWT</h2>" +
+    "<p>" + token + "<\p>" +
+    "<h2>Bearer Token</h2>" +
+    "<pre>" + JSON.stringify(jwtPayload.body, null, 2) + "</pre>";
+
+
+  return view;
 };
 
 let oauth2JWT = function(setup) {

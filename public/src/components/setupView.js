@@ -10,7 +10,7 @@ class SetupView extends React.Component {
   }
 
   componentDidMount() {
-    fetch('getSetup')
+    fetch('setupData')
       .then(result => result.json())
       .then((setupData) => {
         this.setState({
@@ -43,7 +43,7 @@ class SetupView extends React.Component {
             <table>
               <tbody>
               <tr><td className="ci">Issuer</td><td className="ci"><input className="ci" type="text" name="issuer" value={this.state.issuer} onChange={this.handleChange} /></td></tr>
-              <tr><td className="ci">End Point</td><td className="ci"><input className="ci" type="text" name="tokenEndPoint" value={this.state.tokenEndPoint} onChange={this.handleChange} /></td></tr>
+              <tr><td className="ci">OAuth2 token<br/>End Point</td><td className="ci"><input className="ci" type="text" name="tokenEndPoint" value={this.state.tokenEndPoint} onChange={this.handleChange} /></td></tr>
               <tr><td className="ci">Application Id</td><td className="ci"><input className="ci" type="text" name="applicationId" value={this.state.applicationId} onChange={this.handleChange} /></td></tr>
               <tr><td className="ci">Dev Portal Host</td><td className="ci"><input className="ci" type="text" name="devPortalHost" value={this.state.devPortalHost} onChange={this.handleChange} /></td></tr>
               <tr><td className="ci">Private Key</td><td className="ci"><textarea className="ci" cols="80" rows="30" name="privateKey" value={this.state.privateKey} onChange={this.handleChange} /></td></tr>
