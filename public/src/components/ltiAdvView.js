@@ -4,9 +4,7 @@ import JSONTree from 'react-json-tree';
 class LtiAdvView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      body: {}
-    };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -19,15 +17,15 @@ class LtiAdvView extends React.Component {
           returnUrl: jwtPayload.return_url,
           errorUrl: jwtPayload.error_url,
           verified: jwtPayload.verified,
-          namesRoles: jwtPayload.namesRoles,
+          namesRoles: jwtPayload.names_roles,
           grading: jwtPayload.grading
         });
       });
   }
 
   render() {
-    let body = JSON.stringify(this.state.body);
-    const verified = (this.state.verified) ? <span className="verified">Verified</span> : <span className="notverified">Verify failed</span>;
+    const body = JSON.stringify(this.state.body);
+    const verified = (this.state.verified) ? <span className="verified">Verified<br/></span> : <span className="notverified">Verify failed<br/></span>;
     const msgReturn = this.state.returnUrl + "&lti_msg=" + encodeURI("I have a message for you") + "&lti_log=" + encodeURI("Log this message");
     const errorReturn = this.state.errorUrl + "&lti_errormsg=" + encodeURI("An error has occurred") + "&lti_errorlog=" + encodeURI("Log this error");
     const namesRoles = (this.state.namesRoles) ? <form action="/namesAndRoles" method="POST"><input type="submit" value="Names and Roles" /><input type="hidden" name="body" value={body} /></form> :
@@ -41,23 +39,22 @@ class LtiAdvView extends React.Component {
 
         <div>
           <p>We have received your LTI launch. You can view the JSON below.</p>
-          <p>
-            What would you like to do?<br/>
-            <form action={this.state.returnUrl} method="post"><input type="submit" value="Return to Learn" /></form>
-            <form action={msgReturn} method="post"><input type="submit" value="Return with message" /></form>
-            <form action={errorReturn} method="post"><input type="submit" value="Return with error" /></form>
-            {namesRoles}
-            {grading}
-          </p>
-          <p>{verified}</p>
-          <p>
-            <b>JWT Header</b>
-            <JSONTree data={this.state.header} hideRoot={true} />
-          </p>
-          <p>
-            <b>JWT Body</b>
-            <JSONTree data={this.state.body}  hideRoot={true} />
-          </p>
+          <span>What would you like to do?</span>
+          <form action={this.state.returnUrl} method="post"><input type="submit" value="Return to Learn" /></form>
+          <form action={msgReturn} method="post"><input type="submit" value="Return with message" /></form>
+          <form action={errorReturn} method="post"><input type="submit" value="Return with error" /></form>
+          {namesRoles}
+          {grading}
+
+          <br/>
+          <h4>Resource Launch</h4>
+          {verified}
+
+          <b>JWT Header</b>
+          <JSONTree data={this.state.header} hideRoot={true} />
+
+          <b>JWT Body</b>
+          <JSONTree data={this.state.body}  hideRoot={true} />
         </div>
       </div>
     )

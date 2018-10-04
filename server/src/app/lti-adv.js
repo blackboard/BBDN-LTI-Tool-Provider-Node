@@ -25,7 +25,7 @@ exports.verifyToken = function (id_token, jwtPayload, setup) {
     jwtPayload.error_url = jwtPayload.return_url;
   }
   if (jwtPayload.body["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"] !== undefined) {
-    jwtPayload.namesRoles = true;
+    jwtPayload.names_roles = true;
   }
   if (jwtPayload.body["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"] !== undefined) {
     jwtPayload.grading = true;

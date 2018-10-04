@@ -1,7 +1,7 @@
 var _ = require('lodash');
 import config from "../config/config";
 import path from "path";
-import {RegistrationData, ContentItem, JWTPayload, SetupParameters} from "../common/restTypes";
+import {RegistrationData, ContentItem, JWTPayload, SetupParameters, NRPayload} from "../common/restTypes";
 var crypto = require('crypto');
 var registration = require('./registration.js');
 var redis = require('redis');
@@ -218,10 +218,11 @@ module.exports = function (app) {
 
   //=======================================================
   // LTI Advantage Message processing
-  let jwtPayload = new JWTPayload();
+  let jwtPayload;
 
   app.post('/lti13', (req, res) => {
     console.log('--------------------\nltiAdvantage');
+    jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
     res.redirect('/lti_adv_view');
   });
@@ -232,10 +233,11 @@ module.exports = function (app) {
 
   //=======================================================
   // Deep Linking
-  let dlPayload = new JWTPayload();
+  let dlPayload;
 
   app.post('/deepLink', (req, res) => {
     console.log('--------------------\ndeepLink');
+    dlPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, dlPayload, setup);
     deepLinking.deepLink(req, res, dlPayload, setup);
     res.redirect('/deep_link');
@@ -259,12 +261,17 @@ module.exports = function (app) {
 
   //=======================================================
   // Names and Roles
-  let nrPayload = {};
+  let nrPayload;
 
   app.post('/namesAndRoles', (req, res) => {
     console.log('--------------------\nnamesAndRoles');
-    namesRoles.namesRoles(req, res, nrPayload, setup);
+    nrPayload = new NRPayload();
+    namesRoles.namesRoles(req, res, nrPayload, jwtPayload, setup);
     res.redirect('/names_roles_view');
+  });
+
+  app.get('/nrPayloadData', (req, res) => {
+    res.send(nrPayload);
   });
 
   //=======================================================
