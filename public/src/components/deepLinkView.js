@@ -24,7 +24,7 @@ class DeepLinkPayloadView extends React.Component {
   }
 
   render() {
-    const verified = (this.state.verified) ? <span className="verified">Verified</span> : <span className="notverified">Verify failed</span>;
+    const verified = (this.state.verified) ? <span className="verified">Verified<br/></span> : <span className="notverified">Verify failed<br/></span>;
 
     return(
       <div>
@@ -32,25 +32,23 @@ class DeepLinkPayloadView extends React.Component {
 
         <div>
           <p>We have received your Deep Linking launch. You can view the JSON below.</p>
-
           <form action={this.state.returnUrl} method="POST">
             <input type="hidden" name="JWT" value={this.state.jwt}/>
             <input type="submit" value="Return Deep Linking" />
           </form>
-          <p>
-            <b>Return JSON</b>
-            <JSONTree data={this.state.returnJSON} hideRoot={true} />
-          </p>
+
+          <b>Return JSON</b>
+          <JSONTree data={this.state.returnJSON} hideRoot={true} />
+
+          <br/>
           <h4>Deep Linking Request</h4>
-          <p>{verified}</p>
-          <p>
-            <b>JWT Header</b>
-            <JSONTree data={this.state.header} hideRoot={true} />
-          </p>
-          <p>
-            <b>JWT Body</b>
-            <JSONTree data={this.state.body} hideRoot={true} />
-          </p>
+          {verified}
+
+          <b>JWT Header</b>
+          <JSONTree data={this.state.header} hideRoot={true} />
+
+          <b>JWT Body</b>
+          <JSONTree data={this.state.body} hideRoot={true} />
         </div>
       </div>
     )

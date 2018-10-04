@@ -249,6 +249,7 @@ module.exports = function (app) {
 
   app.post('/deepLinkOptions', (req, res) => {
     console.log('--------------------\ndeepLinkOptions');
+    dlPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, dlPayload, setup);
     res.redirect('/deep_link_options');
   });
