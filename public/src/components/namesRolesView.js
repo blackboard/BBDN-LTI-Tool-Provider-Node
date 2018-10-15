@@ -14,9 +14,9 @@ class NamesRolesView extends React.Component {
         this.setState({
           url: nrPayload.url,
           token: nrPayload.token,
-//          header: nrPayload.jwtPayload.header,
-//          body: nrPayload.jwtPayload.body,
-//          verified: nrPayload.jwtPayload.verified,
+          header: nrPayload.jwtPayload.header,
+          body: nrPayload.jwtPayload.body,
+          verified: nrPayload.jwtPayload.verified,
           origBody: nrPayload.orig_body,
           returnUrl: nrPayload.return_url
         });
@@ -25,7 +25,7 @@ class NamesRolesView extends React.Component {
 
   render() {
     const body = JSON.stringify(this.state.origBody);
-//    const verified = (this.state.verified) ? <span className="verified">Verified<br/></span> : <span className="notverified">Verify failed<br/></span>;
+    const verified = (this.state.verified) ? <span className="verified">Verified<br/></span> : <span className="notverified">Verify failed<br/></span>;
 
     return(
       <div>
@@ -35,17 +35,17 @@ class NamesRolesView extends React.Component {
           <p>Some text about names and roles</p>
           <span>What would you like to do?</span>
           <form action={this.state.returnUrl} method="post"><input type="submit" value="Return to Learn" /></form>
-          <form action="/namesAndRoles" method="post"><input type="submit" value="Names and Roles" /><input type="hidden" name="body" defaultValue={body} /></form>
+          <form action="/namesAndRoles" method="post"><input type="submit" value="Names and Roles" /><input type="hidden" name="body" value={body} /></form>
 
           <br/>
           <h4>Names and Roles Response</h4>
-          Verified message<br/>
+          {verified}
 
           <b>JWT Header</b>
-          <br/>Header displayed here<br/>
+          <JSONTree data={this.state.header} hideRoot={true} />
 
           <b>JWT Body</b>
-          <br/>Body displayed here<br/>
+          <JSONTree data={this.state.body} hideRoot={true} />
         </div>
       </div>
     )

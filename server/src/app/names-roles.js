@@ -1,7 +1,9 @@
 'use strict';
+import {JWTPayload} from "../common/restTypes";
 
 let ltiAdv = require('./lti-adv');
-let srequest = require('sync-request');
+let https = require('https');
+let url = require('url');
 
 exports.namesRoles = (req, res, nrPayload, jwtPayload, setup) => {
   nrPayload.orig_body = JSON.parse(req.body.body);
@@ -11,24 +13,48 @@ exports.namesRoles = (req, res, nrPayload, jwtPayload, setup) => {
   nrPayload.return_url = jwtPayload.return_url;
 
   // Get OAuth2 token
-  nrPayload.token = ltiAdv.getOauth2Token(setup);
+  let tokenjwt = ltiAdv.getOauth2Token(setup);
+  let jwtparts = tokenjwt.split( "." );
+  let body = JSON.parse( Buffer.from(jwtparts[1], 'base64').toString() );
 
-  // Do a synchroneous call
-  let response;
-  try {
-    response = srequest("GET", nrPayload.url);
-//      {headers: {'content-type': 'application/vnd.ims.lti-nprs.v2.membershipcontainer+json'}});
-  }
-  catch(err) {
-    return console.log('Names and Roles Error - request call failed: ' + err);
-  }
+  nrPayload.token = body.access_token;
 
-  if (res.statusCode !== 200) {
-    return console.log('Names and Roles Error - membership call failed: ' + response.statusCode + '\n' + url);
-  }
+  let headers = {
+    'content-type': 'application/vnd.ims.lti-nprs.v2.membershipcontainer+json',
+    Authorization: 'Bearer ' + nrPayload.token
+  };
 
-  let nrJWT = new jwtPayload();
-  ltiAdv.verifyToken(response.body.id_token, nrJWT, setup);
+  let parts = url.parse(nrPayload.url, true);
 
-  nrPayload.jwtPayload = nrJWT;
+  let options = {
+    hostname: parts.hostname,
+    path: parts.path,
+    method: 'GET',
+    headers: headers
+  };
+
+  console.log(options);
+
+  let request = https.request(options, function(response) {
+    response.setEncoding(('UTF-8'));
+    let responseString = '';
+
+    response.on('data', function(data) {
+      responseString += data;
+    });
+
+    response.on('end', function() {
+      let json = JSON.parse(responseString);
+      nrPayload.jwtPayload = new JWTPayload();
+      if (json !== 200) {
+        nrPayload.jwtPayload.body = json;
+      } else {
+        ltiAdv.verifyToken(json.body, nrPayload.jwtPayload, setup);
+      }
+      res.redirect('/names_roles_view');
+    });
+  });
+
+  request.write("");
+  request.end();
 };

@@ -122,7 +122,6 @@ exports.tokenGrab = function (req, res, jwtPayload, setup) {
     "<h2>Bearer Token</h2>" +
     "<pre>" + JSON.stringify(jwtPayload.body, null, 2) + "</pre>";
 
-
   return view;
 };
 

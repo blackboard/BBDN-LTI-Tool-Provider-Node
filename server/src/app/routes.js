@@ -227,6 +227,13 @@ module.exports = function (app) {
     res.redirect('/lti_adv_view');
   });
 
+  app.post('/ltiAdv', (req, res) => {
+    console.log('--------------------\nltiAdvantage');
+    jwtPayload = new JWTPayload();
+    ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+    res.redirect('/lti_adv_view');
+  });
+
   app.get('/jwtPayloadData', (req, res) => {
     res.send(jwtPayload);
   });
@@ -268,7 +275,6 @@ module.exports = function (app) {
     console.log('--------------------\nnamesAndRoles');
     nrPayload = new NRPayload();
     namesRoles.namesRoles(req, res, nrPayload, jwtPayload, setup);
-    res.redirect('/names_roles_view');
   });
 
   app.get('/nrPayloadData', (req, res) => {
