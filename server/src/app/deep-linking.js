@@ -7,7 +7,8 @@ exports.deepLink = function (req, res, dlPayload, setup) {
   let deploy = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/deployment_id"];
   let deepLink = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"];
   let data = deepLink.data;
-  let json = deepLinkingFrame(setup.applicationId, deploy, data, deepLinkingFixed());
+  let iss = dlPayload.body.iss;
+  let json = deepLinkingFrame(setup.applicationId, iss, deploy, data, deepLinkingFixed());
 
   dlPayload.jwt = jwt.sign(json, setup.privateKey, {algorithm: 'RS256'});
   dlPayload.return_url = deepLink.deep_link_return_url;
@@ -19,6 +20,7 @@ exports.deepLinkContent = function (req, res, dlPayload, setup) {
   let deploy = dlPayload.body["https://purl.imsglobal.org/spec/lti/claim/deployment_id"];
   let deepLink = dlPayload.body["https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings"];
   let data = deepLink.data;
+  let iss = dlPayload.body.iss;
 
   let items = [];
   switch( req.body.custom_option) {
@@ -48,7 +50,7 @@ exports.deepLinkContent = function (req, res, dlPayload, setup) {
       break;
   }
 
-  let json = deepLinkingFrame(setup.applicationId, deploy, data, items);
+  let json = deepLinkingFrame(setup.applicationId, iss, deploy, data, items);
 
   if ( req.body.custom_message !== '' )
   {
@@ -78,12 +80,12 @@ exports.deepLinkContent = function (req, res, dlPayload, setup) {
   dlPayload.return_json = json;
 };
 
-let deepLinkingFrame = function(iss, deploy, data, items) {
+let deepLinkingFrame = function(iss, aud, deploy, data, items) {
   let now = Math.trunc(new Date().getTime() / 1000);
 
   return {
     "iss": iss,
-    "aud": "http://blackboard.com",
+    "aud": aud,
     "sub": iss,
     "iat": now,
     "exp": now + (5 * 60),

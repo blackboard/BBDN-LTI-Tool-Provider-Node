@@ -1,60 +1,59 @@
 'use strict';
-import {JWTPayload} from "../common/restTypes";
 
 let ltiAdv = require('./lti-adv');
-let https = require('https');
-let url = require('url');
+let request = require('request');
 
-exports.namesRoles = (req, res, nrPayload, jwtPayload, setup) => {
-  nrPayload.orig_body = JSON.parse(req.body.body);
-  let namesRoles = nrPayload.orig_body["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"];
-  nrPayload.url = namesRoles.context_memberships_url;
-  nrPayload.version = namesRoles.service_version;
-  nrPayload.return_url = jwtPayload.return_url;
+exports.namesRoles = (req, res, nrPayload, setup) => {
+  if (nrPayload.url === "") {
+    nrPayload.orig_body = JSON.parse(req.body.body);
+    let namesRoles = nrPayload.orig_body["https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"];
+    nrPayload.url = namesRoles.context_memberships_url;
+    nrPayload.version = namesRoles.service_version;
+    nrPayload.return_url = nrPayload.orig_body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
+  }
 
-  // Get OAuth2 token
-  let tokenjwt = ltiAdv.getOauth2Token(setup);
-  let jwtparts = tokenjwt.split( "." );
-  let body = JSON.parse( Buffer.from(jwtparts[1], 'base64').toString() );
+  // Get OAuth2 token and make call to Learn
+  ltiAdv.getOauth2Token(setup).then(
+    function (token) {
+      let body = JSON.parse(token);
+      nrPayload.token = body.access_token;
 
-  nrPayload.token = body.access_token;
+      let options = {
+        method: "GET",
+        uri: nrPayload.url,
+        headers: {
+          'content-type': 'application/vnd.ims.lti-nprs.v2.membershipcontainer+json',
+          Authorization: 'Bearer ' + nrPayload.token
+        }
+      };
 
-  let headers = {
-    'content-type': 'application/vnd.ims.lti-nprs.v2.membershipcontainer+json',
-    Authorization: 'Bearer ' + nrPayload.token
-  };
+      request(options, function (err, response, body) {
+        let json = JSON.parse(body);
 
-  let parts = url.parse(nrPayload.url, true);
-
-  let options = {
-    hostname: parts.hostname,
-    path: parts.path,
-    method: 'GET',
-    headers: headers
-  };
-
-  console.log(options);
-
-  let request = https.request(options, function(response) {
-    response.setEncoding(('UTF-8'));
-    let responseString = '';
-
-    response.on('data', function(data) {
-      responseString += data;
-    });
-
-    response.on('end', function() {
-      let json = JSON.parse(responseString);
-      nrPayload.jwtPayload = new JWTPayload();
-      if (json !== 200) {
-        nrPayload.jwtPayload.body = json;
-      } else {
-        ltiAdv.verifyToken(json.body, nrPayload.jwtPayload, setup);
-      }
-      res.redirect('/names_roles_view');
-    });
-  });
-
-  request.write("");
-  request.end();
+        if (err) {
+          console.log('Names and Roles Error - request failed: ' + err.message);
+        } else if (response.statusCode !== 200) {
+          console.log('Names and Roles Error - Service call failed:  ' + response.statusCode + '\n' + response.statusMessage + '\n' + options.uri);
+          nrPayload.body = json;
+          nrPayload.difference_url = "";
+          nrPayload.next_url = "";
+        } else {
+          nrPayload.body = json;
+          let links = response.headers.link.split(" ");
+          links.forEach(link => {
+            if (link.includes('difference')) {
+              nrPayload.difference_url = link.substring(0, link.indexOf(";"));
+            }
+            if (link.includes('next')) {
+              nrPayload.next_url = link.substring(0, link.indexOf(";"));
+            }
+          });
+        }
+        res.redirect('/names_roles_view');
+      });
+    },
+    function (error) {
+      console.log(error);
+    }
+  );
 };

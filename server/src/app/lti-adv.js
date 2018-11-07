@@ -4,6 +4,7 @@ let srequest = require('sync-request');
 let jwt = require('jsonwebtoken');
 let jwk = require('jwk-to-pem');
 let crypto = require('crypto');
+let request = require('request');
 
 exports.toolLaunch = function (req, res, jwtPayload) {
   let id_token = req.body.id_token;
@@ -55,7 +56,7 @@ exports.verifyToken = function (id_token, jwtPayload, setup) {
     res = srequest('GET', url);
   }
   catch(err) {
-    return console.log('Verify Error - request call failed: ' + err);
+    return console.log('Verify Error - request failed: ' + err);
   }
 
   if (res.statusCode !== 200) {
@@ -73,56 +74,43 @@ exports.verifyToken = function (id_token, jwtPayload, setup) {
 };
 
 exports.getOauth2Token = function (setup) {
-  let url = setup.tokenEndPoint;
+  return new Promise(function(resolve, reject) {
+    let options = {
+      method: "POST",
+      uri: setup.tokenEndPoint,
+      headers: {
+        content_type: "application/x-www-form-urlencoded"
+      },
+      form: {
+        grant_type: "client_credentials",
+        client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+        client_assertion: oauth2JWT(setup),
+        scope: "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+      }
+    };
 
-  let headers = {
-    'content-type':  'application/x-www-form-urlencoded'
-  };
-
-  let body =
-    "grant_type=client_credentials" +
-    "&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer" +
-    "&client_assertion=" + oauth2JWT(setup) +
-    "&scope=test";
-
-  // Do a synchroneous call to dev portal
-  let response;
-  try {
-    response = srequest('POST', url, {headers, body});
-  } catch(err) {
-    return console.log('Get Token Error - request call failed: %s', err);
-  }
-
-  if (response.statusCode !== 200) {
-    let errorMsg;
-    try {
-      errorMsg = response.getBody("UTF-8");
-    } catch(err) {
-      errorMsg = err.body;
-    }
-    return console.log('Get Token Error - jwttoken call failed: %s\n%s\n%s', response.statusCode, errorMsg, url);
-  }
-
-  return response.getBody('UTF-8');
+    request(options, function(err, response, body) {
+      if (err) {
+        console.log('Get Token Error - request failed: ')
+        reject(body);
+      } else if (response.statusCode !== 200) {
+        reject(body);
+      } else {
+        resolve(body);
+      }
+    });
+  });
 };
 
 exports.tokenGrab = function (req, res, jwtPayload, setup) {
-  let token;
-
-  token = this.getOauth2Token(setup);
-  try {
-    this.verifyToken(token, jwtPayload, setup);
-  } catch (err) {
-    return console.log('Get Token Error - verify failed\n%s', err);
-  }
-
-  let view =
-    "<h2>JWT</h2>" +
-    "<p>" + token + "<\p>" +
-    "<h2>Bearer Token</h2>" +
-    "<pre>" + JSON.stringify(jwtPayload.body, null, 2) + "</pre>";
-
-  return view;
+  this.getOauth2Token(setup).then(
+    function (token) {
+      res.send(token);
+    },
+    function (error) {
+      res.send(error);
+    }
+  );
 };
 
 let oauth2JWT = function(setup) {

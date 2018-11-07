@@ -44,10 +44,11 @@ export class NRPayload {
   constructor() {
     this.url = "";
     this.version = "";
-    this.token = Object;
-    this.jwtPayload = Object;
+    this.body = Object;
     this.orig_body = Object;
     this.return_url = "";
+    this.difference_url = "";
+    this.next_url = "";
   }
 }
 

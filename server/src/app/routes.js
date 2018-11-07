@@ -274,7 +274,12 @@ module.exports = function (app) {
   app.post('/namesAndRoles', (req, res) => {
     console.log('--------------------\nnamesAndRoles');
     nrPayload = new NRPayload();
-    namesRoles.namesRoles(req, res, nrPayload, jwtPayload, setup);
+    namesRoles.namesRoles(req, res, nrPayload, setup);
+  });
+
+  app.post('/namesAndRoles2', (req, res) => {
+    nrPayload.url = req.body.url;
+    namesRoles.namesRoles(req, res, nrPayload, setup);
   });
 
   app.get('/nrPayloadData', (req, res) => {
@@ -295,7 +300,7 @@ module.exports = function (app) {
 
   app.get('/tokenGrab', (req, res) => {
     console.log('--------------------\ntokenGrab');
-    res.send(ltiAdv.tokenGrab(req, res, jwtPayload, setup));
+    ltiAdv.tokenGrab(req, res, jwtPayload, setup);
   });
 
   //=======================================================
