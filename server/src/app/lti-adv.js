@@ -91,9 +91,10 @@ exports.getOauth2Token = function (setup) {
 
     request(options, function(err, response, body) {
       if (err) {
-        console.log('Get Token Error - request failed: ')
+        console.log('Get Token Error - request failed: ' + err.message);
         reject(body);
       } else if (response.statusCode !== 200) {
+        console.log('Names and Roles Error - Service call failed:  ' + response.statusCode + '\n' + response.statusMessage + '\n' + options.uri);
         reject(body);
       } else {
         resolve(body);
