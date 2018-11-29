@@ -39,13 +39,13 @@ exports.namesRoles = (req, res, nrPayload, setup) => {
           nrPayload.next_url = "";
         } else {
           nrPayload.body = json;
-          let links = response.headers.link.split(" ");
+          let links = response.headers.link.split(",");
           links.forEach(link => {
             if (link.includes('difference')) {
-              nrPayload.difference_url = link.substring(0, link.indexOf(";"));
+              nrPayload.difference_url = getLink(link);
             }
             if (link.includes('next')) {
-              nrPayload.next_url = link.substring(0, link.indexOf(";"));
+              nrPayload.next_url = getLink(link);
             }
           });
         }
@@ -56,4 +56,10 @@ exports.namesRoles = (req, res, nrPayload, setup) => {
       console.log(error);
     }
   );
+};
+
+let getLink = function(link) {
+  let start = link.indexOf("http");
+  let end = link.indexOf(";") - 1;
+  return link.substring(start, end);
 };
