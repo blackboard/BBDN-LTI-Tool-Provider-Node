@@ -52,6 +52,13 @@ export class NRPayload {
   }
 }
 
+export class AGPayload {
+  constructor() {
+    this.orig_body = Object;
+    this.claim = Object;
+  }
+}
+
 export class SetupParameters {
   constructor() {
     this.privateKey = "";

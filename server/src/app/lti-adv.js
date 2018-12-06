@@ -73,7 +73,7 @@ exports.verifyToken = function (id_token, jwtPayload, setup) {
   }
 };
 
-exports.getOauth2Token = function (setup) {
+exports.getOauth2Token = function (setup, scope) {
   return new Promise(function(resolve, reject) {
     let options = {
       method: "POST",
@@ -85,7 +85,7 @@ exports.getOauth2Token = function (setup) {
         grant_type: "client_credentials",
         client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
         client_assertion: oauth2JWT(setup),
-        scope: "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+        scope: scope
       }
     };
 
@@ -94,7 +94,7 @@ exports.getOauth2Token = function (setup) {
         console.log('Get Token Error - request failed: ' + err.message);
         reject(body);
       } else if (response.statusCode !== 200) {
-        console.log('Names and Roles Error - Service call failed:  ' + response.statusCode + '\n' + response.statusMessage + '\n' + options.uri);
+        console.log('Get Token Error - Service call failed:  ' + response.statusCode + '\n' + response.statusMessage + '\n' + options.uri);
         reject(body);
       } else {
         resolve(body);
@@ -104,7 +104,8 @@ exports.getOauth2Token = function (setup) {
 };
 
 exports.tokenGrab = function (req, res, jwtPayload, setup) {
-  this.getOauth2Token(setup).then(
+  let scope = "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly";
+  this.getOauth2Token(setup, scope).then(
     function (token) {
       res.send(token);
     },

@@ -1,7 +1,7 @@
 var _ = require('lodash');
 import config from "../config/config";
 import path from "path";
-import {RegistrationData, ContentItem, JWTPayload, SetupParameters, NRPayload} from "../common/restTypes";
+import {RegistrationData, ContentItem, JWTPayload, SetupParameters, NRPayload, AGPayload} from "../common/restTypes";
 var crypto = require('crypto');
 var registration = require('./registration.js');
 var redis = require('redis');
@@ -288,11 +288,17 @@ module.exports = function (app) {
 
   //=======================================================
   // Assignments and Grades
+  let agPayload;
 
   app.post('/assignAndGrades', (req, res) => {
     console.log('--------------------\nassignAndGrades');
-//    assignGrades.assignGrades(req, res, setup);
+    agPayload = new AGPayload();
+    assignGrades.assignGrades(req, res, agPayload, setup);
     res.redirect('/assign_grades_view');
+  });
+
+  app.get('/agPayloadData', (req, res) => {
+    res.send(agPayload);
   });
 
   //=======================================================

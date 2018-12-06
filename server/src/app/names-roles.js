@@ -13,7 +13,8 @@ exports.namesRoles = (req, res, nrPayload, setup) => {
   }
 
   // Get OAuth2 token and make call to Learn
-  ltiAdv.getOauth2Token(setup).then(
+  let scope = "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly";
+  ltiAdv.getOauth2Token(setup, scope).then(
     function (token) {
       let body = JSON.parse(token);
       nrPayload.token = body.access_token;

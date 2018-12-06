@@ -19,7 +19,6 @@ class NamesRolesView extends React.Component {
           origBody: nrPayload.orig_body,
           returnUrl: nrPayload.return_url
         });
-        console.log(this.state);
       });
   }
 
