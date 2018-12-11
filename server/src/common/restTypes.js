@@ -35,8 +35,27 @@ export class JWTPayload {
     this.error_url = "";
     this.jwt = "";
     this.return_json = "";
-    this.namesRoles = false;
+    this.names_roles = false;
     this.grading = false;
+  }
+}
+
+export class NRPayload {
+  constructor() {
+    this.url = "";
+    this.version = "";
+    this.body = Object;
+    this.orig_body = Object;
+    this.return_url = "";
+    this.difference_url = "";
+    this.next_url = "";
+  }
+}
+
+export class AGPayload {
+  constructor() {
+    this.orig_body = Object;
+    this.claim = Object;
   }
 }
 
