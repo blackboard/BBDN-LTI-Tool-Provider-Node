@@ -20,7 +20,7 @@ exports.namesRoles = (req, res, nrPayload, setup) => {
       nrPayload.token = body.access_token;
 
       let options = {
-        method: "GET",
+        method: 'GET',
         uri: nrPayload.url,
         headers: {
           'content-type': 'application/vnd.ims.lti-nprs.v2.membershipcontainer+json',
@@ -34,7 +34,7 @@ exports.namesRoles = (req, res, nrPayload, setup) => {
         if (err) {
           console.log('Names and Roles Error - request failed: ' + err.message);
         } else if (response.statusCode !== 200) {
-          console.log('Names and Roles Error - Service call failed:  ' + response.statusCode + '\n' + response.statusMessage + '\n' + options.uri);
+          console.log('Names and Roles Error - Service call failed: ' + response.statusCode + '\n' + options.uri);
           nrPayload.body = json;
           nrPayload.difference_url = "";
           nrPayload.next_url = "";

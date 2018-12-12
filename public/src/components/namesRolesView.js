@@ -31,7 +31,7 @@ class NamesRolesView extends React.Component {
 
     return(
       <div>
-        <div><h3>Names and Roles</h3></div>
+        <div><h3>Names and Roles Service</h3></div>
 
         <div>
           <p>Some text about names and roles</p>

@@ -1,7 +1,8 @@
 var _ = require('lodash');
 import config from "../config/config";
 import path from "path";
-import {RegistrationData, ContentItem, JWTPayload, SetupParameters, NRPayload, AGPayload} from "../common/restTypes";
+import {AGPayload, ContentItem, JWTPayload, NRPayload, RegistrationData, SetupParameters} from "../common/restTypes";
+
 var crypto = require('crypto');
 var registration = require('./registration.js');
 var redis = require('redis');
@@ -124,8 +125,7 @@ module.exports = function (app) {
           "toolProxy": launchData.toolProxy
         });
       });
-    }
-    else {
+    } else {
       res.send({
         "requestBody": launchData.requestBody,
         "registrationData": registrationData,
@@ -181,15 +181,13 @@ module.exports = function (app) {
       passthru_res = res;
       passthru = true;
       res.redirect("/cim_request");
-    }
-    else {
+    } else {
       if (!passthru) {
         // custom_option was set in call from TC so use current req and res
         passthru_req = req;
         passthru_res = res;
         passthru = false;
-      }
-      else {
+      } else {
         // custom_option was set from menu so add option and content (if available) to passthru_req
         passthru_req.body.custom_option = req.body.custom_option;
         passthru_req.body.custom_content = req.body.custom_content;
@@ -295,6 +293,36 @@ module.exports = function (app) {
     agPayload = new AGPayload();
     assignGrades.assignGrades(req, res, agPayload, setup);
     res.redirect('/assign_grades_view');
+  });
+
+  app.post('/agsReadCols', (req, res) => {
+    console.log('--------------------\nagsReadCols');
+    agPayload.url = req.body.url;
+    assignGrades.readCols(req, res, agPayload, setup);
+  });
+
+  app.post('/agsAddcol', (req, res) => {
+    console.log('--------------------\nagsAddCol');
+    agPayload.form = req.body;
+    assignGrades.addCol(req, res, agPayload, setup);
+  });
+
+  app.post('/agsDeleteCol', (req, res) => {
+    console.log('--------------------\nagsDeleteCol');
+    agPayload.form = req.body;
+    assignGrades.delCol(req, res, agPayload, setup);
+  });
+
+  app.post('/agsResults', (req, res) => {
+    console.log('--------------------\nagsResults');
+    agPayload.form = req.body;
+    assignGrades.results(req, res, agPayload, setup);
+  });
+
+  app.post('/agsScores', (req, res) => {
+    console.log('--------------------\nagsResults');
+    agPayload.form = req.body;
+    assignGrades.scores(req, res, agPayload, setup);
   });
 
   app.get('/agPayloadData', (req, res) => {

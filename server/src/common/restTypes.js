@@ -56,6 +56,12 @@ export class AGPayload {
   constructor() {
     this.orig_body = Object;
     this.claim = Object;
+    this.scopeLineItem = false;
+    this.scopeLineItemReadonly = false;
+    this.scopeResult = false;
+    this.scopeScore = false;
+    this.lineItems = "";
+    this.lineitem = [];
   }
 }
 
