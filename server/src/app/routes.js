@@ -236,6 +236,11 @@ module.exports = function (app) {
     res.send(jwtPayload);
   });
 
+  app.get('/login', (req, res) => {
+    console.log('--------------------\nlogin');
+    ltiAdv.security1(req, res, jwtPayload, setup);
+  });
+
   //=======================================================
   // Deep Linking
   let dlPayload;

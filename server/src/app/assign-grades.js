@@ -80,7 +80,7 @@ exports.addCol = (req, res, agPayload, setup) => {
       let add = {
         scoreMaximum: agPayload.form.score,
         label: agPayload.form.tagval + ' grade',
-        resourceId: agPayload.form.tagval + '-grade',
+        resourceId: setup.applicationId,
         tag: 'grade'
       };
 
@@ -187,12 +187,12 @@ exports.scores = (req, res, agPayload, setup) => {
     function (token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
-      let userId = agPayload.orig_body.sub;
+      let userId = '_28522_1';
 
       let score = {
         userId: userId,
-        scoreGiven: 95,
-        scoreMaximum: 100,
+        scoreGiven: 95.0,
+        scoreMaximum: 100.0,
         comment: 'This is exceptional work.',
         timestamp: '2017-04-16T18:54:36.736+00:00',
         activityProgress: 'Completed',

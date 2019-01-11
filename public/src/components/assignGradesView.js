@@ -18,11 +18,25 @@ class AssignGradesView extends React.Component {
           lineItem: agPayload.lineItem,
           body: agPayload.body
         });
+        console.log('-----' + this.state.lineItem);
+        console.log('-----' + this.state.lineItems);
       });
   }
 
   render() {
     const body = JSON.stringify(this.state.origBody);
+    const readcol = (this.state.lineItem !== "" && this.state.lineItem !== undefined) ?
+      <form action="/agsReadCols" method="post"><input type="submit" value="Read Column" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form> :
+      <div><b>Read Column not available</b></div>;
+    const delcol = (this.state.lineItem !== "" && this.state.lineItem !== undefined) ?
+      <form action="/agsDeleteCol" method="post"><input type="submit" value="Delete Column" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form> :
+      <div><b>Delete Column not available</b></div>;
+    const results = (this.state.lineItem !== "" && this.state.lineItem !== undefined) ?
+      <form action="/agsResults" method="post"><input type="submit" value="Read Results" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form> :
+      <div><b>Results not available</b></div>;
+    const scores = (this.state.lineItem !== "" && this.state.lineItem !== undefined) ?
+      <form action="/agsScores" method="post"><input type="submit" value="Send Scores" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form> :
+      <div><b>Scores not available</b></div>;
 
     return(
       <div>
@@ -43,10 +57,10 @@ class AssignGradesView extends React.Component {
               </tr>
             </table>
           </form>
-          <form action="/agsReadCols" method="post"><input type="submit" value="Read Column" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form>
-          <form action="/agsDeleteCol" method="post"><input type="submit" value="Delete Column" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form>
-          <form action="/agsResults" method="post"><input type="submit" value="Read Results" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form>
-          <form action="/agsScores" method="post"><input type="submit" value="Send Scores" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form>
+          {readcol}
+          {delcol}
+          {results}
+          {scores}
 
           <br/>
           <h4>Assignment and Grade Response</h4>
