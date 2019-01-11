@@ -35,7 +35,14 @@ class AssignGradesView extends React.Component {
       <form action="/agsResults" method="post"><input type="submit" value="Read Results" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form> :
       <div><b>Results not available</b></div>;
     const scores = (this.state.lineItem !== "" && this.state.lineItem !== undefined) ?
-      <form action="/agsScores" method="post"><input type="submit" value="Send Scores" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></form> :
+      <form action="/agsScores" method="post">
+        <table>
+          <tr>
+            <td><input type="submit" value="Send Scores" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.lineItem} /></td>
+            <td><input type="text" name="userid" size="10" placeholder="_XXXX_1" /></td>
+          </tr>
+        </table>
+      </form> :
       <div><b>Scores not available</b></div>;
 
     return(

@@ -187,7 +187,7 @@ exports.scores = (req, res, agPayload, setup) => {
     function (token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
-      let userId = '_28522_1';
+      let userId = agPayload.form.userid;
 
       let score = {
         userId: userId,
