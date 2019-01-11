@@ -24,14 +24,16 @@ class NamesRolesView extends React.Component {
 
   render() {
     const body = JSON.stringify(this.state.origBody);
-    const diff = (this.state.differenceUrl !== "") ? <form action="/namesAndRoles2" method="POST"><input type="submit" value="NRPS Difference" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.differenceUrl} /></form> :
+    const diff = (this.state.differenceUrl !== "") ?
+      <form action="/namesAndRoles2" method="POST"><input type="submit" value="NRPS Difference" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.differenceUrl} /></form> :
       <div><b>No difference link</b></div>;
-    const next = (this.state.nextUrl !== "") ? <form action="/namesAndRoles2" method="POST"><input type="submit" value="NRPS Next" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.nextUrl} /></form> :
+    const next = (this.state.nextUrl !== "") ?
+      <form action="/namesAndRoles2" method="POST"><input type="submit" value="NRPS Next" /><input type="hidden" name="body" value={body} /><input type="hidden" name="url" value={this.state.nextUrl} /></form> :
       <div><b>No next link</b></div>;
 
     return(
       <div>
-        <div><h3>Names and Roles</h3></div>
+        <div><h3>Names and Roles Service</h3></div>
 
         <div>
           <p>Some text about names and roles</p>

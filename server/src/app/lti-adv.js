@@ -5,6 +5,7 @@ let jwt = require('jsonwebtoken');
 let jwk = require('jwk-to-pem');
 let crypto = require('crypto');
 let request = require('request');
+let uuid = require('uuid');
 
 exports.toolLaunch = function (req, res, jwtPayload) {
   let id_token = req.body.id_token;
@@ -113,6 +114,21 @@ exports.tokenGrab = function (req, res, jwtPayload, setup) {
       res.send(error);
     }
   );
+};
+
+exports.security1 = function (req, res, jwtPayload, setup) {
+  let state = uuid.v4();
+  let nonce = uuid.v4();
+  let url = setup.tokenEndPoint + '?response_type=id_token' +
+    '&scope=openid' +
+    '&login_hint=' + req.query.login_hint +
+    '&lti_message_hint=' + req.query.lti_message_hint +
+    '&state=' + state +
+    '&redirect_uri=' + encodeURIComponent(req.query.target_link_uri) +
+    '&client_id=' + setup.applicationId +
+    '&nonce=' + nonce;
+
+  res.redirect(url);
 };
 
 let oauth2JWT = function(setup) {
