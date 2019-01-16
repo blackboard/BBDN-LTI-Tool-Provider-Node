@@ -54,7 +54,7 @@
   "scripts": {
     "build-server": "babel server/src -d server/lib --source-maps",
     "build-public": "webpack --display-error-details",
-    "postinstall": "bower install",
+    "postinstall": "bower install --allow-root",
     "prestart": "npm install; npm run build-server; npm run build-public",
     "start": "node server/lib/server.js"
   }

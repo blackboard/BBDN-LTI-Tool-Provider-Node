@@ -10,8 +10,7 @@ RUN npm install
 
 # Bundle app source
 COPY . /usr/app
-RUN npm run build-server
-RUN npm run build-public
+RUN npm run postinstall
 
 EXPOSE 3000
 CMD ./launch.sh
