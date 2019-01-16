@@ -113,7 +113,7 @@ let deepLinkingLTILink = function() {
   end.setDate(start.getDate() + 30);
 
   return {
-    "type": "ltiLink",
+    "type": "ltiResourceLink",
     "title": "A title for LTI Link",
     "text": "A description",
     "url": config.provider_domain + ":" + config.provider_port + "/lti13",
