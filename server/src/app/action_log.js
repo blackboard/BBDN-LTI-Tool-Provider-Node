@@ -1,16 +1,15 @@
-module.exports = function () {
-
-  var log = [];
+module.exports = (function() {
+  let log = [];
 
   return {
-    logStep: function (description, json) {
-      log.push({message: description, data: json});
+    logStep: function(description, json) {
+      log.push({ message: description, data: json });
     },
-    clearLog: function () {
+    clearLog: function() {
       log = [];
     },
-    getLog: function () {
+    getLog: function() {
       return log;
     }
   };
-}();
+})();

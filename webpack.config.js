@@ -1,31 +1,35 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require("path");
+const webpack = require("webpack");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
-  entry: './public/src/app.js',
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public/dist')
+  optimization: {
+    minimizer: [new UglifyJsPlugin({ parallel: true })]
   },
-  devtool: 'source-map',
+  mode: "development",
+  entry: "./public/src/app.js",
+  output: {
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "public/dist")
+  },
+  devtool: "source-map",
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        include: /public\/src/
+        include: /public\/src/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "babel-loader"
+          }
+        ]
       }
     ]
   },
   plugins: [
     new webpack.ProvidePlugin({
       "window.jQuery": "jquery"
-    }),
-  ],
-  resolve: {
-    alias: {
-      'node_modules': path.join(__dirname, 'node_modules'),
-      'bower_components': path.join(__dirname, 'public/bower_components')
-    }
-  }
+    })
+  ]
 };
