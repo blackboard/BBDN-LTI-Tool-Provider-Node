@@ -1,10 +1,14 @@
 {
   "presets": [
-    "env",
-    "react"
+    "@babel/preset-env",
+    "@babel/preset-react"
   ],
   "plugins": [
-    "transform-flow-strip-types",
-    "babel-plugin-relative-import"
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-transform-classes",
+    "@babel/plugin-transform-flow-strip-types",
+    "@babel/plugin-transform-modules-commonjs",
+    "@babel/transform-runtime"
   ]
 }

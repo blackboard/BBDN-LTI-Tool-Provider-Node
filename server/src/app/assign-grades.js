@@ -1,19 +1,22 @@
-'use strict';
+"use strict";
 
-let ltiAdv = require('./lti-adv');
-let request = require('request');
+let ltiAdv = require("./lti-adv");
+let request = require("request");
 
 const lineItemScope = "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem";
-const lineItemReadonlyScope = "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly";
-const resultsScope = "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly";
+const lineItemReadonlyScope =
+  "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly";
+const resultsScope =
+  "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly";
 const scoreScope = "https://purl.imsglobal.org/spec/lti-ags/scope/score";
 
-exports.assignGrades = (req, res, agPayload, setup) => {
+exports.assignGrades = (req, res, agPayload) => {
   let json = JSON.parse(req.body.body);
   agPayload.orig_body = json;
-  agPayload.claim = json["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
+  agPayload.claim =
+    json["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
   let scopes = agPayload.claim.scope;
-  scopes.forEach(function (element) {
+  scopes.forEach(function(element) {
     switch (element) {
       case lineItemScope:
         agPayload.scopeLineItem = true;
@@ -37,35 +40,42 @@ exports.assignGrades = (req, res, agPayload, setup) => {
 };
 
 exports.readCols = (req, res, agPayload, setup) => {
-  let scope = (agPayload.scopeLineItem) ? lineItemScope : lineItemReadonlyScope;
+  let scope = agPayload.scopeLineItem ? lineItemScope : lineItemReadonlyScope;
   ltiAdv.getOauth2Token(setup, scope).then(
-    function (token) {
+    function(token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
 
       let options = {
-        method: 'GET',
+        method: "GET",
         uri: agPayload.url,
         headers: {
-          Authorization: 'Bearer ' + agPayload.token
+          Authorization: "Bearer " + agPayload.token
         }
       };
 
-      request(options, function (err, response, body) {
+      request(options, function(err, response, body) {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log('Assignment and Grade Error - request failed: ' + err.message);
+          console.log(
+            "Assignment and Grade Error - request failed: " + err.message
+          );
         } else if (response.statusCode !== 200) {
-          console.log('Assignment and Grade Error - Service call falied: ' + response.statusCode + '\n' + options.uri);
+          console.log(
+            "Assignment and Grade Error - Service call falied: " +
+              response.statusCode +
+              "\n" +
+              options.uri
+          );
           agPayload.body = json;
         } else {
           agPayload.body = json;
         }
-        res.redirect('/assign_grades_view');
+        res.redirect("#/assign_grades_view");
       });
     },
-    function (error) {
+    function(error) {
       console.log(error);
     }
   );
@@ -73,42 +83,47 @@ exports.readCols = (req, res, agPayload, setup) => {
 
 exports.addCol = (req, res, agPayload, setup) => {
   ltiAdv.getOauth2Token(setup, lineItemScope).then(
-    function (token) {
+    function(token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
 
       let add = {
         scoreMaximum: agPayload.form.score,
-        label: agPayload.form.tagval + ' grade',
+        label: agPayload.form.tagval + " grade",
         resourceId: setup.applicationId,
-        tag: 'grade'
+        tag: "grade"
       };
 
       let options = {
-        method: 'POST',
+        method: "POST",
         uri: agPayload.form.url,
         headers: {
-          'content-type': 'application/vnd.ims.lis.v2.lineitem+json',
-          Authorization: 'Bearer ' + agPayload.token
+          "content-type": "application/vnd.ims.lis.v2.lineitem+json",
+          Authorization: "Bearer " + agPayload.token
         },
         body: JSON.stringify(add)
       };
 
-      request(options, function (err, response, body) {
+      request(options, function(err, response, body) {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log('AGS Add Column Error - request failed: ' + err.message);
+          console.log("AGS Add Column Error - request failed: " + err.message);
         } else if (response.statusCode !== 200) {
-          console.log('AGS Add Column Error - Service call failed: ' + response.statusCode + '\n' + options.uri);
+          console.log(
+            "AGS Add Column Error - Service call failed: " +
+              response.statusCode +
+              "\n" +
+              options.uri
+          );
           agPayload.body = json;
         } else {
           agPayload.body = json;
         }
-        res.redirect('/assign_grades_view');
+        res.redirect("#/assign_grades_view");
       });
     },
-    function (error) {
+    function(error) {
       console.log(error);
     }
   );
@@ -116,33 +131,40 @@ exports.addCol = (req, res, agPayload, setup) => {
 
 exports.delCol = (req, res, agPayload, setup) => {
   ltiAdv.getOauth2Token(setup, lineItemScope).then(
-    function (token) {
+    function(token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
 
       let options = {
-        method: 'DELETE',
+        method: "DELETE",
         uri: agPayload.form.url,
         headers: {
-          Authorization: 'Bearer ' + agPayload.token
+          Authorization: "Bearer " + agPayload.token
         }
       };
 
-      request(options, function (err, response, body) {
+      request(options, function(err, response, body) {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log('AGS Delete Column Error - request failed: ' + err.message);
+          console.log(
+            "AGS Delete Column Error - request failed: " + err.message
+          );
         } else if (response.statusCode !== 200) {
-          console.log('AGS Delete Column Error - Service call failed: ' + response.statusCode + '\n' + options.uri);
+          console.log(
+            "AGS Delete Column Error - Service call failed: " +
+              response.statusCode +
+              "\n" +
+              options.uri
+          );
           agPayload.body = json;
         } else {
           agPayload.body = json;
         }
-        res.redirect('/assign_grades_view');
+        res.redirect("#/assign_grades_view");
       });
     },
-    function (error) {
+    function(error) {
       console.log(error);
     }
   );
@@ -150,33 +172,40 @@ exports.delCol = (req, res, agPayload, setup) => {
 
 exports.results = (req, res, agPayload, setup) => {
   ltiAdv.getOauth2Token(setup, resultsScope).then(
-    function (token) {
+    function(token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
 
       let options = {
-        method: 'GET',
-        uri: agPayload.form.url + '/results',
+        method: "GET",
+        uri: agPayload.form.url + "/results",
         headers: {
-          Authorization: 'Bearer ' + agPayload.token
+          Authorization: "Bearer " + agPayload.token
         }
       };
 
-      request(options, function (err, response, body) {
+      request(options, function(err, response, body) {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log('AGS Read Results Error - request failed: ' + err.message);
+          console.log(
+            "AGS Read Results Error - request failed: " + err.message
+          );
         } else if (response.statusCode !== 200) {
-          console.log('AGS Read Results Error - Service call failed: ' + response.statusCode + '\n' + options.uri);
+          console.log(
+            "AGS Read Results Error - Service call failed: " +
+              response.statusCode +
+              "\n" +
+              options.uri
+          );
           agPayload.body = json;
         } else {
           agPayload.body = json;
         }
-        res.redirect('/assign_grades_view');
+        res.redirect("#/assign_grades_view");
       });
     },
-    function (error) {
+    function(error) {
       console.log(error);
     }
   );
@@ -184,7 +213,7 @@ exports.results = (req, res, agPayload, setup) => {
 
 exports.scores = (req, res, agPayload, setup) => {
   ltiAdv.getOauth2Token(setup, scoreScope).then(
-    function (token) {
+    function(token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
       let userId = agPayload.form.userid;
@@ -193,37 +222,42 @@ exports.scores = (req, res, agPayload, setup) => {
         userId: userId,
         scoreGiven: 95.0,
         scoreMaximum: 100.0,
-        comment: 'This is exceptional work.',
-        timestamp: '2017-04-16T18:54:36.736+00:00',
-        activityProgress: 'Completed',
-        gradingProgress: 'FullyGraded'
+        comment: "This is exceptional work.",
+        timestamp: "2017-04-16T18:54:36.736+00:00",
+        activityProgress: "Completed",
+        gradingProgress: "FullyGraded"
       };
 
       let options = {
-        method: 'POST',
-        uri: agPayload.form.url + '/scores',
+        method: "POST",
+        uri: agPayload.form.url + "/scores",
         headers: {
-          'content-type': 'application/vnd.ims.lis.v1.score+json',
-          Authorization: 'Bearer ' + agPayload.token
+          "content-type": "application/vnd.ims.lis.v1.score+json",
+          Authorization: "Bearer " + agPayload.token
         },
         body: JSON.stringify(score)
       };
 
-      request(options, function (err, response, body) {
+      request(options, function(err, response, body) {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log('AGS Send Score Error - request failed: ' + err.message);
+          console.log("AGS Send Score Error - request failed: " + err.message);
         } else if (response.statusCode !== 200) {
-          console.log('AGS Send Score Error - Service call failed: ' + response.statusCode + '\n' + options.uri);
+          console.log(
+            "AGS Send Score Error - Service call failed: " +
+              response.statusCode +
+              "\n" +
+              options.uri
+          );
           agPayload.body = json;
         } else {
           agPayload.body = json;
         }
-        res.redirect('/assign_grades_view');
+        res.redirect("#/assign_grades_view");
       });
     },
-    function (error) {
+    function(error) {
       console.log(error);
     }
   );

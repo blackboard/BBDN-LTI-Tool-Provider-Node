@@ -1,7 +1,7 @@
 
 
 # BBDN-LTI-Tool-Provider-Node
-This project is a multi-purpose application designed to demonstrate several integration methods available with Blackboard Learn. The application is an LTI 1.1 and 2.0 Tool Provider.
+This project is a multi-purpose application designed to demonstrate several integration methods available with Blackboard Learn. The application is an LTI 1.1 and Advantage Tool Provider.
 Upon launch of the LTI Tool, the user is given a few options:
 
 - Send Outcomes: Send a Grade to the Tool Consumer with LTI Outcomes
@@ -13,11 +13,13 @@ Upon launch of the LTI Tool, the user is given a few options:
 
 ## Requirements
 - [Node and npm](http://nodejs.org)
+- [Redis](http:redis.io) - On Mac it's easiest to `brew install redis`. The code assumes the default
+host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
 
 ## How To Run the code
 All packages needed are in the package.json. 
 
-You should have node installed (built with v7.1.0). Then from the project directory at the command line, type `npm start`. This will install all of your dependencies and start the server.
+You should have node installed (built with v10.13.0). Then from the project directory at the command line, type `npm start`. This will install all of your dependencies and start the server.
 
 Access the application via http://localhost:3000. You can customize the host name and port number by creating a server/config/config_override.json file (see the server/config/config.json file for a template)
 
@@ -28,7 +30,6 @@ To launch the LTI 1 tool, you must launch into the application as an LTI Tool wi
 To launch the Content Provider simulation call the tool with this url, http://localhost:3000/CIMRequest.
 Add the parameter "custom_option" with a value of 1 - 5 (e.g. CIMRequest?custom_option=1) and the corresponding predefined message load from the menu
 
-
 ## Usage
 The application is very simple in its current iteration. Essentially there is one page with a bunch of buttons. Click the one you want. I
 f you are testing caliper, ensure you click the register caliper button at least once. This registers your tool with Blackboard and provides the application with the API Key and Caliper end point.
@@ -36,10 +37,8 @@ Also, if you wish to ingest Blackbaord's caliper events, you will need to regist
 
 See the <a href="https://community.blackboard.com/community/developers/standards" target="_blank">community site</a> for more details.
 
-
 ## Developing
 This is not meant to be a Node.JS tutorial. It is simply an example of how one might implement the various features therein. Pull requests are welcome!
-
 
 # LTI 1.3 Tool
 
@@ -59,8 +58,6 @@ Additional data
 - Dev portal host
 
 This data can be entered using http://localhost:3000/setup
-
-[Redis](http:redis.io) - Required to persist the tool data
 
 - Install Redis to store the tool proxies that are generated. On Mac it's easiest to `brew install redis`. The code assumes the default
 host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
@@ -85,37 +82,6 @@ The Deep Linking Request should launch to http://localhost:3000/deeoLinkkOptions
 The Deep Linking Request should launch to http://localhost:3000/deepLinkContent to return fixed content containing:
 - 1 LTI Link
 - 1 Content Link
-
-# LTI 2.0 Tool Provider
-
-## Requirements
-
-- [Redis](http:redis.io) - Required to persist the Tool Proxy that is generated
-
-## Installation
-
-1. Install Redis to store the tool proxies that are generated. On Mac it's easiest to `brew install redis`. The code assumes the default
-host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
-2. Install the application: `npm install`
-3. Start the server: `npm start`
-4. View in browser at http://localhost:3000
-
-## Configuration
-
-You can override the external domain and port for the server by creating server/config/config_override.json (see server/config/config.json)
-
-## LTI 2 Registration
-
-The registration URL is http://localhost:3000/registration
-
-## LTI 2 Tool Settings
-
-The tool settings UI can be reached at the root: 
-http://localhost:3000/
-
-## LTI 2 Outcomes
-
-The outcomes UI for getting and receiving results is part of the page is shown when an link is launched from Learn.
 
 # Docker
 
