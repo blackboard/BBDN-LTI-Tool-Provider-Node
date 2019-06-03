@@ -137,7 +137,7 @@ routes(app);
 if (config.use_ssl) {
   https.createServer(options, app).listen(listenPort, function() {
     console.log("Configuring for SSL use");
-    console.log("Polling:  " + provider);
+    console.log("Home page:  " + provider);
     console.log("LTI 1 Tool Provider:  " + provider + "/lti");
     console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
     console.log("LTI 1.3 Launch: " + provider + "/lti13");
@@ -146,7 +146,7 @@ if (config.use_ssl) {
   });
 } else {
   app.listen(listenPort);
-  console.log("Polling:  " + provider);
+  console.log("Home page:  " + provider);
   console.log("LTI 1 Tool Provider:  " + provider + "/lti");
   console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
   console.log("LTI 1.3 Launch: " + provider + "/lti13");

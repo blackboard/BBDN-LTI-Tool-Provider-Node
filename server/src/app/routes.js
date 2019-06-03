@@ -276,47 +276,15 @@ module.exports = function(app) {
   });
 
   //=======================================================
-  // Pass poll data back to react
-  //
-  // Usage in React:
-  //   fetch( "getQuestion?pollId=<id>" )
-
-  app.get("/getQuestion", (req, res) => {
-    redisUtil.loadPollQuestion(req.query.pollId).then( (question) => { res.send(question) });
-  });
-
-  app.get("/getOptions", (req, res) => {
-    redisUtil.loadPollOptions(req.query.pollId).then( (options) => { res.send(options); });
-  });
-
-  app.get("/getResults", (req, res) => {
-    redisUtil.loadPollResults(req.query.pollId).then( (results) => { res.send(results); });
-  });
-
-  //=======================================================
   // Test REDIS
 
   app.get("/testRedis", (req, res) => {
     console.log("--------------------\ntestRedis");
-    let pollId = "1234567";
 
-    redisUtil.savePollQuestion(pollId, "What is your favorite color");
-    redisUtil.loadPollQuestion(pollId).then((question) => { console.log(question); });
-
-    redisUtil.savePollOptions(pollId, ["Red", "Blue", "Purple", "Yellow"]);
-    redisUtil.loadPollOptions(pollId).then( (options) => { console.log(options); });
-
-    redisUtil.savePollAnswer(pollId, Math.floor(Math.random() * 4));
-    redisUtil.loadPollResults(pollId).then( (results) => { console.log(results); });
+    redisUtil.redisSave("key", "value");
+    redisUtil.redisGet("key").then( (value) => { console.log("Redis value for key: " + value); });
 
     res.send('<html lang=""><body>1</body></html>');
-  });
-
-  //=======================================================
-  // Poll
-  app.post('/pollSetup', (req, res) => {
-    console.log('--------------------\npollSetup');
-    res.redirect('#/poll_setup');
   });
 
   //=======================================================

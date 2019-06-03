@@ -1,10 +1,10 @@
 {
-  "name": "lti-poll",
-  "description": "An LTI Poll Tool",
+  "name": "lti-test",
+  "description": "An LTI Testing Tool",
   "version": "0.0.1",
   "private": true,
   "main": "server.js",
-  "repository": "https://github.com/ewpreston/LTI-Poll",
+  "repository": "https://github.com/blackboard/BBDN-LTI-Tool-Provider-Node",
   "license": "MIT",
   "dependencies": {
     "@babel/polyfill": "^7.4.3",
@@ -24,6 +24,7 @@
     "lodash": "^4.17.11",
     "oauth-signature": "^1.5.0",
     "prop-types": "^15.7.2",
+    "pug": "2.0.3",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.6",
     "react-dom": "^16.8.6",

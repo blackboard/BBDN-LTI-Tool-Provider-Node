@@ -32,7 +32,7 @@ class LaunchEndpoint extends React.Component {
     return (
       <div>
         <Typography variant="h4" gutterBottom component="h2">
-          Welcome to the LTI Polling Tool
+          Welcome to the LTI Testing Tool
         </Typography>
         <Typography variant="subtitle1" gutterBottom component="h2">
           Your configuration
