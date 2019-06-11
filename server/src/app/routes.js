@@ -3,6 +3,7 @@ import {AGPayload, ContentItem, JWTPayload, NRPayload, SetupParameters} from "..
 import config from "../config/config";
 import assignGrades from "./assign-grades";
 import {default as content_item} from "./content-item";
+import eventstore from './eventstore';
 import {deepLink, deepLinkContent} from "./deep-linking";
 import lti from "./lti";
 import ltiAdv from "./lti-adv";
@@ -35,6 +36,18 @@ module.exports = function(app) {
 
   //=======================================================
   // LTI 1 provider and caliper stuff
+  app.post('/caliper/send', (req, res) => {
+    lti.caliper_send(req, res);
+  });
+  app.post('/caliper/register', (req, res) => {
+    lti.caliper(req, res);
+  });
+  app.post('/caliper', (req, res) => {
+    eventstore.got_caliper(req, res);
+  });
+  app.get('/caliper', (req, res) => {
+    eventstore.show_events(req, res);
+  });
   app.post("/rest/auth", (req, res) => {
     lti.rest_auth(req, res);
   });
