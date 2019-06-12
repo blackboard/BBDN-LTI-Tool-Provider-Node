@@ -211,22 +211,32 @@ exports.results = (req, res, agPayload, setup) => {
   );
 };
 
-exports.scores = (req, res, agPayload, setup) => {
+exports.scores = (req, res, agPayload, setup, clear) => {
   ltiAdv.getOauth2Token(setup, scoreScope).then(
     function(token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
       let userId = agPayload.form.userid;
 
-      let score = {
-        userId: userId,
-        scoreGiven: 95.0,
-        scoreMaximum: 100.0,
-        comment: "This is exceptional work.",
-        timestamp: "2017-04-16T18:54:36.736+00:00",
-        activityProgress: "Completed",
-        gradingProgress: "FullyGraded"
-      };
+      let score = {};
+      if (clear) {
+        score = {
+          userId: userId,
+          timestamp: "2017-04-16T18:54:36.736+00:00",
+          activityProgress: "Completed",
+          gradingProgress: "NotReady"
+        };
+      } else {
+        score = {
+          userId: userId,
+          scoreGiven: 95.0,
+          scoreMaximum: 100.0,
+          comment: "This is exceptional work.",
+          timestamp: "2017-04-16T18:54:36.736+00:00",
+          activityProgress: "Completed",
+          gradingProgress: "FullyGraded"
+        };
+      }
 
       let options = {
         method: "POST",

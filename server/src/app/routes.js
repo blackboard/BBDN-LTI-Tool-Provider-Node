@@ -247,7 +247,13 @@ module.exports = function(app) {
   app.post("/agsScores", (req, res) => {
     console.log("--------------------\nagsResults");
     agPayload.form = req.body;
-    assignGrades.scores(req, res, agPayload, setup);
+    assignGrades.scores(req, res, agPayload, setup, false);
+  });
+
+  app.post("/agsClearScores", (req, res) => {
+    console.log("--------------------\nagsResults");
+    agPayload.form = req.body;
+    assignGrades.scores(req, res, agPayload, setup, true);
   });
 
   app.get("/agPayloadData", (req, res) => {
