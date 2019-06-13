@@ -77,7 +77,7 @@ class AssignGradesView extends React.Component {
                   type="text"
                   name="userid"
                   size="10"
-                  placeholder="_XXXX_1"
+                  placeholder="User UUID"
                 />
               </td>
             </tr>
@@ -89,6 +89,34 @@ class AssignGradesView extends React.Component {
           <b>Scores not available</b>
         </Typography>
       );
+    const clearScores =
+        this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
+            <form action="/agsClearScores" method="post">
+              <table>
+                <tbody>
+                <tr>
+                  <td>
+                    <input type="submit" value="Clear Scores"/>
+                    <input type="hidden" name="body" defaultValue={body}/>
+                    <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
+                  </td>
+                  <td>
+                    <input
+                        type="text"
+                        name="userid"
+                        size="10"
+                        placeholder="User UUID"
+                    />
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </form>
+        ) : (
+            <Typography variant="body1" style={styles.notAvailable}>
+              <b>Scores not available</b>
+            </Typography>
+        );
 
     return (
       <div>
@@ -97,9 +125,6 @@ class AssignGradesView extends React.Component {
         </Typography>
 
         <div>
-          <Typography variant="body1" gutterBottom>
-            Some text about names and roles
-          </Typography>
           <Typography variant="body1">
             What would you like to do?
           </Typography>
@@ -157,6 +182,9 @@ class AssignGradesView extends React.Component {
             </li>
             <li>
               {scores}
+            </li>
+            <li>
+              {clearScores}
             </li>
           </ul>
 

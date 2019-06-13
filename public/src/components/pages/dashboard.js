@@ -20,9 +20,7 @@ import { HashRouter, Route } from "react-router-dom";
 import { darkMode, lightMode } from "../../common/styles/palette";
 import { styles } from "../../common/styles/styles";
 import ErrorBoundary from "../errorBoundary";
-import Courses from "../page_objects/courses";
 import { fullListItems } from "../page_objects/listItems";
-import SnackBar from "../page_objects/snackbar";
 import AssignGradesView from "./assignGradesView";
 import CIMRequestView from "./cimRequestView";
 import ContentItemView from "./contentItemView";
@@ -31,11 +29,9 @@ import DeepLinkPayloadView from "./deepLinkView";
 import LaunchEndpoint from "./home";
 import LtiAdvView from "./ltiAdvView";
 import NamesRolesView from "./namesRolesView";
-import PollSetup from "./pollSetup";
-import Polls from "./pollsList";
-import Reports from "./reports";
 import Setup from "./setupView";
 import SetupView from "./setupView";
+import SnackBar from "../page_objects/snackbar";
 
 class Dashboard extends React.Component {
   state = {
@@ -64,12 +60,6 @@ class Dashboard extends React.Component {
   render() {
     const { classes } = this.props;
     let drawerList = <List>{fullListItems}</List>;
-
-    /*if (this.state.user.role === 'instructor') {
-      drawerList = <List>{fullListItems}</List>
-    } else {
-      drawerList = <List>{participantList}</List>
-    }*/
 
     return (
       <MuiThemeProvider theme={this.state.theme}>
@@ -101,7 +91,7 @@ class Dashboard extends React.Component {
                   color="secondary"
                   noWrap
                   className={classes.title}>
-                  LTI Polling Tool
+                  LTI Testing Tool
                 </Typography>
                 <Tooltip title={"Toggle Dark Mode"}>
                   <IconButton color={"secondary"} onClick={this.handleDarkMode}>
@@ -149,10 +139,6 @@ class Dashboard extends React.Component {
                   path="/assign_grades_view"
                   component={AssignGradesView}
                 />
-                <Route path="/pollSetup" component={PollSetup} />
-                <Route path={"/polls"} component={Polls} />
-                <Route path={"/courses"} component={Courses} />
-                <Route path={"/reports"} component={Reports} />
               </main>
               <SnackBar />
             </ErrorBoundary>

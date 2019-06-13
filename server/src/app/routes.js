@@ -3,6 +3,7 @@ import {AGPayload, ContentItem, JWTPayload, NRPayload, SetupParameters} from "..
 import config from "../config/config";
 import assignGrades from "./assign-grades";
 import {default as content_item} from "./content-item";
+import eventstore from './eventstore';
 import {deepLink, deepLinkContent} from "./deep-linking";
 import lti from "./lti";
 import ltiAdv from "./lti-adv";
@@ -35,6 +36,18 @@ module.exports = function(app) {
 
   //=======================================================
   // LTI 1 provider and caliper stuff
+  app.post('/caliper/send', (req, res) => {
+    lti.caliper_send(req, res);
+  });
+  app.post('/caliper/register', (req, res) => {
+    lti.caliper(req, res);
+  });
+  app.post('/caliper', (req, res) => {
+    eventstore.got_caliper(req, res);
+  });
+  app.get('/caliper', (req, res) => {
+    eventstore.show_events(req, res);
+  });
   app.post("/rest/auth", (req, res) => {
     lti.rest_auth(req, res);
   });
@@ -234,7 +247,13 @@ module.exports = function(app) {
   app.post("/agsScores", (req, res) => {
     console.log("--------------------\nagsResults");
     agPayload.form = req.body;
-    assignGrades.scores(req, res, agPayload, setup);
+    assignGrades.scores(req, res, agPayload, setup, false);
+  });
+
+  app.post("/agsClearScores", (req, res) => {
+    console.log("--------------------\nagsResults");
+    agPayload.form = req.body;
+    assignGrades.scores(req, res, agPayload, setup, true);
   });
 
   app.get("/agPayloadData", (req, res) => {
@@ -276,47 +295,15 @@ module.exports = function(app) {
   });
 
   //=======================================================
-  // Pass poll data back to react
-  //
-  // Usage in React:
-  //   fetch( "getQuestion?pollId=<id>" )
-
-  app.get("/getQuestion", (req, res) => {
-    redisUtil.loadPollQuestion(req.query.pollId).then( (question) => { res.send(question) });
-  });
-
-  app.get("/getOptions", (req, res) => {
-    redisUtil.loadPollOptions(req.query.pollId).then( (options) => { res.send(options); });
-  });
-
-  app.get("/getResults", (req, res) => {
-    redisUtil.loadPollResults(req.query.pollId).then( (results) => { res.send(results); });
-  });
-
-  //=======================================================
   // Test REDIS
 
   app.get("/testRedis", (req, res) => {
     console.log("--------------------\ntestRedis");
-    let pollId = "1234567";
 
-    redisUtil.savePollQuestion(pollId, "What is your favorite color");
-    redisUtil.loadPollQuestion(pollId).then((question) => { console.log(question); });
-
-    redisUtil.savePollOptions(pollId, ["Red", "Blue", "Purple", "Yellow"]);
-    redisUtil.loadPollOptions(pollId).then( (options) => { console.log(options); });
-
-    redisUtil.savePollAnswer(pollId, Math.floor(Math.random() * 4));
-    redisUtil.loadPollResults(pollId).then( (results) => { console.log(results); });
+    redisUtil.redisSave("key", "value");
+    redisUtil.redisGet("key").then( (value) => { console.log("Redis value for key: " + value); });
 
     res.send('<html lang=""><body>1</body></html>');
-  });
-
-  //=======================================================
-  // Poll
-  app.post('/pollSetup', (req, res) => {
-    console.log('--------------------\npollSetup');
-    res.redirect('#/poll_setup');
   });
 
   //=======================================================

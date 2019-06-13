@@ -58,9 +58,6 @@ class NamesRolesView extends React.Component {
         </Typography>
 
         <div>
-          <Typography variant="body1" gutterBottom>
-            Some text about names and roles
-          </Typography>
           <Typography variant="body1">
             What would you like to do?
           </Typography>
