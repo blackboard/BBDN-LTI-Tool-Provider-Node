@@ -95,6 +95,59 @@ exports.got_launch = function(req, res) {
   });
 };
 
+exports.caliper = function (req, res) {
+  let options = {
+    consumer_key: consumer_key,
+    consumer_secret: consumer_secret,
+    url: caliper_profile_url,
+    signer: new HMAC_SHA.HMAC_SHA1(),
+    oauth_version: '1.0',
+    oauth_signature_method: 'HMAC-SHA1'
+  };
+
+  let parts = caliper_profile_url_parts = url.parse(options.url, true);
+  let caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname;
+
+  let req_options = {
+    hostname: caliper_profile_url_parts.hostname,
+    path: caliper_profile_url_parts.path,
+    method: 'GET',
+    rejectUnauthorized: rejectUnauthorized,
+    headers: _build_headers(options, parts)
+  };
+
+  console.log(req_options);
+
+  let http_req = https.request(req_options, function (http_res) {
+    http_res.setEncoding('utf-8');
+    let responseString = '';
+    http_res.on('data', function (data) {
+      responseString += data;
+    });
+    http_res.on('end', function () {
+      console.log(responseString);
+      let json = JSON.parse(responseString);
+      caliper_id = json['id'];
+      eventStoreUrl = json['eventStoreUrl'];
+      apiKey = json['apiKey'];
+
+      console.log("ID: " + caliper_id + " eventStoreUrl: " + eventStoreUrl + " apiKey: " + apiKey);
+
+      res.render('lti', {
+        title: 'Caliper Response Received!',
+        content: '<pre>' + JSON.stringify(json, null, '  ') + '</pre>',
+        return_url: return_url,
+        return_onclick: 'location.href=' + '\'' + return_url + '\''
+      });
+    });
+  });
+
+  http_req.body = _.omit(http_req.body, '__proto__');
+  http_req.write("");
+  http_req.end();
+};
+
+
 exports.caliper_send = function (req, res) {
 
   finish(function (async) {
@@ -102,6 +155,9 @@ exports.caliper_send = function (req, res) {
     let courseSectionId = "https://example.edu/politicalScience/2015/american-revolution-101/section/001";
 
     let parts = url.parse(eventStoreUrl, true);
+    console.log("eventStoreUrl: " + eventStoreUrl);
+    console.log("parts.host: " + parts.host);
+    console.log("parts.path: " + parts.path);
 
     // Any asynchronous calls within this function will be captured
     // Just wrap each asynchronous call with function 'async'.
