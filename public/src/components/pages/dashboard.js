@@ -29,6 +29,7 @@ import DeepLinkPayloadView from "./deepLinkView";
 import LaunchEndpoint from "./home";
 import LtiAdvView from "./ltiAdvView";
 import NamesRolesView from "./namesRolesView";
+import GroupsView from "./groupsView";
 import Setup from "./setupView";
 import SetupView from "./setupView";
 import SnackBar from "../page_objects/snackbar";
@@ -135,6 +136,7 @@ class Dashboard extends React.Component {
                 <Route path="/deep_link" component={DeepLinkPayloadView} />
                 <Route path="/deep_link_options" component={DeepLinkOptions} />
                 <Route path="/names_roles_view" component={NamesRolesView} />
+                <Route path="/groupss_view" component={GroupsView} />
                 <Route
                   path="/assign_grades_view"
                   component={AssignGradesView}

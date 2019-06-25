@@ -1,5 +1,5 @@
 import path from "path";
-import {AGPayload, ContentItem, JWTPayload, NRPayload, SetupParameters} from "../common/restTypes";
+import {AGPayload, ContentItem, JWTPayload, NRPayload, GroupsPayload, SetupParameters} from "../common/restTypes";
 import config from "../config/config";
 import assignGrades from "./assign-grades";
 import {default as content_item} from "./content-item";
@@ -8,6 +8,7 @@ import {deepLink, deepLinkContent} from "./deep-linking";
 import lti from "./lti";
 import ltiAdv from "./lti-adv";
 import namesRoles from "./names-roles";
+import groups from "./groups";
 import redisUtil from "./redisutil";
 
 const contentitem_key = "contentItemData";
@@ -207,6 +208,20 @@ module.exports = function(app) {
 
   app.get("/nrPayloadData", (req, res) => {
     res.send(nrPayload);
+  });
+
+  //=======================================================
+  // Groups
+  let groupsPayload;
+
+  app.post("/groups", (req, res) => {
+    console.log("--------------------\ngroups");
+    groupsPayload = new GroupsPayload();
+    groups.groups(req, res, groupsPayload, setup);
+  });
+
+  app.get("/groupsPayloadData", (req, res) => {
+    res.send(groupsPayload);
   });
 
   //=======================================================
