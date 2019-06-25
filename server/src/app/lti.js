@@ -3,6 +3,7 @@
 let lti = require("ims-lti");
 let caliper = require('ims-caliper');
 let _ = require("lodash");
+var moment = require('moment');
 let finish = require('finish');
 let https = require("https");
 let HMAC_SHA = require("./hmac-sha1");
@@ -32,8 +33,8 @@ let eventStoreUrl = "";
 let apiKey = "";
 
 //REST
-let app_key = "d03caa33-1095-47b9-bc67-f5cd634430b1";
-let app_secret = "QSFClAMu5KmoG8yFbHTi7pjhsseJl4uz";
+let app_key = "YourKeyHere";
+let app_secret = "YourSecretHere";
 let access_token = "";
 let token_type = "";
 let expires_in = "";
@@ -148,182 +149,142 @@ exports.caliper = function (req, res) {
 };
 
 
-exports.caliper_send = function (req, res) {
+exports.caliper_send = function(req,res) {
 
-  finish(function (async) {
-    let actorId = "https://example.edu/user/554433";
-    let courseSectionId = "https://example.edu/politicalScience/2015/american-revolution-101/section/001";
+  var sensor = caliper.Sensor;
+  var client = caliper.Client;
 
-    let parts = url.parse(eventStoreUrl, true);
-    console.log("eventStoreUrl: " + eventStoreUrl);
-    console.log("parts.host: " + parts.host);
-    console.log("parts.path: " + parts.path);
+  finish(function(async) {
+    const BASE_IRI = "https://example.edu";
+    const BASE_SECTION_IRI = "https://example.edu/terms/201601/courses/7/sections/1";
+    
+    // Initialize the caliper client and sensor
+    
 
-    // Any asynchronous calls within this function will be captured
-    // Just wrap each asynchronous call with function 'async'.
-    // Each asynchronous call should invoke 'done' as its callback.
-    // 'done' tasks two arguments: error and result.
-    async('sensor', function (done) {
+    // Id with canned value
+    uuid = user_id;
+    
+
+  // Any asynchronous calls within this function will be captured
+    // Just wrap each asynchronous call with function 'async'. 
+    // Each asynchronous call should invoke 'done' as its callback. 
+    // 'done' tasks two arguments: error and result. 
+    async('sensor', function(done) { 
       // Initialize sensor with options
-      let sensor = caliper.Sensor;
 
-      sensor.initialize(caliper_id, {
-        hostname: parts.host,
-        path: parts.path,
-        rejectUnauthorized: rejectUnauthorized,
-        headers: {"Authorization": apiKey}
+        sensor.initialize(caliper_id);
+        
+        var parts = url.parse(eventStoreUrl, true);
+  
+        client.initialize(caliper_id, {
+          hostname: caliper_profile_url_parts.hostname,
+          path: caliper_profile_url_parts.path,
+          uri: eventStoreUrl,
+          method: "POST",
+          port: caliper_profile_url_parts.port,
+          rejectUnauthorized: rejectUnauthorized,
+          headers: {"Authorization": apiKey, "Content-Type": "application/json"}
+        });
+  
+        sensor.registerClient(client);
+      
+      done(null,sensor);
+    });
+    
+    async('actor', function(done) {
+      // The Actor for the caliper Event
+      var actor = entityFactory().create(caliper.Person, {id: BASE_IRI.concat("/users/554433")});
+      
+      done(null,actor);
+    });
+    
+    async('action', function(done) {    
+      // The Action for the caliper Event
+      var action = caliper.Actions.navigatedTo.term;
+      
+      done(null,action);
+    });
+    
+    async('target', function(done) {    
+      var target = entityFactory().create(caliper.WebPage, {
+        id: BASE_SECTION_IRI.concat("/pages/2"),
+        name: "Learning Analytics Specifications",
+        description: "Overview of Learning Analytics Specifications with particular emphasis on IMS Caliper.",
+        dateCreated: moment.utc("2016-08-01T09:00:00.000Z")
       });
 
-      done(null, sensor);
+      done(null,target);
     });
-
-    async('actor', function (done) {
-      // The Actor for the caliper Event
-      let actor = new caliper.Person(actorId);
-      actor.setName("Scott Hurrey");
-      actor.setDescription("Scott Hurrey");
-      actor.setDateCreated((new Date()).toISOString());
-      actor.setDateModified((new Date()).toISOString());
-
-      done(null, actor);
-    });
-
-    async('action', function (done) {
-      // The Action for the caliper Event
-      let action = caliper.NavigationActions.NAVIGATED_TO;
-
-      done(null, action);
-    });
-
-    async('target', function (done) {
-      // The Object being interacted with by the Actor
-      let eventObj = new caliper.EPubVolume("https://example.com/viewer/book/34843#epubcfi(/4/3)");
-      eventObj.setName("The Glorious Cause: The American Revolution, 1763-1789 (Oxford History of the United States)");
-      eventObj.setDescription("The Glorious Cause: The American Revolution, 1763-1789 (Oxford History of the United States)");
-      eventObj.setVersion("2nd ed.");
-      eventObj.setDateCreated((new Date()).toISOString());
-      eventObj.setDateModified((new Date()).toISOString());
-      eventObj.setDatePublished((new Date()).toISOString());
-
-      // The target object (frame) within the Event Object
-      let target = new caliper.Frame("https://example.com/viewer/book/34843#epubcfi(/4/3/1)");
-      target.setName("Key Figures: George Washington");
-      target.setDescription("Key Figures: George Washington");
-      target.setIsPartOf(eventObj);
-      target.setVersion(eventObj.version);
-      target.setIndex(1);
-      target.setDateCreated((new Date()).toISOString());
-      target.setDateModified((new Date()).toISOString());
-      target.setDatePublished((new Date()).toISOString());
-
-      done(null, target);
-    });
-
-    async('navigatedFrom', function (done) {
+    
+    async('navigatedFrom', function(done) {    
       // Specific to the Navigation Event - the location where the user navigated from
-      let navigatedFrom = new caliper.WebPage("https://example.edu/politicalScience/2015/american-revolution-101/index.html");
-      navigatedFrom.setName("American Revolution 101 Landing Page");
-      navigatedFrom.setDescription("American Revolution 101 Landing Page");
-      navigatedFrom.setVersion("1.0");
-      navigatedFrom.setDateCreated((new Date()).toISOString());
-      navigatedFrom.setDateModified((new Date()).toISOString());
-      navigatedFrom.setDatePublished((new Date()).toISOString());
+      var navigatedFrom = entityFactory().create(caliper.WebPage, {id: BASE_SECTION_IRI.concat("/pages/1")});
 
-      done(null, navigatedFrom);
+      done(null,navigatedFrom);
     });
+    
+    async('edApp', function(done) {    
+      var edApp = entityFactory().coerce(caliper.SoftwareApplication, {id: BASE_IRI});
 
-    async('edApp', function (done) {
-      // The edApp that is part of the Learning Context
-      let edApp = new caliper.SoftwareApplication("https://example.com/viewer");
-      edApp.setName("ePub");
-      edApp.setDescription("ePub");
-      edApp.setDateCreated((new Date()).toISOString());
-      edApp.setDateModified((new Date()).toISOString());
-
-      done(null, edApp);
+      done(null,edApp);
     });
-
-    async('group', function (done) {
-      // LIS Course Offering
-      let courseOffering = new caliper.CourseOffering("https://example.edu/politicalScience/2015/american-revolution-101");
-      courseOffering.setName("Political Science 101: The American Revolution");
-      courseOffering.setDescription("Political Science 101: The American Revolution");
-      courseOffering.setCourseNumber("POL101");
-      courseOffering.setAcademicSession("Fall-2015");
-      courseOffering.setDateCreated((new Date("2015-08-01T06:00:00Z")).toISOString());
-      courseOffering.setDateModified((new Date("2015-09-02T11:30:00Z")).toISOString());
-
-      // LIS Course Section
-      let courseSection = new caliper.CourseSection(courseSectionId);
-      courseSection.setName("American Revolution 101");
-      courseSection.setDescription("American Revolution 101");
-      courseSection.setCourseNumber("POL101");
-      courseSection.setAcademicSession("Fall-2015");
-      courseSection.setSubOrganizationOf(courseOffering);
-      courseSection.setDateCreated((new Date()).toISOString());
-      courseSection.setDateModified((new Date()).toISOString());
-      courseSection.setCategory("History");
-
-      // LIS Group
-      let group = new caliper.Group("https://example.edu/politicalScience/2015/american-revolution-101/section/001/group/001");
-      group.setName("Discussion Group 001");
-      group.setDescription("Discussion Group 001");
-      group.setSubOrganizationOf(courseSection);
-      group.setDateCreated((new Date()).toISOString());
-      group.setDateModified((new Date()).toISOString());
-
-      done(null, group);
+    
+    async('group', function(done) {    
+      var group = entityFactory().create(caliper.CourseSection, {
+        id: BASE_SECTION_IRI,
+        courseNumber: "CPS 435-01",
+        academicSession: "Fall 2016"
+      });
+  
+      done(null,group);
     });
+    
+    async('membership', function(done) {
+      var membership = entityFactory().create(caliper.Membership, {
+        id: BASE_SECTION_IRI.concat("/rosters/1"),
+        member: BASE_IRI.concat("/users/554433"),
+        organization: BASE_SECTION_IRI,
+        roles: [caliper.Role.learner.term],
+        status: caliper.Status.active.term,
+        dateCreated: moment.utc("2016-08-01T06:00:00.000Z")
+      });
 
-    async('membership', function (done) {
-      // The Actor's Membership
-      let membership = new caliper.Membership("https://example.edu/politicalScience/2015/american-revolution-101/roster/554433");
-      membership.setName("American Revolution 101");
-      membership.setDescription("Roster entry");
-      membership.setMember(actorId);
-      membership.setOrganization(courseSectionId);
-      membership.setRoles([caliper.Role.LEARNER]);
-      membership.setStatus(caliper.Status.ACTIVE);
-      membership.setDateCreated((new Date()).toISOString());
-      membership.setDateModified((new Date()).toISOString());
-
-      done(null, membership);
+      done(null,membership);
     });
+    
+  }, function(err, results) {
 
-  }, function (err, results) {
-    let event = new caliper.NavigationEvent();
-    event.setActor(results['actor']);
-    event.setAction(results['action']);
-    event.setObject(results['target'].isPartOf);
-    event.setTarget(results['target']);
-    event.setNavigatedFrom(results['navigatedFrom']);
-    event.setEventTime((new Date()).toISOString());
-    event.setEdApp(results['edApp']);
-    event.setGroup(results['group']);
-    event.setMembership(results['membership']);
-    event.setFederatedSession(custom_caliper_federated_session_id);
+    var event = eventFactory().create(caliper.NavigationEvent, {
+        id: user_id,
+        actor: results['actor'],
+        action: results['action'],
+        object: results['target'],
+        eventTime: new Date().toISOString(),
+        referrer: results['navigatedFrom'],
+        edApp: results['edApp'],
+        group: results['group'],
+        membership: results['membership'],
+        session: custom_caliper_federated_session_id
+      });
 
     console.log('created navigation event %O', event);
 
-    let sensor = results['sensor'];
+    console.log('results %O', results);
 
-    sensor.send(event);
-    // This callback is invoked after all asynchronous calls finish
-    // or as soon as an error occurs
-    // results is an array that contains result of each asynchronous call
-    console.log('Sensor: %O Actor: %O Action: %O Object: %O Target: %O NavigatedFrom: %O EdApp: %O Group: %O Membership: %O', results['sensor'], results['actor'], results['action'], results['eventObj'], results['target'], results['navigatedFrom'], results['edApp'], results['group'], results['membership']);
+    var envelope = sensor.createEnvelope({ data : event });
+
+    sensor.sendToClients(envelope);
+    // This callback is invoked after all asynchronous calls finish 
+    // or as soon as an error occurs 
+    // results is an array that contains result of each asynchronous call 
+    console.log('Sensor: %O Actor: %O Action: %O Object: %O Target: %O NavigatedFrom: %O EdApp: %O Group: %O Membership: %O',results['sensor'],results['actor'],results['action'],results['eventObj'],results['target'],results['navigatedFrom'],results['edApp'],results['group'],results['membership']);
     console.log('eventObj from target: %O', results['target'].isPartOf);
-
-    let content = '<pre>' + JSON.stringify(event, null, '  ') + '</pre>';
-
+    
+    var content = JSON.stringify(event, null, '\t');
+    
     console.log('JSON: ' + content);
-
-    res.render('lti', {
-      title: 'Caliper event successfully sent!',
-      content: content,
-      return_url: return_url,
-      return_onclick: 'location.href=' + '\'' + return_url + '\';'
-    });
+    
+    res.render('lti', { title: 'Caliper event successfully sent!', content: content, return_url: return_url });
   });
 };
 
