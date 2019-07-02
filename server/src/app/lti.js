@@ -50,7 +50,7 @@ let caliper_profile_url_parts = "";
  * POST LTI Launch Received
  */
 
-exports.got_launch = function(req, res) {
+export function got_launch(req, res) {
   req.body = _.omit(req.body, "__proto__");
 
   let content = "";
@@ -94,7 +94,7 @@ exports.got_launch = function(req, res) {
     return_url: return_url,
     return_onclick: "location.href=" + "'" + return_url + "';"
   });
-};
+}
 
 exports.caliper = function (req, res) {
   let options = {
