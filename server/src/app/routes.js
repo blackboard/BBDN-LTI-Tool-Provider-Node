@@ -117,7 +117,7 @@ module.exports = function(app) {
           redisUtil.redisSave(contentitem_key, contentItemData);
           ciLoaded = true;
 
-          let redirectUrl = provider + "/content_item";
+          let redirectUrl = provider + "#/content_item";
           console.log("Redirecting to : " + redirectUrl);
           res.redirect(redirectUrl);
         });

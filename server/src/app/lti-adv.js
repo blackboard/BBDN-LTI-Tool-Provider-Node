@@ -169,6 +169,7 @@ exports.security1 = function(req, res, jwtPayload, setup) {
     "&nonce=" +
     nonce;
 
+  console.log("LTI JWT login init; redirecting to: " + url);
   res.redirect(url);
 };
 
