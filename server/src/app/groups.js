@@ -52,6 +52,8 @@ exports.groups = (req, res, groupsPayload, setup) => {
           groupsPayload.next_url = "";
         } else {
           groupsPayload.body = json;
+          console.log("Groups call returned:");
+          console.log(body);
           if (response.headers.link) {
             let links = response.headers.link.split(",");
             links.forEach(link => {

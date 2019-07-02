@@ -136,7 +136,7 @@ class Dashboard extends React.Component {
                 <Route path="/deep_link" component={DeepLinkPayloadView} />
                 <Route path="/deep_link_options" component={DeepLinkOptions} />
                 <Route path="/names_roles_view" component={NamesRolesView} />
-                <Route path="/groupss_view" component={GroupsView} />
+                <Route path="/groups_view" component={GroupsView} />
                 <Route
                   path="/assign_grades_view"
                   component={AssignGradesView}
