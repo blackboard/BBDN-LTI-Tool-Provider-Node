@@ -140,8 +140,10 @@ if (config.use_ssl) {
     console.log("Home page:  " + provider);
     console.log("LTI 1 Tool Provider:  " + provider + "/lti");
     console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
-    console.log("LTI 1.3 Launch: " + provider + "/lti13");
-    console.log("LTI Deep Linking: " + provider + "/deepLinkOptions");
+    console.log("LTI 1.3 Login URL: " + provider + "/login");
+    console.log("LTI 1.3 Redirect URL: " + provider + "/lti13");
+    console.log("LTI 1.3 Launch URL: " + provider + "/lti13");
+    console.log("LTI 1.3 Deep Linking URL: " + provider + "/deepLinkOptions");
     console.log("Listening on " + listenPort);
   });
 } else {
@@ -149,6 +151,8 @@ if (config.use_ssl) {
   console.log("Home page:  " + provider);
   console.log("LTI 1 Tool Provider:  " + provider + "/lti");
   console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
-  console.log("LTI 1.3 Launch: " + provider + "/lti13");
-  console.log("LTI Deep Linking: " + provider + "/deepLinkOptions");
+  console.log("LTI 1.3 Login URL: " + provider + "/login");
+  console.log("LTI 1.3 Redirect URL: " + provider + "/lti13");
+  console.log("LTI 1.3 Launch URL: " + provider + "/lti13");
+  console.log("LTI 1.3 Deep Linking URL: " + provider + "/deepLinkOptions");
 }
