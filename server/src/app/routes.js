@@ -260,15 +260,21 @@ module.exports = function(app) {
   });
 
   app.post("/agsScores", (req, res) => {
-    console.log("--------------------\nagsResults");
+    console.log("--------------------\nagsScores");
     agPayload.form = req.body;
-    assignGrades.scores(req, res, agPayload, setup, false);
+    assignGrades.scores(req, res, agPayload, setup, "score");
   });
 
   app.post("/agsClearScores", (req, res) => {
-    console.log("--------------------\nagsResults");
+    console.log("--------------------\nagsClearScores");
     agPayload.form = req.body;
-    assignGrades.scores(req, res, agPayload, setup, true);
+    assignGrades.scores(req, res, agPayload, setup, "clear");
+  });
+
+  app.post("/agsSubmitAttempt", (req, res) => {
+    console.log("--------------------\nagsSubmitAttempt");
+    agPayload.form = req.body;
+    assignGrades.scores(req, res, agPayload, setup, "submit");
   });
 
   app.get("/agPayloadData", (req, res) => {

@@ -155,7 +155,7 @@ let deepLinkingLTILink = function() {
       height: 90
     },
     lineItem: {
-      scoreMaximum: 87,
+      scoreMaximum: 100,
       label: "Chapter 12 quiz",
       resourceId: "xyzpdq1234",
       tag: "originality"
@@ -164,6 +164,8 @@ let deepLinkingLTILink = function() {
       key1: "some value",
       contextHistory: "$Context.id.history",
       resourceHistory: "$ResourceLink.id.history",
+      firstAvailable: "$ResourceLink.available.startDateTime",
+      lastAvailable: "$ResourceLink.available.endDateTime",
       dueDate: "$ResourceLink.submission.endDateTime",
       userName: "$User.username",
       userEmail: "$Person.email.primary",
