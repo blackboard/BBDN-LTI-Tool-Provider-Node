@@ -37,6 +37,17 @@ export class NRPayload {
   }
 }
 
+export class GroupsPayload {
+  constructor() {
+    this.url = "";
+    this.version = "";
+    this.body = Object;
+    this.orig_body = Object;
+    this.return_url = "";
+    this.next_url = "";
+  }
+}
+
 export class AGPayload {
   constructor() {
     this.orig_body = Object;

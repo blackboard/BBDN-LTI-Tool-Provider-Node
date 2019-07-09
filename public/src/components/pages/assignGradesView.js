@@ -71,6 +71,7 @@ class AssignGradesView extends React.Component {
                 <input type="submit" value="Send Scores"/>
                 <input type="hidden" name="body" defaultValue={body}/>
                 <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
+                <input type="hidden" name="itemsUrl" defaultValue={this.state.lineItems}/>
               </td>
               <td>
                 <input
@@ -78,6 +79,22 @@ class AssignGradesView extends React.Component {
                   name="userid"
                   size="10"
                   placeholder="User UUID"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="score"
+                  size="10"
+                  placeholder="score"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="column"
+                  size="10"
+                  placeholder="Column ID"
                 />
               </td>
             </tr>
@@ -114,9 +131,37 @@ class AssignGradesView extends React.Component {
             </form>
         ) : (
             <Typography variant="body1" style={styles.notAvailable}>
-              <b>Scores not available</b>
+              <b>Clear Scores not available</b>
             </Typography>
         );
+    const submitAttempt =
+      this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
+        <form action="/agsSubmitAttempt" method="post">
+          <table>
+            <tbody>
+            <tr>
+              <td>
+                <input type="submit" value="Submit Attempt"/>
+                <input type="hidden" name="body" defaultValue={body}/>
+                <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="userid"
+                  size="10"
+                  placeholder="User UUID"
+                />
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      ) : (
+        <Typography variant="body1" style={styles.notAvailable}>
+          <b>Scores not available</b>
+        </Typography>
+      );
 
     return (
       <div>
@@ -186,11 +231,14 @@ class AssignGradesView extends React.Component {
             <li>
               {clearScores}
             </li>
+            <li>
+              {submitAttempt}
+            </li>
           </ul>
 
           <br />
           <Typography variant="h5">
-            Assignment and Grade Response
+            Assignment and Grades Response
           </Typography>
 
           <Typography variant="body1">

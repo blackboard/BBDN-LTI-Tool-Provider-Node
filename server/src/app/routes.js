@@ -1,13 +1,14 @@
 import path from "path";
-import {AGPayload, ContentItem, JWTPayload, NRPayload, SetupParameters} from "../common/restTypes";
+import {AGPayload, ContentItem, JWTPayload, NRPayload, GroupsPayload, SetupParameters} from "../common/restTypes";
 import config from "../config/config";
 import assignGrades from "./assign-grades";
-import {default as content_item} from "./content-item";
+import * as content_item from "./content-item";
 import eventstore from './eventstore';
 import {deepLink, deepLinkContent} from "./deep-linking";
-import lti from "./lti";
+import * as lti from "./lti";
 import ltiAdv from "./lti-adv";
 import namesRoles from "./names-roles";
+import groups from "./groups";
 import redisUtil from "./redisutil";
 
 const contentitem_key = "contentItemData";
@@ -116,7 +117,7 @@ module.exports = function(app) {
           redisUtil.redisSave(contentitem_key, contentItemData);
           ciLoaded = true;
 
-          let redirectUrl = provider + "/content_item";
+          let redirectUrl = provider + "#/content_item";
           console.log("Redirecting to : " + redirectUrl);
           res.redirect(redirectUrl);
         });
@@ -210,6 +211,20 @@ module.exports = function(app) {
   });
 
   //=======================================================
+  // Groups
+  let groupsPayload;
+
+  app.post("/groups", (req, res) => {
+    console.log("--------------------\ngroups");
+    groupsPayload = new GroupsPayload();
+    groups.groups(req, res, groupsPayload, setup);
+  });
+
+  app.get("/groupsPayloadData", (req, res) => {
+    res.send(groupsPayload);
+  });
+
+  //=======================================================
   // Assignments and Grades
   let agPayload;
 
@@ -245,15 +260,21 @@ module.exports = function(app) {
   });
 
   app.post("/agsScores", (req, res) => {
-    console.log("--------------------\nagsResults");
+    console.log("--------------------\nagsScores");
     agPayload.form = req.body;
-    assignGrades.scores(req, res, agPayload, setup, false);
+    assignGrades.scores(req, res, agPayload, setup, "score");
   });
 
   app.post("/agsClearScores", (req, res) => {
-    console.log("--------------------\nagsResults");
+    console.log("--------------------\nagsClearScores");
     agPayload.form = req.body;
-    assignGrades.scores(req, res, agPayload, setup, true);
+    assignGrades.scores(req, res, agPayload, setup, "clear");
+  });
+
+  app.post("/agsSubmitAttempt", (req, res) => {
+    console.log("--------------------\nagsSubmitAttempt");
+    agPayload.form = req.body;
+    assignGrades.scores(req, res, agPayload, setup, "submit");
   });
 
   app.get("/agPayloadData", (req, res) => {

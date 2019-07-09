@@ -12,7 +12,7 @@ let consumerSecret = "secret";
 let returnUrl = "";
 let sha_method = "";
 
-export default function(req, res, contentItemData) {
+export function got_launch(req, res, contentItemData) {
   returnUrl = req.body.content_item_return_url;
   sha_method = req.body.oauth_signature_method;
   console.log("Signature Method: " + sha_method);
@@ -91,7 +91,7 @@ export default function(req, res, contentItemData) {
   return new Promise(function(resolve) {
     resolve();
   });
-};
+}
 
 let _build_headers = function(options, parts) {
   let headers = {},

@@ -47,6 +47,13 @@ exports.verifyToken = function(id_token, jwtPayload, setup) {
   ) {
     jwtPayload.grading = true;
   }
+  if (
+      jwtPayload.body[
+          "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice"
+          ] !== undefined
+  ) {
+    jwtPayload.groups = true;
+  }
 
   // Verify launch is from correct party
   // aud could be an array or a single entry
@@ -67,7 +74,7 @@ exports.verifyToken = function(id_token, jwtPayload, setup) {
     clientId +
     "/jwks.json";
 
-  // Do a synchoneous call to dev portal
+  // Do a synchronous call to dev portal
   let res;
   try {
     res = srequest("GET", url);
@@ -162,6 +169,7 @@ exports.security1 = function(req, res, jwtPayload, setup) {
     "&nonce=" +
     nonce;
 
+  console.log("LTI JWT login init; redirecting to: " + url);
   res.redirect(url);
 };
 

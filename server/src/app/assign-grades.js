@@ -63,7 +63,7 @@ exports.readCols = (req, res, agPayload, setup) => {
           );
         } else if (response.statusCode !== 200) {
           console.log(
-            "Assignment and Grade Error - Service call falied: " +
+            "Assignment and Grade Error - Service call failed: " +
               response.statusCode +
               "\n" +
               options.uri
@@ -211,36 +211,54 @@ exports.results = (req, res, agPayload, setup) => {
   );
 };
 
-exports.scores = (req, res, agPayload, setup, clear) => {
+exports.scores = (req, res, agPayload, setup, task) => {
   ltiAdv.getOauth2Token(setup, scoreScope).then(
     function(token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
       let userId = agPayload.form.userid;
+      let newScore = agPayload.form.score;
+      let columnId = agPayload.form.column;
+
+      let url = agPayload.form.url + "/scores";
+
+      if (columnId) {
+        url = agPayload.form.itemsUrl + "/" + columnId + "/scores";
+      }
 
       let score = {};
-      if (clear) {
+      if (task == "clear") {
         score = {
           userId: userId,
           timestamp: "2017-04-16T18:54:36.736+00:00",
-          activityProgress: "Completed",
+          activityProgress: "Initialized",
           gradingProgress: "NotReady"
         };
-      } else {
+      } else if (task == "score") {
         score = {
           userId: userId,
-          scoreGiven: 95.0,
+          scoreGiven: newScore ? newScore : 95.0,
           scoreMaximum: 100.0,
           comment: "This is exceptional work.",
           timestamp: "2017-04-16T18:54:36.736+00:00",
           activityProgress: "Completed",
           gradingProgress: "FullyGraded"
         };
+      } else if (task == "submit") {
+        score = {
+          userId: userId,
+          timestamp: "2017-04-16T18:54:36.736+00:00",
+          activityProgress: "Submitted",
+          gradingProgress: "Pending"
+        };
+      } else {
+        console.log("Unknown task sent to scores: " + task);
+        return;
       }
 
       let options = {
         method: "POST",
-        uri: agPayload.form.url + "/scores",
+        uri: url,
         headers: {
           "content-type": "application/vnd.ims.lis.v1.score+json",
           Authorization: "Bearer " + agPayload.token

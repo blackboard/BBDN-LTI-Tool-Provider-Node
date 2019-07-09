@@ -20,7 +20,8 @@ class LtiAdvView extends React.Component {
           errorUrl: jwtPayload.error_url,
           verified: jwtPayload.verified,
           namesRoles: jwtPayload.names_roles,
-          grading: jwtPayload.grading
+          grading: jwtPayload.grading,
+          groups: jwtPayload.groups
         });
       });
   }
@@ -68,6 +69,16 @@ class LtiAdvView extends React.Component {
         <b>Assignments and Grades not available</b>
       </Typography>
     );
+    const groups = this.state.groups ? (
+        <form action="/groups" method="POST">
+          <input type="submit" value="Groups" />
+          <input type="hidden" name="body" value={body} />
+        </form>
+    ) : (
+        <Typography variant="body1" style={styles.notAvailable}>
+          <b>Groups not available</b>
+        </Typography>
+    );
 
     return (
       <div>
@@ -93,6 +104,7 @@ class LtiAdvView extends React.Component {
           </form>
           {namesRoles}
           {grading}
+          {groups}
 
           <br />
           <Typography variant="h5">
