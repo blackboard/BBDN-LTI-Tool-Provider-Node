@@ -68,7 +68,6 @@ class SetupView extends Component {
             required
             label="Developer Portal URL"
             variant="outlined"
-            placeholder="https://developer.blackboard.com"
             fullWidth={true}
             InputLabelProps={{
               shrink: true
@@ -83,7 +82,6 @@ class SetupView extends Component {
             required
             label="Application ID"
             variant="outlined"
-            placeholder={randomGuid}
             fullWidth={true}
             InputLabelProps={{
               shrink: true
@@ -98,7 +96,6 @@ class SetupView extends Component {
             required
             label="OAuth2 Token End Point"
             variant="outlined"
-            placeholder={randomHost}
             fullWidth={true}
             InputLabelProps={{
               shrink: true
@@ -113,7 +110,6 @@ class SetupView extends Component {
             required
             label="Issuer"
             variant="outlined"
-            placeholder="blackboard.com"
             fullWidth={true}
             InputLabelProps={{
               shrink: true
@@ -130,7 +126,6 @@ class SetupView extends Component {
             rows="15"
             variant="outlined"
             multiline
-            placeholder={randomText}
             fullWidth={true}
             InputLabelProps={{
               shrink: true
