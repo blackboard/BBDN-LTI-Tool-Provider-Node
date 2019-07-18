@@ -106,34 +106,6 @@ class AssignGradesView extends React.Component {
           <b>Scores not available</b>
         </Typography>
       );
-    const clearScores =
-        this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
-            <form action="/agsClearScores" method="post">
-              <table>
-                <tbody>
-                <tr>
-                  <td>
-                    <input type="submit" value="Clear Scores"/>
-                    <input type="hidden" name="body" defaultValue={body}/>
-                    <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
-                  </td>
-                  <td>
-                    <input
-                        type="text"
-                        name="userid"
-                        size="10"
-                        placeholder="User UUID"
-                    />
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </form>
-        ) : (
-            <Typography variant="body1" style={styles.notAvailable}>
-              <b>Clear Scores not available</b>
-            </Typography>
-        );
     const submitAttempt =
       this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
         <form action="/agsSubmitAttempt" method="post">
@@ -227,9 +199,6 @@ class AssignGradesView extends React.Component {
             </li>
             <li>
               {scores}
-            </li>
-            <li>
-              {clearScores}
             </li>
             <li>
               {submitAttempt}

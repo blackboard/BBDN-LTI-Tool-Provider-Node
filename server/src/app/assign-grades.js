@@ -237,7 +237,7 @@ exports.scores = (req, res, agPayload, setup, task) => {
       } else if (task == "score") {
         score = {
           userId: userId,
-          scoreGiven: newScore ? newScore : 95.0,
+          scoreGiven: newScore ? newScore : null,
           scoreMaximum: 100.0,
           comment: "This is exceptional work.",
           timestamp: "2017-04-16T18:54:36.736+00:00",
