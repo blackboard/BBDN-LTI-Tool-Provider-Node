@@ -83,6 +83,13 @@ module.exports = function(app) {
     if (req.body.lti_message_type === "basic-lti-launch-request") {
       lti.got_launch(req, res);
     }
+
+    if (req.body.id_token) {
+      console.log("Redirecting to LTI 1.3");
+      jwtPayload = new JWTPayload();
+      ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+      res.redirect("#/lti_adv_view");
+    }
   });
 
   //=======================================================

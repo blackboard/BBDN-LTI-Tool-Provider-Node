@@ -12,8 +12,8 @@ let redisUtil = require("./app/redisutil");
 
 const options = config.use_ssl
   ? {
-      key: fs.readFileSync("star.int.bbpd.io.key"),
-      cert: fs.readFileSync("star.int.bbpd.io.crt")
+      key: fs.readFileSync(config.ssl_key),
+      cert: fs.readFileSync(config.ssl_crt)
     }
   : { key: null, cert: null };
 
@@ -144,6 +144,7 @@ if (config.use_ssl) {
     console.log("LTI 1.3 Redirect URL: " + provider + "/lti13," + provider + "/deepLinkOptions");
     console.log("LTI 1.3 Launch URL: " + provider + "/lti13");
     console.log("LTI 1.3 Deep Linking URL: " + provider + "/deepLinkOptions");
+    console.log("Setup URL: " + provider + "/#setup");
     console.log("Listening on " + listenPort);
   });
 } else {
@@ -155,4 +156,6 @@ if (config.use_ssl) {
   console.log("LTI 1.3 Redirect URL: " + provider + "/lti13," + provider + "/deepLinkOptions");
   console.log("LTI 1.3 Launch URL: " + provider + "/lti13");
   console.log("LTI 1.3 Deep Linking URL: " + provider + "/deepLinkOptions");
+  console.log("Setup URL: " + provider + "/#setup");
+  console.log("Listening on " + listenPort);
 }
