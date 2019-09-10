@@ -72,7 +72,7 @@ TBD
 TBD
 
 ### Deep Linking 2.0
-The Deep Linking Request should launch to http://localhost:3000/deeoLinkkOptions to be able to select content items and counts to return. Possible content items are:
+The Deep Linking Request should launch to http://localhost:3000/deepLinkOptions to be able to select content items and counts to return. Possible content items are:
 - LTI Link
 - Content Link
 - File
