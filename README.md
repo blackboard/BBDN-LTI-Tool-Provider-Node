@@ -1,5 +1,3 @@
-
-
 # BBDN-LTI-Tool-Provider-Node
 This project is a multi-purpose application designed to demonstrate several integration methods available with Blackboard Learn. The application is an LTI 1.1 and Advantage Tool Provider.
 Upon launch of the LTI Tool, the user is given a few options:
@@ -7,14 +5,30 @@ Upon launch of the LTI Tool, the user is given a few options:
 - Send Outcomes: Send a Grade to the Tool Consumer with LTI Outcomes
 - Caliper: Register your Tool as a Caliper Provider and then emit an event to the caliper service. In addition, an endpoint is provided to consume caliper events from the Blackboard Learn server.
 - Blackboard REST: The application provides a method to retrieve a REST token and then retrieve the user and course objects based on the UUID passed in the LTI launch.
-- Content Item Message: The application provides a method to send Content Item Messages back to Learn simulating a Content provider. This provides a menu of predefined message loads as well as the option to add a custom load.
-- Membership Service: Request members for course that launched the tool.
+- Deep Linking: The application provides a method to send Content Item Messages back to Learn simulating a Content provider. This provides a menu of predefined message loads as well as the option to add a custom load.
+- Names & Roles Service: Request members for course that launched the tool.
+- Assignment & Grades Service: With LTI Advantage a new service is available to get, create, and update line items in the gradebook.
 - Return to Learn: This will take the return URL in the LTI Launch and return the user to that place in Blackboard Learn. If no URL is provided, the user is returned to the top-level domain they came from.
 
 ## Requirements
 - [Node and npm](http://nodejs.org)
 - [Redis](http:redis.io) - On Mac it's easiest to `brew install redis`. The code assumes the default
 host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
+
+## Configuration
+You can override a number of configuration properties by creating a config_override.json file in server/config. Below is an example:
+
+{
+  "provider_domain": "https://example.com",
+  "provider_port": "9008",
+  "redis_host": "localhost",
+  "redis_port": 6379,
+  "use_ssl": true,
+  "ssl_key": "example.com.key",
+  "ssl_crt": "example.com.crt"
+}
+
+If you want to run under SSL you must specify the ssl_key and ssl_crt. They should be placed in the root folder of the application.
 
 ## How To Run the code
 All packages needed are in the package.json. 
@@ -26,8 +40,8 @@ Access the application via http://localhost:3000. You can customize the host nam
 ### Base LTI 1.1.x functionality and Membership service
 To launch the LTI 1 tool, you must launch into the application as an LTI Tool with the url, http://localhost:3000/lti.
 
-### Content Item Message
-To launch the Content Provider simulation call the tool with this url, http://localhost:3000/CIMRequest.
+### Deep Linking 1.0
+To launch the Content Provider simulation call the tool with this url, http://localhost:3000/CIMRequest for use with LTI 1.1.
 Add the parameter "custom_option" with a value of 1 - 5 (e.g. CIMRequest?custom_option=1) and the corresponding predefined message load from the menu
 
 ## Usage
@@ -57,19 +71,19 @@ Connection access to a copy of the Blackboard Developer's Portal (devportal) to 
 Additional data
 - Dev portal host
 
-This data can be entered using http://localhost:3000/setup
+This data can be entered using http://localhost:3000/#setup
 
-- Install Redis to store the tool proxies that are generated. On Mac it's easiest to `brew install redis`. The code assumes the default
+- Install Redis to store the configuration. On Mac it's easiest to `brew install redis`. The code assumes the default
 host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
 
 ### Base LTI 1.3 tool launch
 The normal LTI Resource link should launch to http://localhost:3000/lti13.
 
 ### Assignment and Grade Services 2.0
-TBD
+If enabled on the LMS this will be available in the tool.
 
 ### Names and Roles Provisioning Services 2.0
-TBD
+If enabled on the LMS this will be available in the tool.
 
 ### Deep Linking 2.0
 The Deep Linking Request should launch to http://localhost:3000/deepLinkOptions to be able to select content items and counts to return. Possible content items are:
@@ -78,10 +92,6 @@ The Deep Linking Request should launch to http://localhost:3000/deepLinkOptions 
 - File
 - Image
 - HTML fragment
-
-The Deep Linking Request should launch to http://localhost:3000/deepLinkContent to return fixed content containing:
-- 1 LTI Link
-- 1 Content Link
 
 # Docker
 
