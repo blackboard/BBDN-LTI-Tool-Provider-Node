@@ -39,7 +39,7 @@ export const fullListItems = (
     />
     <Divider />
     <ListItemLink
-      to="/setup"
+      to="/setup_page"
       primary="LTI Settings"
       icon={<SettingsIcon color={"secondary"} />}
     />

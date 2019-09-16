@@ -71,7 +71,7 @@ Connection access to a copy of the Blackboard Developer's Portal (devportal) to 
 Additional data
 - Dev portal host
 
-This data can be entered using http://localhost:3000/#setup
+This data can be entered using http://localhost:3000/setup
 
 - Install Redis to store the configuration. On Mac it's easiest to `brew install redis`. The code assumes the default
 host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json

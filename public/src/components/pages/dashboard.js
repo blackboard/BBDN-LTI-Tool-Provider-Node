@@ -30,7 +30,6 @@ import LaunchEndpoint from "./home";
 import LtiAdvView from "./ltiAdvView";
 import NamesRolesView from "./namesRolesView";
 import GroupsView from "./groupsView";
-import Setup from "./setupView";
 import SetupView from "./setupView";
 import SnackBar from "../page_objects/snackbar";
 
@@ -127,7 +126,6 @@ class Dashboard extends React.Component {
               <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Route exact path="/" component={LaunchEndpoint} />
-                <Route path="/setup" component={Setup} />
                 <Route path="/home" component={LaunchEndpoint} />
                 <Route path="/content_item" component={ContentItemView} />
                 <Route path="/cim_request" component={CIMRequestView} />
