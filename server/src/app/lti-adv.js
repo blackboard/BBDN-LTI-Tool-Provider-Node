@@ -184,5 +184,5 @@ let oauth2JWT = function(setup) {
     jti: crypto.randomBytes(16).toString("hex")
   };
 
-  return jwt.sign(json, setup.privateKey, { algorithm: "RS256" });
+  return jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
 };

@@ -23,7 +23,7 @@ exports.deepLink = function(req, res, dlPayload, setup) {
 
   console.log("Private key: " + setup.privateKey);
 
-  dlPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256" });
+  dlPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
   dlPayload.return_url = deepLink.deep_link_return_url;
   dlPayload.error_url =
     dlPayload.body[
@@ -95,7 +95,7 @@ exports.deepLinkContent = function(req, res, dlPayload, setup) {
 
   console.log("Private key2: " + setup.privateKey);
 
-  dlPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256" });
+  dlPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
   dlPayload.return_url = deepLink.deep_link_return_url;
   dlPayload.return_json = json;
 };
