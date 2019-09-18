@@ -63,7 +63,7 @@ exports.groups = (req, res, groupsPayload, setup) => {
             });
           }
         }
-        res.redirect("#/groups_view");
+        res.redirect("/groups_view");
       });
     },
     function(error) {

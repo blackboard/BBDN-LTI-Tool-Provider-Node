@@ -63,7 +63,7 @@ exports.namesRoles = (req, res, nrPayload, setup) => {
             }
           });
         }
-        res.redirect("#/names_roles_view");
+        res.redirect("/names_roles_view");
       });
     },
     function(error) {

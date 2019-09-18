@@ -16,7 +16,7 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
-import { HashRouter, Route } from "react-router-dom";
+import {BrowserRouter, Route} from 'react-router-dom';
 import { darkMode, lightMode } from "../../common/styles/palette";
 import { styles } from "../../common/styles/styles";
 import ErrorBoundary from "../errorBoundary";
@@ -64,85 +64,83 @@ class Dashboard extends React.Component {
     return (
       <MuiThemeProvider theme={this.state.theme}>
         <div className={classes.root}>
-          <HashRouter>
-            <CssBaseline />
-            <AppBar
-              position="absolute"
-              className={classNames(
-                classes.appBar,
-                this.state.open && classes.appBarShift
-              )}>
-              <Toolbar
-                disableGutters={!this.state.open}
-                className={classes.toolbar}>
-                <IconButton
-                  color="secondary"
-                  aria-label="Open drawer"
-                  onClick={this.handleDrawerOpen}
-                  className={classNames(
-                    classes.menuButton,
-                    this.state.open && classes.menuButtonHidden
-                  )}>
-                  <MenuIcon />
+          <CssBaseline/>
+          <AppBar
+            position="absolute"
+            className={classNames(
+              classes.appBar,
+              this.state.open && classes.appBarShift
+            )}>
+            <Toolbar
+              disableGutters={!this.state.open}
+              className={classes.toolbar}>
+              <IconButton
+                color="secondary"
+                aria-label="Open drawer"
+                onClick={this.handleDrawerOpen}
+                className={classNames(
+                  classes.menuButton,
+                  this.state.open && classes.menuButtonHidden
+                )}>
+                <MenuIcon/>
+              </IconButton>
+              <Typography
+                component="h1"
+                variant="h6"
+                color="secondary"
+                noWrap
+                className={classes.title}>
+                LTI Testing Tool
+              </Typography>
+              <Tooltip title={"Toggle Dark Mode"}>
+                <IconButton color={"secondary"} onClick={this.handleDarkMode}>
+                  <ModeButton/>
                 </IconButton>
-                <Typography
-                  component="h1"
-                  variant="h6"
-                  color="secondary"
-                  noWrap
-                  className={classes.title}>
-                  LTI Testing Tool
-                </Typography>
-                <Tooltip title={"Toggle Dark Mode"}>
-                  <IconButton color={"secondary"} onClick={this.handleDarkMode}>
-                    <ModeButton />
-                  </IconButton>
-                </Tooltip>
-                <IconButton color="secondary">
-                  <Badge badgeContent={4} color="error">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-              </Toolbar>
-            </AppBar>
-            <Drawer
-              variant="permanent"
-              classes={{
-                paper: classNames(
-                  classes.drawerPaper,
-                  !this.state.open && classes.drawerPaperClose
-                )
-              }}
-              open={this.state.open}>
-              <div className={classes.toolbarIcon}>
-                <IconButton onClick={this.handleDrawerClose}>
-                  <ChevronLeftIcon />
-                </IconButton>
-              </div>
-              <Divider />
-              {drawerList}
-            </Drawer>
-            <ErrorBoundary>
-              <main className={classes.content}>
-                <div className={classes.appBarSpacer} />
-                <Route exact path="/" component={LaunchEndpoint} />
-                <Route path="/home" component={LaunchEndpoint} />
-                <Route path="/content_item" component={ContentItemView} />
-                <Route path="/cim_request" component={CIMRequestView} />
-                <Route path="/lti_adv_view" component={LtiAdvView} />
-                <Route path="/setup_page" component={SetupView} />
-                <Route path="/deep_link" component={DeepLinkPayloadView} />
-                <Route path="/deep_link_options" component={DeepLinkOptions} />
-                <Route path="/names_roles_view" component={NamesRolesView} />
-                <Route path="/groups_view" component={GroupsView} />
-                <Route
-                  path="/assign_grades_view"
-                  component={AssignGradesView}
-                />
-              </main>
-              <SnackBar />
-            </ErrorBoundary>
-          </HashRouter>
+              </Tooltip>
+              <IconButton color="secondary">
+                <Badge badgeContent={4} color="error">
+                  <NotificationsIcon/>
+                </Badge>
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant="permanent"
+            classes={{
+              paper: classNames(
+                classes.drawerPaper,
+                !this.state.open && classes.drawerPaperClose
+              )
+            }}
+            open={this.state.open}>
+            <div className={classes.toolbarIcon}>
+              <IconButton onClick={this.handleDrawerClose}>
+                <ChevronLeftIcon/>
+              </IconButton>
+            </div>
+            <Divider/>
+            {drawerList}
+          </Drawer>
+          <ErrorBoundary>
+            <main className={classes.content}>
+              <div className={classes.appBarSpacer}/>
+              <Route exact path="/" component={LaunchEndpoint}/>
+              <Route path="/home" component={LaunchEndpoint}/>
+              <Route path="/content_item" component={ContentItemView}/>
+              <Route path="/cim_request" component={CIMRequestView}/>
+              <Route path="/lti_adv_view" component={LtiAdvView}/>
+              <Route path="/setup_page" component={SetupView}/>
+              <Route path="/deep_link" component={DeepLinkPayloadView}/>
+              <Route path="/deep_link_options" component={DeepLinkOptions}/>
+              <Route path="/names_roles_view" component={NamesRolesView}/>
+              <Route path="/groups_view" component={GroupsView}/>
+              <Route
+                path="/assign_grades_view"
+                component={AssignGradesView}
+              />
+            </main>
+            <SnackBar/>
+          </ErrorBoundary>
         </div>
       </MuiThemeProvider>
     );
