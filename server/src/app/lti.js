@@ -165,7 +165,7 @@ exports.caliper_send = function(req,res) {
     uuid = user_id;
     
 
-  // Any asynchronous calls within this function will be captured
+    // Any asynchronous calls within this function will be captured
     // Just wrap each asynchronous call with function 'async'. 
     // Each asynchronous call should invoke 'done' as its callback. 
     // 'done' tasks two arguments: error and result. 
@@ -174,8 +174,6 @@ exports.caliper_send = function(req,res) {
 
         sensor.initialize(caliper_id);
         
-        var parts = url.parse(eventStoreUrl, true);
-  
         client.initialize(caliper_id, {
           hostname: caliper_profile_url_parts.hostname,
           path: caliper_profile_url_parts.path,
