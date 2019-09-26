@@ -179,6 +179,7 @@ exports.caliper_send = function(req,res) {
           path: caliper_profile_url_parts.path,
           uri: eventStoreUrl,
           method: "POST",
+          json: true,
           port: caliper_profile_url_parts.port,
           rejectUnauthorized: rejectUnauthorized,
           headers: {"Authorization": apiKey, "Content-Type": "application/json"}
