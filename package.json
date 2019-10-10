@@ -22,6 +22,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.1",
     "lodash": "^4.17.11",
+    "lowdb": "^1.0.0",
     "moment": "^2.24.0",
     "mongodb": "^2.2.11",
     "oauth-signature": "^1.5.0",
@@ -57,7 +58,7 @@
   "scripts": {
     "build-server": "babel server/src -d server/lib --source-maps",
     "build-public": "webpack --display-error-details",
-    "prestart": "npm install; npm run build-server; npm run build-public",
+    "prestart": "npm install & npm run build-server & npm run build-public",
     "start": "node server/lib/server.js"
   }
 }

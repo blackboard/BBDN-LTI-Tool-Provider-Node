@@ -107,3 +107,6 @@ local.properties
 
 # Code Recommenders
 .recommenders/
+
+# lowdb
+db.json

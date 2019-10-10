@@ -3,12 +3,14 @@ import express from "express";
 import fs from "fs";
 import https from "https";
 import request from "request";
+import low from 'lowdb';
+import FileSync from 'lowdb/adapters/FileSync';
+
 import routes from "./app/routes.js";
 import config from "./config/config.js";
 
 const app = express();
 const httpProxy = express();
-let redisUtil = require("./app/redisutil");
 
 const options = config.use_ssl
   ? {
@@ -23,8 +25,6 @@ let provider =
 let listenPort =
   process.env.PORT ||
   (config.provider_port !== "NA" ? config.provider_port : 5000);
-
-redisUtil.redisInit(config.redis_host, config.redis_port);
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // don't validate ssl cert for posts to ssl sites
 
@@ -102,30 +102,6 @@ httpProxy.all("/*", function(req, res) {
     console.error(err.toString());
   }
 });
-
-// setup parameters ============================================================
-/**let setup_key = 'setupParameters';
- redisUtil.redisGet(setup_key).then((setupData) => {
-  console.log('--------------------');
-  if (setupData === null) {
-    let setup = new SetupParameters();
-    setup.issuer = 'https://blackboard.com';
-    setup.tokenEndPoint = 'Need Oauth2 token endpoint';
-    setup.privateKey = 'Need private key';
-    setup.applicationId = 'Need application id';
-    setup.devPortalHost = "Need dev portal url";
-    redisUtil.redisSave(setup_key, setup);
-    console.log('Initialize setup parameters');
-  } else {
-    console.log('Setup parameters');
-    console.log('Issuer: ' + setupData.issuer);
-    console.log('Token: ' + setupData.tokenEndPoint);
-    console.log('Client ID: ' + setupData.applicationId);
-    console.log('Dev Portal: ' + setupData.devPortalHost);
-  }
-  console.log('--------------------');
-});
- **/
 
 // routes ======================================================================
 routes(app);

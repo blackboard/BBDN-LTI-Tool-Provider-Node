@@ -42,7 +42,7 @@ class LaunchEndpoint extends React.Component {
         <br />
         <div>
           <Button variant={"outlined"} color={"secondary"} href={"/testRedis"}>
-            Test Redis
+            Test DB
           </Button>
         </div>
       </div>

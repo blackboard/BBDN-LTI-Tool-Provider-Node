@@ -9,9 +9,12 @@ import * as lti from "./lti";
 import ltiAdv from "./lti-adv";
 import namesRoles from "./names-roles";
 import groups from "./groups";
-import redisUtil from "./redisutil";
+import * as dbutil from './dbutil';
 
 const contentitem_key = "contentItemData";
+
+// init lowdb.
+dbutil.dbInit();
 
 module.exports = function(app) {
   let provider =
@@ -27,12 +30,12 @@ module.exports = function(app) {
   let setup_key = "setupParameters";
 
   if (!setupLoaded) {
-    redisUtil.redisGet(setup_key).then(setupData => {
-      if (setupData !== null) {
+    const setupData = dbutil.dbGet(setup_key);
+    if(setupData) {
         setup = setupData;
         setupLoaded = true;
-      }
-    });
+    }
+    console.log('setupData', setupData, 'setup', setup);
   }
 
   //=======================================================
@@ -71,7 +74,9 @@ module.exports = function(app) {
     console.log("--------------------\nlti");
     if (req.body.lti_message_type === "ContentItemSelectionRequest") {
       content_item.got_launch(req, res, contentItemData).then(() => {
-        redisUtil.redisSave(contentitem_key, contentItemData);
+
+        dbutil.dbSave(contentitem_key, contentItemData);
+
         ciLoaded = true;
 
         let redirectUrl = provider + "#/content_item";
@@ -121,7 +126,7 @@ module.exports = function(app) {
       content_item
         .got_launch(passthru_req, passthru_res, contentItemData)
         .then(() => {
-          redisUtil.redisSave(contentitem_key, contentItemData);
+          dbutil.dbSave(contentitem_key, contentItemData);
           ciLoaded = true;
 
           let redirectUrl = provider + "#/content_item";
@@ -133,10 +138,9 @@ module.exports = function(app) {
 
   app.get("/contentitemdata", (req, res) => {
     if (!ciLoaded) {
-      redisUtil.redisGet(contentitem_key).then(contentData => {
-        contentItemData = contentData;
-        res.send(contentItemData);
-      });
+      const contentData = dbutil.dbGet(contentitem_key);
+      contentItemData = contentData;
+      res.send(contentItemData);
     } else {
       res.send(contentItemData);
     }
@@ -318,20 +322,21 @@ module.exports = function(app) {
     setup.issuer = req.body.issuer;
     setup.applicationId = req.body.applicationId;
     setup.devPortalHost = req.body.devPortalHost;
-    redisUtil.redisSave(setup_key, setup);
+    dbutil.dbSave(setup_key, setup);
     res.redirect("#/setup_page");
   });
 
   //=======================================================
-  // Test REDIS
+  // Test lowdb
 
   app.get("/testRedis", (req, res) => {
     console.log("--------------------\ntestRedis");
 
-    redisUtil.redisSave("key", "value");
-    redisUtil.redisGet("key").then( (value) => { console.log("Redis value for key: " + value); });
+    dbutil.dbSave("key", "value");
+    const value = dbutil.dbGet("key");
+    console.log("lowdb value for key: " + value);
 
-    res.send('<html lang=""><body>1</body></html>');
+    res.send('<html lang=""><body><h3>Database is up and running.</h3></body></html>');
   });
 
   //=======================================================
