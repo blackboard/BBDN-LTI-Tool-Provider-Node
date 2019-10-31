@@ -159,7 +159,7 @@ class AssignGradesView extends React.Component {
                   <tbody>
                   <tr>
                     <td>
-                      <input type="submit" value="Add Column"/>
+                      <input type="submit" value="Add/Update Column"/>
                       <input type="hidden" name="body" defaultValue={body}/>
                       <input
                         type="hidden"
@@ -178,9 +178,17 @@ class AssignGradesView extends React.Component {
                     <td>
                       <input
                         type="text"
-                        name="tagval"
+                        name="label"
                         size="10"
-                        placeholder="name"
+                        placeholder="column name"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name="columnId"
+                        size="10"
+                        placeholder="Column ID"
                       />
                     </td>
                   </tr>

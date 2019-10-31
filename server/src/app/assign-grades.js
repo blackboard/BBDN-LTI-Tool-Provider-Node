@@ -86,30 +86,48 @@ exports.addCol = (req, res, agPayload, setup) => {
     function(token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
+      let label = agPayload.form.label;
+      let columnId = agPayload.form.columnId;
+      console.log("Add column ID: " + columnId);
 
       let add = {
         scoreMaximum: agPayload.form.score,
-        label: agPayload.form.tagval + " grade",
+        label: label,
         resourceId: setup.applicationId,
-        tag: "grade"
+        tag: label + " tag"
       };
+      let options = {};
 
-      let options = {
-        method: "POST",
-        uri: agPayload.form.url,
-        headers: {
-          "content-type": "application/vnd.ims.lis.v2.lineitem+json",
-          Authorization: "Bearer " + agPayload.token
-        },
-        body: JSON.stringify(add)
-      };
+      if ( columnId ) {
+        // This is an update
+        options = {
+          method: "PUT",
+          uri: agPayload.form.url + "/" + columnId,
+          headers: {
+            "content-type": "application/vnd.ims.lis.v2.lineitem+json",
+            Authorization: "Bearer " + agPayload.token
+          },
+          body: JSON.stringify(add)
+        };
+      } else {
+        // This is a create
+        options = {
+          method: "POST",
+          uri: agPayload.form.url,
+          headers: {
+            "content-type": "application/vnd.ims.lis.v2.lineitem+json",
+            Authorization: "Bearer " + agPayload.token
+          },
+          body: JSON.stringify(add)
+        };
+      }
 
       request(options, function(err, response, body) {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log("AGS Add Column Error - request failed: " + err.message);
-        } else if (response.statusCode !== 200) {
+          console.log("AGS Add/Update Column Error - request failed: " + err.message);
+        } else if (response.statusCode !== 200 && response.statusCode !== 201) {
           console.log(
             "AGS Add Column Error - Service call failed: " +
               response.statusCode +

@@ -60,7 +60,7 @@ module.exports = function(app) {
         if (setup.privateKey === "") {
           // use our generated one that goes with our generated public key and jwks URL
           setup.privateKey = privateKey;
-          console.log("Using generated private key: " + setup.privateKey);
+          console.log("Using generated private key...");
         }
 
         setupLoaded = true;

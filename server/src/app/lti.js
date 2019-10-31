@@ -223,7 +223,7 @@ exports.caliper_send = function(req,res) {
     });
     
     async('edApp', function(done) {    
-      var edApp = entityFactory().coerce(caliper.SoftwareApplication, {id: BASE_IRI});
+      var edApp = entityFactory().create(caliper.SoftwareApplication, {id: BASE_SECTION_IRI, type: "SoftwareApplication", version: "1.0"});
 
       done(null,edApp);
     });
