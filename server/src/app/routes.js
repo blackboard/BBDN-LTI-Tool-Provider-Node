@@ -264,6 +264,18 @@ module.exports = function(app) {
     res.send(groupsPayload);
   });
 
+  let groupSetsPayload;
+
+  app.post("/groupsets", (req, res) => {
+    console.log("--------------------\ngroupsets");
+    groupSetsPayload = new GroupsPayload();
+    groups.groupSets(req, res, groupSetsPayload, setup);
+  });
+
+  app.get("/groupSetsPayloadData", (req, res) => {
+    res.send(groupSetsPayload);
+  });
+
   //=======================================================
   // Assignments and Grades
   let agPayload;
