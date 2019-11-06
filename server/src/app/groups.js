@@ -3,21 +3,23 @@
 let ltiAdv = require("./lti-adv");
 let request = require("request");
 
-exports.groups = (req, res, groupsPayload, setup) => {
+exports.groups = (req, res, groupsPayload) => {
   if (groupsPayload.url === "") {
     groupsPayload.orig_body = JSON.parse(req.body.body);
     let groups =
-        groupsPayload.orig_body[
+      groupsPayload.orig_body[
         "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice"
-      ];
+        ];
     groupsPayload.url = groups.context_groups_url;
     groupsPayload.version = groups.service_version;
     groupsPayload.return_url =
-        groupsPayload.orig_body[
+      groupsPayload.orig_body[
         "https://purl.imsglobal.org/spec/lti/claim/launch_presentation"
-      ].return_url;
+        ].return_url;
   }
+};
 
+exports.getGroups = (req, res, groupsPayload, setup) => {
   // Get OAuth2 token and make call to Learn
   let scope =
     "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly";
@@ -25,10 +27,16 @@ exports.groups = (req, res, groupsPayload, setup) => {
     function(token) {
       let body = JSON.parse(token);
       groupsPayload.token = body.access_token;
+      let userId = groupsPayload.form.userid;
+      let url = groupsPayload.form.url;
+
+      if ( userId ) {
+        url += "?user_id=" + userId;
+      }
 
       let options = {
         method: "GET",
-        uri: groupsPayload.url,
+        uri: url,
         headers: {
           "content-type":
             "application/vnd.ims.lti-gs.v1.contextgroupcontainer+json",

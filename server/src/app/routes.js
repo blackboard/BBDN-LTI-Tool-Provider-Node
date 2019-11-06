@@ -258,10 +258,17 @@ module.exports = function(app) {
     console.log("--------------------\ngroups");
     groupsPayload = new GroupsPayload();
     groups.groups(req, res, groupsPayload, setup);
+    res.redirect("/groups_view");
   });
 
   app.get("/groupsPayloadData", (req, res) => {
     res.send(groupsPayload);
+  });
+
+  app.post("/getgroups", (req, res) => {
+    console.log("--------------------\ngroups");
+    groupsPayload.form = req.body;
+    groups.getGroups(req, res, groupsPayload, setup);
   });
 
   let groupSetsPayload;
