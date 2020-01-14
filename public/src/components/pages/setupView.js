@@ -17,7 +17,8 @@ class SetupView extends Component {
       privateKey: "",
       devPortalHost: "",
       issuer: "",
-      tokenEndPoint: ""
+      tokenEndPoint: "",
+      oidcAuthUrl: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,7 +33,8 @@ class SetupView extends Component {
           applicationId: result.applicationId,
           devPortalHost: result.devPortalHost,
           issuer: result.issuer,
-          tokenEndPoint: result.tokenEndPoint
+          tokenEndPoint: result.tokenEndPoint,
+          oidcAuthUrl: result.oidcAuthUrl
         });
       });
   }
@@ -102,6 +104,20 @@ class SetupView extends Component {
             }}
             name={"tokenEndPoint"}
             value={this.state.tokenEndPoint || ""}
+            onInput={this.handleChange}
+          />
+          <br />
+          <br />
+          <TextField
+            required
+            label="OIDC Auth URL"
+            variant="outlined"
+            fullWidth={true}
+            InputLabelProps={{
+              shrink: true
+            }}
+            name={"oidcAuthUrl"}
+            value={this.state.oidcAuthUrl || ""}
             onInput={this.handleChange}
           />
           <br />

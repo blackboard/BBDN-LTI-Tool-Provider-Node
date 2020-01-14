@@ -144,7 +144,8 @@ if (config.use_ssl) {
     console.log("LTI 1.3 Redirect URL: " + provider + "/lti13," + provider + "/deepLinkOptions");
     console.log("LTI 1.3 Launch URL: " + provider + "/lti13");
     console.log("LTI 1.3 Deep Linking URL: " + provider + "/deepLinkOptions");
-    console.log("Setup URL: " + provider + "/#setup");
+    console.log("JWKS URL: " + provider + "/.well-known/jwks.json");
+    console.log("Setup URL: " + provider + "/setup");
     console.log("Listening on " + listenPort);
   });
 } else {
@@ -156,6 +157,7 @@ if (config.use_ssl) {
   console.log("LTI 1.3 Redirect URL: " + provider + "/lti13," + provider + "/deepLinkOptions");
   console.log("LTI 1.3 Launch URL: " + provider + "/lti13");
   console.log("LTI 1.3 Deep Linking URL: " + provider + "/deepLinkOptions");
-  console.log("Setup URL: " + provider + "/#setup");
+  console.log("JWKS URL: " + provider + "/.well-known/jwks.json");
+  console.log("Setup URL: " + provider + "/setup");
   console.log("Listening on " + listenPort);
 }

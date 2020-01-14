@@ -11,7 +11,32 @@ import namesRoles from "./names-roles";
 import groups from "./groups";
 import redisUtil from "./redisutil";
 
+let jwk2pem = require('pem-jwk').jwk2pem
+
 const contentitem_key = "contentItemData";
+
+const FULL_KEYS = "{\n" +
+  "  \"kty\": \"RSA\",\n" +
+  "  \"d\": \"o_OPanHKvMvkM1D0_u52AHhZDRCMyxsDTHW-6rCmi7DhXNcfLGJMpL05pLiGSz3OGZN7uI83IP748f-WgRxc5H5nyXYe-7fEMue1T6ZF1p5-e1rBZ_ukXULHaiLff834YOMuMa0t8X7sKLMI4eInKH2SK_uSqxCT12hh3IukhxS1wbB9kSvE1v7PNXAU1enXC3M1wFRmmKPMuK_AKbtqKv-y2UG1GeisWg7HLuOYHINga8gY60KJDBp-wDsJOpIrMCRDP99OnkJWMbC-k8gWzDGCtdQHTGQnfgGxJVmKVUG-7JOCnlu-S21yofvj1K_aTAtAS8ByJHBLBzIjUBotuQ\",\n" +
+  "  \"e\": \"AQAB\",\n" +
+  "  \"use\": \"sig\",\n" +
+  "  \"kid\": \"12345\",\n" +
+  "  \"alg\": \"RS256\",\n" +
+  "  \"n\": \"sB3jz6IZBOuerqkZ-RUpCoZuNeaL2A2ODOC4W9dJcL649-dYGzJMR6R8chuOL5EQAEZyzbxGU49rkLCa0d0yt4PIJE_k86Ib9PBZhhyj1WuIPHYuJqzPlwdHXJDSA6pEdSsOS5fWCLs75IETnbmPtV0wM8C32QHd6U8M2iZSmy5XFut5H-DisplW7rTaeCzVIqZXEnvBp0ZsxVyXkYJj1emnhX0TqgsdQy8H7evVvM2--dIBIENbKmxNQQH8pwTdRgMWJqAFjo8Tkj2PKLb075aEE-wEtlF0Ms7Y2ASo22Jya57E-CPfeCPE5vIJ_SyC0B8GeIE41qdra-lfzVi_zQ\"\n" +
+  "}";
+
+const PUBLIC_KEY_SET = "{\n" +
+  "  \"keys\": [\n" +
+  "    {\n" +
+  "      \"kty\": \"RSA\",\n" +
+  "      \"e\": \"AQAB\",\n" +
+  "      \"use\": \"sig\",\n" +
+  "      \"kid\": \"12345\",\n" +
+  "      \"alg\": \"RS256\",\n" +
+  "      \"n\": \"sB3jz6IZBOuerqkZ-RUpCoZuNeaL2A2ODOC4W9dJcL649-dYGzJMR6R8chuOL5EQAEZyzbxGU49rkLCa0d0yt4PIJE_k86Ib9PBZhhyj1WuIPHYuJqzPlwdHXJDSA6pEdSsOS5fWCLs75IETnbmPtV0wM8C32QHd6U8M2iZSmy5XFut5H-DisplW7rTaeCzVIqZXEnvBp0ZsxVyXkYJj1emnhX0TqgsdQy8H7evVvM2--dIBIENbKmxNQQH8pwTdRgMWJqAFjo8Tkj2PKLb075aEE-wEtlF0Ms7Y2ASo22Jya57E-CPfeCPE5vIJ_SyC0B8GeIE41qdra-lfzVi_zQ\"\n" +
+  "    }\n" +
+  "  ]\n" +
+  "}";
 
 module.exports = function(app) {
   let provider =
@@ -20,6 +45,7 @@ module.exports = function(app) {
 
   let contentItemData = new ContentItem();
   let ciLoaded = false;
+  let privateKey = jwk2pem(JSON.parse(FULL_KEYS));
 
   //=======================================================
   let setupLoaded = false;
@@ -30,6 +56,13 @@ module.exports = function(app) {
     redisUtil.redisGet(setup_key).then(setupData => {
       if (setupData !== null) {
         setup = setupData;
+
+        if (setup.privateKey === "") {
+          // use our generated one that goes with our generated public key and jwks URL
+          setup.privateKey = privateKey;
+          console.log("Using generated private key...");
+        }
+
         setupLoaded = true;
       }
     });
@@ -74,7 +107,7 @@ module.exports = function(app) {
         redisUtil.redisSave(contentitem_key, contentItemData);
         ciLoaded = true;
 
-        let redirectUrl = provider + "#/content_item";
+        let redirectUrl = provider + "/content_item";
         console.log("Redirecting to : " + redirectUrl);
         res.redirect(redirectUrl);
       });
@@ -88,7 +121,7 @@ module.exports = function(app) {
       console.log("Redirecting to LTI 1.3");
       jwtPayload = new JWTPayload();
       ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
-      res.redirect("#/lti_adv_view");
+      res.redirect("/lti_adv_view");
     }
   });
 
@@ -106,7 +139,7 @@ module.exports = function(app) {
       passthru_req = req;
       passthru_res = res;
       passthru = true;
-      res.redirect("#/cim_request");
+      res.redirect("/cim_request");
     } else {
       if (!passthru) {
         // custom_option was set in call from TC so use current req and res
@@ -124,7 +157,7 @@ module.exports = function(app) {
           redisUtil.redisSave(contentitem_key, contentItemData);
           ciLoaded = true;
 
-          let redirectUrl = provider + "#/content_item";
+          let redirectUrl = provider + "/content_item";
           console.log("Redirecting to : " + redirectUrl);
           res.redirect(redirectUrl);
         });
@@ -150,14 +183,14 @@ module.exports = function(app) {
     console.log("--------------------\nltiAdvantage");
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
-    res.redirect("#/lti_adv_view");
+    res.redirect("/lti_adv_view");
   });
 
   app.post("/ltiAdv", (req, res) => {
     console.log("--------------------\nltiAdvantage");
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
-    res.redirect("#/lti_adv_view");
+    res.redirect("/lti_adv_view");
   });
 
   app.get("/jwtPayloadData", (req, res) => {
@@ -178,7 +211,7 @@ module.exports = function(app) {
     dlPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, dlPayload, setup);
     deepLink(req, res, dlPayload, setup);
-    res.redirect("#/deep_link");
+    res.redirect("/deep_link");
   });
 
   app.get("/dlPayloadData", (req, res) => {
@@ -189,13 +222,13 @@ module.exports = function(app) {
     console.log("--------------------\ndeepLinkOptions");
     dlPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, dlPayload, setup);
-    res.redirect("#/deep_link_options");
+    res.redirect("/deep_link_options");
   });
 
   app.post("/deepLinkContent", (req, res) => {
     console.log("--------------------\ndeepLinkContent");
     deepLinkContent(req, res, dlPayload, setup);
-    res.redirect("#/deep_link");
+    res.redirect("/deep_link");
   });
 
   //=======================================================
@@ -225,10 +258,29 @@ module.exports = function(app) {
     console.log("--------------------\ngroups");
     groupsPayload = new GroupsPayload();
     groups.groups(req, res, groupsPayload, setup);
+    res.redirect("/groups_view");
   });
 
   app.get("/groupsPayloadData", (req, res) => {
     res.send(groupsPayload);
+  });
+
+  app.post("/getgroups", (req, res) => {
+    console.log("--------------------\ngroups");
+    groupsPayload.form = req.body;
+    groups.getGroups(req, res, groupsPayload, setup);
+  });
+
+  let groupSetsPayload;
+
+  app.post("/groupsets", (req, res) => {
+    console.log("--------------------\ngroupsets");
+    groupSetsPayload = new GroupsPayload();
+    groups.groupSets(req, res, groupSetsPayload, setup);
+  });
+
+  app.get("/groupSetsPayloadData", (req, res) => {
+    res.send(groupSetsPayload);
   });
 
   //=======================================================
@@ -239,7 +291,7 @@ module.exports = function(app) {
     console.log("--------------------\nassignAndGrades");
     agPayload = new AGPayload();
     assignGrades.assignGrades(req, res, agPayload);
-    res.redirect("#/assign_grades_view");
+    res.redirect("/assign_grades_view");
   });
 
   app.post("/agsReadCols", (req, res) => {
@@ -292,6 +344,10 @@ module.exports = function(app) {
     res.send(config);
   });
 
+  app.get("/.well-known/jwks.json", (req, res) => {
+    res.send(PUBLIC_KEY_SET);
+  });
+
   //=======================================================
   // Grab a token and display it
 
@@ -303,9 +359,9 @@ module.exports = function(app) {
   //=======================================================
   // Setup processing
 
-  app.get("/setup", (req, res) => {
+  app.get("/setup_page", (req, res) => {
     console.log("--------------------\nsetup");
-    res.redirect("#/setup_page");
+    res.redirect("/setup");
   });
 
   app.get("/setupData", (req, res) => {
@@ -315,11 +371,12 @@ module.exports = function(app) {
   app.post("/saveSetup", (req, res) => {
     setup.privateKey = req.body.privateKey;
     setup.tokenEndPoint = req.body.tokenEndPoint;
+    setup.oidcAuthUrl = req.body.oidcAuthUrl;
     setup.issuer = req.body.issuer;
     setup.applicationId = req.body.applicationId;
     setup.devPortalHost = req.body.devPortalHost;
     redisUtil.redisSave(setup_key, setup);
-    res.redirect("#/setup_page");
+    res.redirect("/setup");
   });
 
   //=======================================================

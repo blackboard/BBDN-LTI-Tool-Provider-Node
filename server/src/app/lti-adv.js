@@ -2,10 +2,10 @@
 
 let srequest = require("sync-request");
 let jwt = require("jsonwebtoken");
-let jwk = require("jwk-to-pem");
 let crypto = require("crypto");
 let request = require("request");
 let uuid = require("uuid");
+let jwk2pem = require('pem-jwk').jwk2pem
 
 exports.toolLaunch = function(req, res, jwtPayload) {
   let id_token = req.body.id_token;
@@ -89,7 +89,7 @@ exports.verifyToken = function(id_token, jwtPayload, setup) {
   }
 
   try {
-    jwt.verify(id_token, jwk(JSON.parse(res.getBody("UTF-8")).keys[0]));
+    jwt.verify(id_token, jwk2pem(JSON.parse(res.getBody("UTF-8")).keys[0]));
     jwtPayload.verified = true;
     console.log("JWT verified " + jwtPayload.verified);
   } catch (err) {
@@ -153,7 +153,7 @@ exports.security1 = function(req, res, jwtPayload, setup) {
   let state = uuid.v4();
   let nonce = uuid.v4();
   let url =
-    setup.tokenEndPoint +
+    setup.oidcAuthUrl +
     "?response_type=id_token" +
     "&scope=openid" +
     "&login_hint=" +
@@ -184,5 +184,5 @@ let oauth2JWT = function(setup) {
     jti: crypto.randomBytes(16).toString("hex")
   };
 
-  return jwt.sign(json, setup.privateKey, { algorithm: "RS256" });
+  return jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
 };

@@ -27,10 +27,10 @@ class GroupsView extends React.Component {
     const body = JSON.stringify(this.state.origBody);
     const next =
       this.state.nextUrl !== "" ? (
-        <form action="/groups" method="POST">
-          <input type="submit" value="Groups Next" />
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.nextUrl} />
+        <form action="/getgroups" method="POST">
+          <input type="submit" value="Groups Next"/>
+          <input type="hidden" name="body" defaultValue={body}/>
+          <input type="hidden" name="url" defaultValue={this.state.nextUrl}/>
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -55,9 +55,26 @@ class GroupsView extends React.Component {
               </form>
             </li>
             <li>
-              <form action="/groups" method="post">
-                <input type="submit" value="Groups"/>
-                <input type="hidden" name="body" defaultValue={body}/>
+              <form action="/getgroups" method="post">
+                <table>
+                  <tbody>
+                  <tr>
+                    <td>
+                      <input type="submit" value="Groups"/>
+                      <input type="hidden" name="body" defaultValue={body}/>
+                      <input type="hidden" name="url" defaultValue={this.state.url}/>
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name="userid"
+                        size="10"
+                        placeholder="User UUID"
+                      />
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
               </form>
             </li>
             <li>
@@ -65,11 +82,11 @@ class GroupsView extends React.Component {
             </li>
           </ul>
 
-          <br />
+          <br/>
           <Typography variant="h5">
             Groups Response
           </Typography>
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true}/>
         </div>
       </div>
     );

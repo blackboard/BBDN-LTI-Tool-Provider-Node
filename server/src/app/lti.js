@@ -165,7 +165,7 @@ exports.caliper_send = function(req,res) {
     uuid = user_id;
     
 
-  // Any asynchronous calls within this function will be captured
+    // Any asynchronous calls within this function will be captured
     // Just wrap each asynchronous call with function 'async'. 
     // Each asynchronous call should invoke 'done' as its callback. 
     // 'done' tasks two arguments: error and result. 
@@ -174,13 +174,12 @@ exports.caliper_send = function(req,res) {
 
         sensor.initialize(caliper_id);
         
-        var parts = url.parse(eventStoreUrl, true);
-  
         client.initialize(caliper_id, {
           hostname: caliper_profile_url_parts.hostname,
           path: caliper_profile_url_parts.path,
           uri: eventStoreUrl,
           method: "POST",
+          json: true,
           port: caliper_profile_url_parts.port,
           rejectUnauthorized: rejectUnauthorized,
           headers: {"Authorization": apiKey, "Content-Type": "application/json"}
@@ -224,7 +223,7 @@ exports.caliper_send = function(req,res) {
     });
     
     async('edApp', function(done) {    
-      var edApp = entityFactory().coerce(caliper.SoftwareApplication, {id: BASE_IRI});
+      var edApp = entityFactory().create(caliper.SoftwareApplication, {id: BASE_SECTION_IRI, type: "SoftwareApplication", version: "1.0"});
 
       done(null,edApp);
     });

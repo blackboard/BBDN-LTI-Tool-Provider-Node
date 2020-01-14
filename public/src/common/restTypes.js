@@ -32,5 +32,6 @@ class SetupParameters {
     this.issuer = "";
     this.applicationId = "";
     this.devPortalHost = "";
+    this.oidcAuthUrl = "";
   }
 }

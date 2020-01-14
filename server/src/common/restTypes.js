@@ -64,7 +64,9 @@ export class AGPayload {
 export class SetupParameters {
   constructor() {
     this.privateKey = "";
+    this.publicKey = "";
     this.tokenEndPoint = "";
+    this.oidcAuthUrl = "";
     this.issuer = "";
     this.applicationId = "";
     this.devPortalHost = "";

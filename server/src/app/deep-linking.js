@@ -21,7 +21,7 @@ exports.deepLink = function(req, res, dlPayload, setup) {
     deepLinkingFixed()
   );
 
-  dlPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256" });
+  dlPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
   dlPayload.return_url = deepLink.deep_link_return_url;
   dlPayload.error_url =
     dlPayload.body[
@@ -91,7 +91,7 @@ exports.deepLinkContent = function(req, res, dlPayload, setup) {
     }
   }
 
-  dlPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256" });
+  dlPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
   dlPayload.return_url = deepLink.deep_link_return_url;
   dlPayload.return_json = json;
 };

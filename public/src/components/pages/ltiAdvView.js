@@ -70,14 +70,24 @@ class LtiAdvView extends React.Component {
       </Typography>
     );
     const groups = this.state.groups ? (
-        <form action="/groups" method="POST">
-          <input type="submit" value="Groups" />
-          <input type="hidden" name="body" value={body} />
-        </form>
+      <form action="/groups" method="POST">
+        <input type="submit" value="Groups"/>
+        <input type="hidden" name="body" value={body}/>
+      </form>
     ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
-          <b>Groups not available</b>
-        </Typography>
+      <Typography variant="body1" style={styles.notAvailable}>
+        <b>Groups not available</b>
+      </Typography>
+    );
+    const groupSets = this.state.groups ? (
+      <form action="/groupsets" method="POST">
+        <input type="submit" value="Group Sets"/>
+        <input type="hidden" name="body" value={body}/>
+      </form>
+    ) : (
+      <Typography variant="body1" style={styles.notAvailable}>
+        <b>Group Sets not available</b>
+      </Typography>
     );
 
     return (
@@ -105,6 +115,7 @@ class LtiAdvView extends React.Component {
           {namesRoles}
           {grading}
           {groups}
+          {groupSets}
 
           <br />
           <Typography variant="h5">
