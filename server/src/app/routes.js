@@ -190,6 +190,7 @@ module.exports = function(app) {
     console.log("--------------------\nltiAdvantage");
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+    res.cookie("userData-legacy", users);
     res.cookie("userData", users,  { sameSite: 'none', secure: true });
     res.redirect("/lti_adv_view");
   });
@@ -198,6 +199,7 @@ module.exports = function(app) {
     console.log("--------------------\nltiAdvantage");
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+    res.cookie("userData-legacy", users);
     res.cookie("userData", users,  { sameSite: 'none', secure: true });
     res.redirect("/lti_adv_view");
   });
