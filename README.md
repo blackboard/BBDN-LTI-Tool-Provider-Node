@@ -54,13 +54,13 @@ See the <a href="https://community.blackboard.com/community/developers/standards
 ## Developing
 This is not meant to be a Node.JS tutorial. It is simply an example of how one might implement the various features therein. Pull requests are welcome!
 
-# LTI 1.3 Tool
+# LTI Advantage Tool
 
 Implementation of IMS Global LTI v1.3 and LTI Advantage
 
 ## Requirements
 
-Connection access to a copy of the Blackboard Developer's Portal (devportal) to register this node application as a tool.
+Connection access to a copy of the Blackboard Developer's Portal (https://developer.blackboard.com) to register this node application as a tool.
 
 **_Note_:** Make sure you copy all important information provided during registation
 - Issuer
@@ -76,7 +76,7 @@ This data can be entered using http://localhost:3000/setup
 - Install Redis to store the configuration. On Mac it's easiest to `brew install redis`. The code assumes the default
 host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
 
-### Base LTI 1.3 tool launch
+### Basic LTI 1.3 tool launch
 The normal LTI Resource link should launch to http://localhost:3000/lti13.
 
 ### Assignment and Grade Services 2.0
@@ -89,9 +89,6 @@ If enabled on the LMS this will be available in the tool.
 The Deep Linking Request should launch to http://localhost:3000/deepLinkOptions to be able to select content items and counts to return. Possible content items are:
 - LTI Link
 - Content Link
-- File
-- Image
-- HTML fragment
 
 # Docker
 
@@ -100,13 +97,3 @@ Docker specific files are included (Dockerfile, docker-compose.yml, launch.sh).
 Use config_override.json (same entries as config.json) to override redis host name from localhost to redis so it can access the redis docker container.
 
 If running the docker image on the same machine as the learn instance then the docker-compose.yml needs to contain the ip address of the machine being used. Start containers using __docker-compose up__
-
-## Marathon
-
-config_override.json needs to be included in the docker image that is loaded onto Marathon.
-
-These entries allow are required
-*  "provider_domain": "https://lti-tool.dev.bbpd.io",
-*  "provider_port": "NA",
-
-'NA' allows the call to the marathon instance to be portless. The marathon container translates the port to 3000 so the LTI tool can process the calls.
