@@ -1,4 +1,5 @@
 import path from "path";
+import cookieParser from "cookie-parser";
 import {AGPayload, ContentItem, JWTPayload, NRPayload, GroupsPayload, SetupParameters} from "../common/restTypes";
 import config from "../config/config";
 import assignGrades from "./assign-grades";
@@ -39,6 +40,8 @@ const PUBLIC_KEY_SET = "{\n" +
   "}";
 
 module.exports = function(app) {
+  app.use(cookieParser());
+
   let provider =
     config.provider_domain +
     (config.provider_port !== "NA" ? ":" + config.provider_port : "");
@@ -178,11 +181,16 @@ module.exports = function(app) {
   //=======================================================
   // LTI Advantage Message processing
   let jwtPayload;
+  let users = {
+    name : "Fyodor",
+    age : "77"
+  }
 
   app.post("/lti13", (req, res) => {
     console.log("--------------------\nltiAdvantage");
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+    res.cookie("userData", users,  { sameSite: 'none', secure: true });
     res.redirect("/lti_adv_view");
   });
 
@@ -190,6 +198,7 @@ module.exports = function(app) {
     console.log("--------------------\nltiAdvantage");
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+    res.cookie("userData", users,  { sameSite: 'none', secure: true });
     res.redirect("/lti_adv_view");
   });
 
@@ -365,6 +374,7 @@ module.exports = function(app) {
   });
 
   app.get("/setupData", (req, res) => {
+    setup.cookies = req.cookies;
     res.send(setup);
   });
 
