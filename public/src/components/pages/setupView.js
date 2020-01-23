@@ -1,13 +1,8 @@
 import Button from "@material-ui/core/Button/index";
 import TextField from "@material-ui/core/TextField/index";
 import Typography from "@material-ui/core/Typography/index";
-import Faker from "faker";
 import React, { Component } from "react";
 import { openSnackbar } from "../page_objects/snackbar";
-
-let randomText = Faker.lorem.lines(25);
-let randomGuid = Faker.random.uuid();
-let randomHost = Faker.internet.url();
 
 class SetupView extends Component {
   constructor(props) {
@@ -18,7 +13,8 @@ class SetupView extends Component {
       devPortalHost: "",
       issuer: "",
       tokenEndPoint: "",
-      oidcAuthUrl: ""
+      oidcAuthUrl: "",
+      cookies: "",
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,7 +30,8 @@ class SetupView extends Component {
           devPortalHost: result.devPortalHost,
           issuer: result.issuer,
           tokenEndPoint: result.tokenEndPoint,
-          oidcAuthUrl: result.oidcAuthUrl
+          oidcAuthUrl: result.oidcAuthUrl,
+          cookies: result.cookies
         });
       });
   }
@@ -160,6 +157,11 @@ class SetupView extends Component {
             Save
           </Button>
         </form>
+
+        <div>
+          <br/>
+          Your cookies: {JSON.stringify(this.state.cookies)}
+        </div>
       </div>
     );
   }
