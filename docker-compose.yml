@@ -1,5 +1,5 @@
-lti-tools:
-  image: lti-tools
+lti-tool:
+  image: lti-tool
   links:
     - redis
   ports:
@@ -9,7 +9,7 @@ lti-tools:
 # on one machine. The IP address will need to be changed to the
 # one currently assigned to the development machine.
   environment:
-    HOST_ENTRY: 10.37.145.131  mylearn.int.bbpd.io
+    HOST_ENTRY: 10.103.124.51  mylearn.int.bbpd.io
 
 redis:
   image: redis
