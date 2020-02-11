@@ -1,4 +1,4 @@
-FROM node:boron
+FROM node:10.16.1
 
 # Create app directory
 RUN mkdir -p /usr/app
@@ -10,7 +10,6 @@ RUN npm install
 
 # Bundle app source
 COPY . /usr/app
-RUN npm run postinstall
 
 EXPOSE 3000
 CMD ./launch.sh
