@@ -36,8 +36,12 @@ class LaunchEndpoint extends React.Component {
         </Typography>
         <Typography variant="subtitle1" gutterBottom component="h2">
           Your configuration
-          <p>LTI 1.3 Launch URL: {baseUrl}</p>
+          <p>LTI Tool Base URL: {baseUrl}</p>
           <p>Blackboard Client ID: {this.state.setupData.applicationId}</p>
+          <p>Developer Portal URL: {this.state.setupData.devPortalHost}</p>
+          <p>
+            Your cookies: {JSON.stringify(this.state.cookies)}
+          </p>
         </Typography>
         <br />
         <div>
