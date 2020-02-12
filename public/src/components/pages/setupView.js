@@ -15,6 +15,7 @@ class SetupView extends Component {
       tokenEndPoint: "",
       oidcAuthUrl: "",
       cookies: "",
+      host: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,16 +24,8 @@ class SetupView extends Component {
   componentDidMount() {
     fetch("setupData")
       .then(result => result.json())
-      .then(result => {
-        this.setState({
-          privateKey: result.privateKey,
-          applicationId: result.applicationId,
-          devPortalHost: result.devPortalHost,
-          issuer: result.issuer,
-          tokenEndPoint: result.tokenEndPoint,
-          oidcAuthUrl: result.oidcAuthUrl,
-          cookies: result.cookies
-        });
+      .then(setupData => {
+        this.setState(setupData);
       });
   }
 
@@ -159,8 +152,12 @@ class SetupView extends Component {
         </form>
 
         <div>
-          <br/>
+          <p>
           Your cookies: {JSON.stringify(this.state.cookies)}
+          </p>
+          <p>
+          Your external host: {this.state.host}
+          </p>
         </div>
       </div>
     );

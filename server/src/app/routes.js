@@ -135,7 +135,8 @@ module.exports = function(app) {
   let passthru = false;
 
   app.post("/CIMRequest", (req, res) => {
-    console.log("--------------------\nCIMRequest");
+    console.log("--------------------\nCIMRequest Provider URL in routes: " + provider);
+
     if (req.body.custom_option === undefined) {
       // no custom_option set so go to CIM request menu and save req and res to pass through
       // after custom_option has been selected
@@ -184,7 +185,7 @@ module.exports = function(app) {
   let users = {
     name : "Fyodor",
     age : "77"
-  }
+  };
 
   app.post("/lti13", (req, res) => {
     console.log("--------------------\nltiAdvantage");
@@ -377,6 +378,7 @@ module.exports = function(app) {
 
   app.get("/setupData", (req, res) => {
     setup.cookies = req.cookies;
+    setup.host = req.header('Host');
     res.send(setup);
   });
 

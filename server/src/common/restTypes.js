@@ -71,5 +71,6 @@ export class SetupParameters {
     this.applicationId = "";
     this.devPortalHost = "";
     this.cookies = "";
+    this.host = "";
   }
 }
