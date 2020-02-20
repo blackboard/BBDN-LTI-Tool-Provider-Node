@@ -18,6 +18,7 @@ host and port (localhost:6379). If you need to run redis on a different host or 
 ## Configuration
 You can override a number of configuration properties by creating a config_override.json file in server/config. Below is an example:
 
+```js
 {
   "provider_domain": "https://example.com",
   "provider_port": "9008",
@@ -27,11 +28,12 @@ You can override a number of configuration properties by creating a config_overr
   "ssl_key": "example.com.key",
   "ssl_crt": "example.com.crt"
 }
+```
 
 If you want to run under SSL you must specify the ssl_key and ssl_crt. They should be placed in the root folder of the application.
 
 ## How To Run the code
-All packages needed are in the package.json. 
+All packages needed are in the package.json.
 
 You should have node installed (built with v10.13.0). Then from the project directory at the command line, type `npm start`. This will install all of your dependencies and start the server.
 
@@ -56,36 +58,126 @@ This is not meant to be a Node.JS tutorial. It is simply an example of how one m
 
 # LTI Advantage Tool
 
-Implementation of IMS Global LTI v1.3 and LTI Advantage
+Implementation of IMS Global LTI v1.3 and LTI Advantage.
 
-## Requirements
+## Setup
 
-Connection access to a copy of the Blackboard Developer's Portal (https://developer.blackboard.com) to register this node application as a tool.
+A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo at 23:00](https://us.bbcollab.com/recording/e193c6cb59cb4ed1a776c271665d4154).
 
-**_Note_:** Make sure you copy all important information provided during registation
-- Issuer
-- Public Keyset URL
-- Auth Token Endpoint
-- Tool Private Key ( this **CANNOT** be retrieved at a later date as it is not stored in the devportal )
+1. Install and start redis
 
-Additional data
-- Dev portal host
+   On Mac it's easiest to `brew install redis`. The code assumes the default host and port (localhost:6379).
 
-This data can be entered using http://localhost:3000/setup
+2. Setup a domain with a self signed ssl certificate
 
-- Install Redis to store the configuration. On Mac it's easiest to `brew install redis`. The code assumes the default
-host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
+   [Generate a self signed certificate](https://www.linux.com/tutorials/creating-self-signed-ssl-certificates-apache-linux/).  In this example:
+      - the FQDN is *example.com*
+      - the key is located in `/etc/httpd/ssl/example.com.key`
+      - the cert is located in `/etc/httpd/ssl/example.com.crt`
 
-### Basic LTI 1.3 tool launch
+   Add an entry in your `/etc/hosts` file to point localhost to *example.com*:
+
+      ```
+      127.0.0.1 localhost example.com
+      ```
+   Edit `server/config/config_override.json` to point to your key and secret for *example.com*
+
+      ```js
+      {
+        "provider_domain": "https://example.com",
+        "provider_port": "9008",
+        "redis_host": "localhost",
+        "redis_port": 6379,
+        "use_ssl": true,
+        "ssl_key": "/etc/httpd/ssl/example.com.key",
+        "ssl_crt": "/etc/httpd/ssl/example.com.crt"
+      }
+      ```
+
+3. Start the server with `npm start`.
+
+   Check that you can access https://example.com:3000/setup (you will receive self-signed certificate warnings)
+
+   You should see the following output:
+
+   ```sh
+   Configuring for SSL use
+   Home page:  https://example.com:3000
+   LTI 1 Tool Provider:  https://example.com:3000/lti
+   LTI 1 Content Item: https://example.com:3000/CIMRequest
+   LTI 1.3 Login URL: https://example.com:3000/login
+   LTI 1.3 Redirect URL: https://example.com:3000/lti13,https://example.com:3000/deepLinkOptions
+   LTI 1.3 Launch URL: https://example.com:3000/lti13
+   LTI 1.3 Deep Linking URL: https://example.com:3000/deepLinkOptions
+   JWKS URL: https://example.com:3000/.well-known/jwks.json
+   Setup URL: https://example.com:3000/setup
+   ```
+
+4. Register your application on the Blackboard Developer Portal
+
+   - Create an account on https://developer.blackboard.com .
+   - Navigate to *My Apps* and register a new application
+   - Enter the following fields:
+      - *Application Name*: LTI 1.3 Example App
+      - *Description*: LTI 1.3 example App
+      - *Domain(s)*: example.com
+      - *Login Initiation URL*: https://example.com:3000/login
+      - *Tool Redirect URL(s)*: https://example.com:3000/lti13,https://example.com:3000/deepLinkOptions
+
+      Click *Register application and generate API key*
+
+   - Make a note of the following fields:
+      - Issuer
+      - Auth token endpoint
+      - Tool private key
+
+   - Click *Done*
+   - Make a note of the *Application ID*
+
+5. Configure the server
+
+   Navigate to https://example.com:3000/setup and enter the following fields:
+   - *Developer portal URL*: https://developer.blackboard.com
+   - *Application Id*: The *Application ID* from the developer portal
+   - *OAuth2 Token End Point*: The *Auth token endpoint* from the developer portal
+   - *OIDC Auth URL*: The *Auth token endpoint* from the developer portal
+   - *Issuer*: The *Issuer* from the developer portal
+   - *Private Key*: The *Tool private key* from the developer portal
+
+   Click *SAVE*
+
+6. Add the tool to your Learn instance
+
+  - Sign into your Learn instance as an administrator
+  - Navigate to *Administrator Tools* > *Integrations* > *LTI Tool Providers* > *Register LTI 1.3 Tool*
+  - In the *Client ID* field enter the *Application ID* copied from the developer portal
+  - Click *Submit*
+
+7. Create a placement for the tool
+
+   In the *LTI Tool Providers* list, select *LTI 1.3 Example App* > *Manage Placements* > *Create Placement*
+   Enter the following fields:
+     -  *Label*: LTI 1.3 Example App
+     -  *Handle*: LTI 1.3 Example App
+     - *Type*: Course tool
+     - *Tool Provider URL*: https://example.com:3000/lti13
+
+   Click *Submit*
+
+8. Launch the tool
+
+   Navigate to a course. Under *Course Management* > *Course Tools* you should see your LTI 1.3 Example App
+
+## Basic LTI 1.3 tool launch
 The normal LTI Resource link should launch to http://localhost:3000/lti13.
 
-### Assignment and Grade Services 2.0
+## Assignment and Grade Services 2.0
 If enabled on the LMS this will be available in the tool.
 
-### Names and Roles Provisioning Services 2.0
+## Names and Roles Provisioning Services 2.0
 If enabled on the LMS this will be available in the tool.
 
-### Deep Linking 2.0
+## Deep Linking 2.0
 The Deep Linking Request should launch to http://localhost:3000/deepLinkOptions to be able to select content items and counts to return. Possible content items are:
 - LTI Link
 - Content Link
