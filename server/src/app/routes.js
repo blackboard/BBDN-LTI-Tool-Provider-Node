@@ -54,18 +54,13 @@ module.exports = function(app) {
   let setupLoaded = false;
   let setup = new SetupParameters();
   let setup_key = "setupParameters";
+  setup.privateKey = privateKey;
 
   if (!setupLoaded) {
     redisUtil.redisGet(setup_key).then(setupData => {
       if (setupData !== null) {
         setup = setupData;
-
-        if (setup.privateKey === "") {
-          // use our generated one that goes with our generated public key and jwks URL
-          setup.privateKey = privateKey;
-          console.log("Using generated private key...");
-        }
-
+        setup.privateKey = privateKey;
         setupLoaded = true;
       }
     });
@@ -383,7 +378,6 @@ module.exports = function(app) {
   });
 
   app.post("/saveSetup", (req, res) => {
-    setup.privateKey = req.body.privateKey;
     setup.tokenEndPoint = req.body.tokenEndPoint;
     setup.oidcAuthUrl = req.body.oidcAuthUrl;
     setup.issuer = req.body.issuer;
