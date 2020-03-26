@@ -35,7 +35,7 @@ class DeepLinkOptions extends React.Component {
                 </TableRow>
                 <TableRow>
                   <CustomTableCell>
-                    <input type="radio" name="custom_option" defaultChecked="true"/>
+                    <input type="radio" name="custom_option" value="1" defaultChecked="true"/>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="h6">

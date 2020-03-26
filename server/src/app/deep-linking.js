@@ -41,6 +41,9 @@ exports.deepLinkContent = function(req, res, dlPayload, setup) {
   let iss = dlPayload.body.iss;
 
   let items = [];
+  console.log(`Custom option: ${req.body.custom_option}`);
+  console.log(`Custom lti links: ${req.body.custom_ltilinks}`);
+  console.log(`Custom embed lti links: ${req.body.embed_ltilinks}`);
   switch (req.body.custom_option) {
     case "1":
       let total = 0;
