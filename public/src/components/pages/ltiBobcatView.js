@@ -42,27 +42,17 @@ class LtiBadgerView extends React.Component {
         <p>We have received your LTI launch.</p>
         <p>
           <pre>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            ( \<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( \<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ \<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /
-            /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            |\\<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / /&nbsp;&nbsp;&nbsp;&nbsp;
-            .-`````-.&nbsp;&nbsp; / ^`-.<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ \&nbsp;&nbsp;&nbsp;
-            /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \_/&nbsp; (|) `o<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \\ \\&nbsp; /&nbsp;&nbsp;
-            .---.&nbsp;&nbsp; \\ _&nbsp; ,--'<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ \/&nbsp;&nbsp;
-            /&nbsp;&nbsp;&nbsp;&nbsp; \,&nbsp; \( `^^^<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp;&nbsp;
-            \/\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (\&nbsp; )<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp;&nbsp; )
-            \&nbsp;&nbsp;&nbsp;&nbsp; ) \ \<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |\\<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / /&nbsp;&nbsp;&nbsp;&nbsp; .-`````-.&nbsp;&nbsp; / ^`-.<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ \&nbsp;&nbsp;&nbsp; /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \_/&nbsp; (|) `o<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ \&nbsp; /&nbsp;&nbsp; .---.&nbsp;&nbsp; \\ _&nbsp; ,--'<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ \/&nbsp;&nbsp; /&nbsp;&nbsp;&nbsp;&nbsp; \,&nbsp; \( `^^^<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp;&nbsp; \/\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (\&nbsp; )<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp;&nbsp; ) \&nbsp;&nbsp;&nbsp;&nbsp; ) \ \<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; ) /__ \__&nbsp; ) (\ \___<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            (___)))__))(__))(__)))
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (___)))__))(__))(__)))
           </pre>
         </p>
         <p>{verified}</p>
