@@ -35,7 +35,7 @@ class DeepLinkOptions extends React.Component {
                 </TableRow>
                 <TableRow>
                   <CustomTableCell>
-                    <input type="radio" name="custom_option" value="1" checked/>
+                    <input type="radio" name="custom_option" defaultChecked="true"/>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="h6">
@@ -46,7 +46,13 @@ class DeepLinkOptions extends React.Component {
                         <TableRow>
                           <CustomTableCell>LTI Links:</CustomTableCell>
                           <CustomTableCell>
-                            <input type="text" size="2" name="custom_ltilinks" value="1"/>
+                            <input type="text" size="2" name="custom_ltilinks" defaultValue="1"/>
+                          </CustomTableCell>
+                        </TableRow>
+                        <TableRow>
+                          <CustomTableCell>Embedded LTI Links:</CustomTableCell>
+                          <CustomTableCell>
+                            <input type="text" size="2" name="embed_ltilinks"/>
                           </CustomTableCell>
                         </TableRow>
                         <TableRow>
