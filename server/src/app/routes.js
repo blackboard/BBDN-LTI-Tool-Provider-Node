@@ -183,7 +183,7 @@ module.exports = function(app) {
   };
 
   app.post("/lti13", (req, res) => {
-    console.log("--------------------\nltiAdvantage");
+    console.log("--------------------\nlti13");
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
     res.cookie("userData-legacy", users);
@@ -198,6 +198,13 @@ module.exports = function(app) {
     res.cookie("userData-legacy", users);
     res.cookie("userData", users,  { sameSite: 'none', secure: true });
     res.redirect("/lti_adv_view");
+  });
+
+  app.post("/lti13bobcat", (req, res) => {
+    console.log("--------------------\nlti13bobcat");
+    jwtPayload = new JWTPayload();
+    ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+    res.redirect("/lti_bobcat_view");
   });
 
   app.get("/jwtPayloadData", (req, res) => {

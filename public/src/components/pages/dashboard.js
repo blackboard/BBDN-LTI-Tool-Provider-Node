@@ -28,6 +28,7 @@ import DeepLinkOptions from "./deepLinkOptions";
 import DeepLinkPayloadView from "./deepLinkView";
 import LaunchEndpoint from "./home";
 import LtiAdvView from "./ltiAdvView";
+import LtiBobcatView from "./ltiBobcatView";
 import NamesRolesView from "./namesRolesView";
 import GroupsView from "./groupsView";
 import GroupSetsView from "./groupSetsView";
@@ -130,6 +131,7 @@ class Dashboard extends React.Component {
               <Route path="/content_item" component={ContentItemView}/>
               <Route path="/cim_request" component={CIMRequestView}/>
               <Route path="/lti_adv_view" component={LtiAdvView}/>
+              <Route path="/lti_bobcat_view" component={LtiBobcatView}/>
               <Route path="/setup_page" component={SetupView}/>
               <Route path="/deep_link" component={DeepLinkPayloadView}/>
               <Route path="/deep_link_options" component={DeepLinkOptions}/>
