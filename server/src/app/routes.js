@@ -54,18 +54,13 @@ module.exports = function(app) {
   let setupLoaded = false;
   let setup = new SetupParameters();
   let setup_key = "setupParameters";
+  setup.privateKey = privateKey;
 
   if (!setupLoaded) {
     redisUtil.redisGet(setup_key).then(setupData => {
       if (setupData !== null) {
         setup = setupData;
-
-        if (setup.privateKey === "") {
-          // use our generated one that goes with our generated public key and jwks URL
-          setup.privateKey = privateKey;
-          console.log("Using generated private key...");
-        }
-
+        setup.privateKey = privateKey;
         setupLoaded = true;
       }
     });
@@ -188,7 +183,7 @@ module.exports = function(app) {
   };
 
   app.post("/lti13", (req, res) => {
-    console.log("--------------------\nltiAdvantage");
+    console.log("--------------------\nlti13");
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
     res.cookie("userData-legacy", users);
@@ -203,6 +198,13 @@ module.exports = function(app) {
     res.cookie("userData-legacy", users);
     res.cookie("userData", users,  { sameSite: 'none', secure: true });
     res.redirect("/lti_adv_view");
+  });
+
+  app.post("/lti13bobcat", (req, res) => {
+    console.log("--------------------\nlti13bobcat");
+    jwtPayload = new JWTPayload();
+    ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+    res.redirect("/lti_bobcat_view");
   });
 
   app.get("/jwtPayloadData", (req, res) => {
@@ -383,7 +385,6 @@ module.exports = function(app) {
   });
 
   app.post("/saveSetup", (req, res) => {
-    setup.privateKey = req.body.privateKey;
     setup.tokenEndPoint = req.body.tokenEndPoint;
     setup.oidcAuthUrl = req.body.oidcAuthUrl;
     setup.issuer = req.body.issuer;

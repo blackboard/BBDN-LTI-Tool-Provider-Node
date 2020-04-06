@@ -9,7 +9,6 @@ class SetupView extends Component {
     super(props);
     this.state = {
       applicationId: "",
-      privateKey: "",
       devPortalHost: "",
       issuer: "",
       tokenEndPoint: "",
@@ -122,22 +121,6 @@ class SetupView extends Component {
             }}
             name={"issuer"}
             value={this.state.issuer || ""}
-            onInput={this.handleChange}
-          />
-          <br />
-          <br />
-          <TextField
-            required
-            label="Private Key"
-            rows="15"
-            variant="outlined"
-            multiline
-            fullWidth={true}
-            InputLabelProps={{
-              shrink: true
-            }}
-            name={"privateKey"}
-            value={this.state.privateKey || ""}
             onInput={this.handleChange}
           />
           <br />

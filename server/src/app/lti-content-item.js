@@ -7,6 +7,9 @@ module.exports = {
       "@graph": [
         {
           "@type": "LtiLinkItem",
+          url: config.provider_domain +
+            (config.provider_port !== "NA" ? ":" + config.provider_port : "") +
+            "/lti",
           mediaType: "application/vnd.ims.lti.v1.ltilink",
           icon: {
             "@id":
@@ -31,6 +34,9 @@ module.exports = {
         },
         {
           "@type": "LtiLinkItem",
+          url: config.provider_domain +
+            (config.provider_port !== "NA" ? ":" + config.provider_port : "") +
+            "/lti",
           mediaType: "application/vnd.ims.lti.v1.ltilink",
           icon: {
             "@id":
@@ -123,9 +129,24 @@ module.exports = {
             width: 50
           },
           placementAdvice: {
-            displayHeight: 100,
-            displayWidth: 100,
+            displayHeight: 400,
+            displayWidth: 400,
             presentationDocumentTarget: "IFRAME"
+          },
+          lineItem: {
+            "@type": "LineItem",
+            label: "Chapter 13 quiz",
+            reportingMethod: "res:totalScore",
+            assignedActivity: {
+              "@id": "http://toolprovider.example.com/assessment/66400",
+              activityId: "a-9334df-33"
+            },
+            scoreConstraints: {
+              "@type": "NumericLimits",
+              normalMaximum: 100,
+              extraCreditMaximum: 10,
+              totalMaximum: 110
+            }
           },
           custom: {
             imscert: "launch»bHYnJGxZ",

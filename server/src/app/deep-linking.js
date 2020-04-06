@@ -41,11 +41,17 @@ exports.deepLinkContent = function(req, res, dlPayload, setup) {
   let iss = dlPayload.body.iss;
 
   let items = [];
+  console.log(`Custom option: ${req.body.custom_option}`);
+  console.log(`Custom lti links: ${req.body.custom_ltilinks}`);
+  console.log(`Custom embed lti links: ${req.body.embed_ltilinks}`);
   switch (req.body.custom_option) {
     case "1":
       let total = 0;
       for (let i = 0; i < req.body.custom_ltilinks; i++, total++) {
         items[total] = deepLinkingLTILink();
+      }
+      for (let i = 0; i < req.body.embed_ltilinks; i++, total++) {
+        items[total] = deepLinkingEmbedLTILink();
       }
       for (let i = 0; i < req.body.custom_contentlinks; i++, total++) {
         items[total] = deepLinkingContentLink();
@@ -170,6 +176,38 @@ let deepLinkingLTILink = function() {
       userName: "$User.username",
       userEmail: "$Person.email.primary",
       userSysRoles: "@X@user.role@X@"
+    }
+  };
+};
+
+let deepLinkingEmbedLTILink = function() {
+  let start = new Date();
+  start.setHours(8, 0, 0, 0);
+  let end = new Date();
+  end.setHours(8, 0, 0, 0);
+  end.setDate(start.getDate() + 30);
+
+  return {
+    type: "ltiResourceLink",
+    title: "An Embedded LTI Link",
+    text: "Bobcat art",
+    url:
+      config.provider_domain +
+      (config.provider_port !== "NA" ? ":" + config.provider_port : "") +
+      "/lti13bobcat",
+    iframe: {
+      width: 600,
+      height: 600
+    },
+    custom: {
+      key1: "some value",
+      contextHistory: "$Context.id.history",
+      resourceHistory: "$ResourceLink.id.history",
+      userName: "$User.username",
+      userEmail: "$Person.email.primary",
+      userSysRoles: "@X@user.role@X@",
+      assignment_pk: "@X@content.pk_string@X@",
+      course_pk: "@X@course.pk_string@X@"
     }
   };
 };
