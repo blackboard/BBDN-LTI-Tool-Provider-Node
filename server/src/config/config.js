@@ -31,7 +31,7 @@ if (process.env.REDIS_URL) {
   configResult["redis_url"] = process.env.REDIS_URL;
 }
 if (process.env.LTI_TEST_PROVIDER_DOMAIN) {
-  configResult["provider_domain"] = process.env.LTI_TEST_PROVIDER_DOMAIN;
+  configResult["frontend_url"] = process.env.LTI_TEST_PROVIDER_DOMAIN;
 }
 if (process.env.LTI_TEST_PROVIDER_PORT) {
   configResult["provider_port"] = process.env.LTI_TEST_PROVIDER_PORT;

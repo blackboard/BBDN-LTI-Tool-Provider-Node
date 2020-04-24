@@ -20,17 +20,14 @@ You can override a number of configuration properties by creating a config_overr
 
 ```js
 {
-  "provider_domain": "https://example.com",
+  "frontend_url": "https://example.com/"
   "provider_port": "9008",
   "redis_host": "localhost",
-  "redis_port": 6379,
-  "use_ssl": true,
-  "ssl_key": "example.com.key",
-  "ssl_crt": "example.com.crt"
+  "redis_port": 6379
 }
 ```
 
-If you want to run under SSL you must specify the ssl_key and ssl_crt. They should be placed in the root folder of the application.
+If you want to run under SSL you should use a reverse proxy, like nginx.
 
 ## How To Run the code
 All packages needed are in the package.json.
@@ -68,49 +65,22 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
 
    On Mac it's easiest to `brew install redis`. The code assumes the default host and port (localhost:6379).
 
-2. Setup a domain with a self signed ssl certificate
+2. Start the server with `npm start`.
 
-   [Generate a self signed certificate](https://www.linux.com/tutorials/creating-self-signed-ssl-certificates-apache-linux/).  In this example:
-      - the FQDN is *example.com*
-      - the key is located in `/etc/httpd/ssl/example.com.key`
-      - the cert is located in `/etc/httpd/ssl/example.com.crt`
-
-   Add an entry in your `/etc/hosts` file to point localhost to *example.com*:
-
-      ```
-      127.0.0.1 localhost example.com
-      ```
-   Edit `server/config/config_override.json` to point to your key and secret for *example.com*
-
-      ```js
-      {
-        "provider_domain": "https://example.com",
-        "provider_port": "9008",
-        "redis_host": "localhost",
-        "redis_port": 6379,
-        "use_ssl": true,
-        "ssl_key": "/etc/httpd/ssl/example.com.key",
-        "ssl_crt": "/etc/httpd/ssl/example.com.crt"
-      }
-      ```
-
-3. Start the server with `npm start`.
-
-   Check that you can access https://example.com:3000/setup (you will receive self-signed certificate warnings)
+   Check that you can access https://example.com/setup
 
    You should see the following output:
 
    ```sh
-   Configuring for SSL use
-   Home page:  https://example.com:3000
-   LTI 1 Tool Provider:  https://example.com:3000/lti
-   LTI 1 Content Item: https://example.com:3000/CIMRequest
-   LTI 1.3 Login URL: https://example.com:3000/login
-   LTI 1.3 Redirect URL: https://example.com:3000/lti13,https://example.com:3000/deepLinkOptions
-   LTI 1.3 Launch URL: https://example.com:3000/lti13
-   LTI 1.3 Deep Linking URL: https://example.com:3000/deepLinkOptions
-   JWKS URL: https://example.com:3000/.well-known/jwks.json
-   Setup URL: https://example.com:3000/setup
+   Home page:  https://example.com
+   LTI 1 Tool Provider:  https://example.com/lti
+   LTI 1 Content Item: https://example.com/CIMRequest
+   LTI 1.3 Login URL: https://example.com/login
+   LTI 1.3 Redirect URL: https://example.com/lti13,https://example.com/deepLinkOptions
+   LTI 1.3 Launch URL: https://example.com/lti13
+   LTI 1.3 Deep Linking URL: https://example.com/deepLinkOptions
+   JWKS URL: https://example.com/.well-known/jwks.json
+   Setup URL: https://example.com/setup
    ```
 
 4. Register your application on the Blackboard Developer Portal
@@ -121,8 +91,8 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
       - *Application Name*: LTI 1.3 Example App
       - *Description*: LTI 1.3 example App
       - *Domain(s)*: example.com
-      - *Login Initiation URL*: https://example.com:3000/login
-      - *Tool Redirect URL(s)*: https://example.com:3000/lti13,https://example.com:3000/deepLinkOptions
+      - *Login Initiation URL*: https://example.com/login
+      - *Tool Redirect URL(s)*: https://example.com/lti13,https://example.com/deepLinkOptions
 
       Click *Register application and generate API key*
 
@@ -136,7 +106,7 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
 
 5. Configure the server
 
-   Navigate to https://example.com:3000/setup and enter the following fields:
+   Navigate to https://example.com/setup and enter the following fields:
    - *Developer portal URL*: https://developer.blackboard.com
    - *Application Id*: The *Application ID* from the developer portal
    - *OAuth2 Token End Point*: The *Auth token endpoint* from the developer portal
@@ -160,7 +130,7 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
      -  *Label*: LTI 1.3 Example App
      -  *Handle*: LTI 1.3 Example App
      - *Type*: Course tool
-     - *Tool Provider URL*: https://example.com:3000/lti13
+     - *Tool Provider URL*: https://example.com/lti13
 
    Click *Submit*
 
@@ -178,7 +148,7 @@ If enabled on the LMS this will be available in the tool.
 If enabled on the LMS this will be available in the tool.
 
 ## Deep Linking 2.0
-The Deep Linking Request should launch to http://localhost:3000/deepLinkOptions to be able to select content items and counts to return. Possible content items are:
+The Deep Linking Request should launch to http://localhost/deepLinkOptions to be able to select content items and counts to return. Possible content items are:
 - LTI Link
 - Content Link
 

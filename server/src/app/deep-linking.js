@@ -139,10 +139,7 @@ let deepLinkingLTILink = function() {
     type: "ltiResourceLink",
     title: "A title for LTI Link",
     text: "A description",
-    url:
-      config.provider_domain +
-      (config.provider_port !== "NA" ? ":" + config.provider_port : "") +
-      "/lti13",
+    url:  `${config.frontend_url}lti13`,
     available: {
       startDateTime: start,
       endDateTime: end
@@ -191,10 +188,7 @@ let deepLinkingEmbedLTILink = function() {
     type: "ltiResourceLink",
     title: "An Embedded LTI Link",
     text: "Bobcat art",
-    url:
-      config.provider_domain +
-      (config.provider_port !== "NA" ? ":" + config.provider_port : "") +
-      "/lti13bobcat",
+    url: `${config.frontend_url}lti13bobcat`,
     iframe: {
       width: 600,
       height: 600

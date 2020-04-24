@@ -42,9 +42,7 @@ const PUBLIC_KEY_SET = "{\n" +
 module.exports = function(app) {
   app.use(cookieParser());
 
-  let provider =
-    config.provider_domain +
-    (config.provider_port !== "NA" ? ":" + config.provider_port : "");
+  const frontendUrl = config.frontend_url;
 
   let contentItemData = new ContentItem();
   let ciLoaded = false;
@@ -67,7 +65,7 @@ module.exports = function(app) {
   }
 
   //=======================================================
-  // LTI 1 provider and caliper stuff
+  // LTI 1.1 provider and caliper stuff
   app.post('/caliper/send', (req, res) => {
     lti.caliper_send(req, res);
   });
@@ -105,7 +103,7 @@ module.exports = function(app) {
         redisUtil.redisSave(contentitem_key, contentItemData);
         ciLoaded = true;
 
-        let redirectUrl = provider + "/content_item";
+        const redirectUrl = `${frontendUrl}content_item`;
         console.log("Redirecting to : " + redirectUrl);
         res.redirect(redirectUrl);
       });
@@ -130,7 +128,7 @@ module.exports = function(app) {
   let passthru = false;
 
   app.post("/CIMRequest", (req, res) => {
-    console.log("--------------------\nCIMRequest Provider URL in routes: " + provider);
+    console.log("--------------------\nCIMRequest frontend URL in routes: " + frontendUrl);
 
     if (req.body.custom_option === undefined) {
       // no custom_option set so go to CIM request menu and save req and res to pass through
@@ -156,7 +154,7 @@ module.exports = function(app) {
           redisUtil.redisSave(contentitem_key, contentItemData);
           ciLoaded = true;
 
-          let redirectUrl = provider + "/content_item";
+          const redirectUrl = `${frontendUrl}content_item`;
           console.log("Redirecting to : " + redirectUrl);
           res.redirect(redirectUrl);
         });
