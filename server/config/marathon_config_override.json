@@ -1,7 +1,0 @@
-{
-  "provider_domain": "https://lti-tool.dev.bbpd.io",
-  "provider_port": "NA",
-  "redis_host": "localhost",
-  "redis_port": 6379,
-  "use_ssl": false
-}

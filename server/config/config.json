@@ -1,9 +1,6 @@
 {
-  "provider_domain": "http://localhost",
+  "frontend_url": "http://localhost/",
   "provider_port": "3000",
   "redis_host": "localhost",
-  "redis_port": 6379,
-  "use_ssl": false,
-  "ssl_key": "",
-  "ssl_crt": ""
+  "redis_port": 6379
 }

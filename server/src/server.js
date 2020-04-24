@@ -1,7 +1,6 @@
 import bodyParser from "body-parser";
 import express from "express";
 import fs from "fs";
-import https from "https";
 import request from "request";
 import routes from "./app/routes.js";
 import config from "./config/config.js";
@@ -12,14 +11,11 @@ let redisUtil = require("./app/redisutil");
 
 const options = config.use_ssl
   ? {
-      key: fs.readFileSync(config.ssl_key),
-      cert: fs.readFileSync(config.ssl_crt)
-    }
-  : { key: null, cert: null };
+    key: fs.readFileSync(config.ssl_key),
+    cert: fs.readFileSync(config.ssl_crt)
+  }
+  : {key: null, cert: null};
 
-let provider =
-  config.provider_domain +
-  (config.provider_port !== "NA" ? ":" + config.provider_port : "");
 let listenPort =
   process.env.PORT ||
   (config.provider_port !== "NA" ? config.provider_port : 5000);
@@ -51,13 +47,13 @@ app.use(
   })
 );
 
-httpProxy.use(function(err, req, res) {
+httpProxy.use(function (err, req, res) {
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
 
 //httpProxy.use(bodyParser.json());       // to support JSON-encoded bodies
-httpProxy.use(bodyParser.json({ type: "*/*" }));
+httpProxy.use(bodyParser.json({type: "*/*"}));
 httpProxy.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -68,7 +64,7 @@ httpProxy.use((req, res, next) => {
   next();
 });
 
-httpProxy.all("/*", function(req, res) {
+httpProxy.all("/*", function (req, res) {
   //modify the url in any way you want
   let learnUrl = "https://isthisthingon.hopto.org" + req.url;
 
@@ -132,32 +128,16 @@ routes(app);
 
 // listen (start app with node server.js) ======================================
 
-//httpProxy.listen(8543);
+app.listen(listenPort);
+const frontendUrl = config.frontend_url;
 
-if (config.use_ssl) {
-  https.createServer(options, app).listen(listenPort, function() {
-    console.log("Configuring for SSL use");
-    console.log("Home page:  " + provider);
-    console.log("LTI 1 Tool Provider:  " + provider + "/lti");
-    console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
-    console.log("LTI 1.3 Login URL: " + provider + "/login");
-    console.log("LTI 1.3 Redirect URL: " + provider + "/lti13," + provider + "/deepLinkOptions");
-    console.log("LTI 1.3 Launch URL: " + provider + "/lti13");
-    console.log("LTI 1.3 Deep Linking URL: " + provider + "/deepLinkOptions");
-    console.log("JWKS URL: " + provider + "/.well-known/jwks.json");
-    console.log("Setup URL: " + provider + "/setup");
-    console.log("Listening on " + listenPort);
-  });
-} else {
-  app.listen(listenPort);
-  console.log("Home page:  " + provider);
-  console.log("LTI 1 Tool Provider:  " + provider + "/lti");
-  console.log("LTI 1 Content Item: " + provider + "/CIMRequest");
-  console.log("LTI 1.3 Login URL: " + provider + "/login");
-  console.log("LTI 1.3 Redirect URL: " + provider + "/lti13," + provider + "/deepLinkOptions");
-  console.log("LTI 1.3 Launch URL: " + provider + "/lti13");
-  console.log("LTI 1.3 Deep Linking URL: " + provider + "/deepLinkOptions");
-  console.log("JWKS URL: " + provider + "/.well-known/jwks.json");
-  console.log("Setup URL: " + provider + "/setup");
-  console.log("Listening on " + listenPort);
-}
+console.log("Home page:  " + frontendUrl);
+console.log("LTI 1 Tool Provider:  " + frontendUrl + "lti");
+console.log("LTI 1 Content Item: " + frontendUrl + "CIMRequest");
+console.log("LTI 1.3 Login URL: " + frontendUrl + "login");
+console.log("LTI 1.3 Redirect URL: " + frontendUrl + "lti13," + frontendUrl + "deepLinkOptions");
+console.log("LTI 1.3 Launch URL: " + frontendUrl + "lti13");
+console.log("LTI 1.3 Deep Linking URL: " + frontendUrl + "deepLinkOptions");
+console.log("JWKS URL: " + frontendUrl + ".well-known/jwks.json");
+console.log("Setup URL: " + frontendUrl + "setup");
+console.log("Listening on " + listenPort);
