@@ -1,4 +1,5 @@
 import path from "path";
+import fs from "fs";
 import cookieParser from "cookie-parser";
 import {AGPayload, ContentItem, JWTPayload, NRPayload, GroupsPayload, SetupParameters} from "../common/restTypes";
 import config from "../config/config";
@@ -401,8 +402,14 @@ module.exports = function(app) {
     redisUtil.redisSave("key", "value");
     redisUtil.redisGet("key").then( (value) => { console.log("Redis value for key: " + value); });
 
-    res.send('<html lang=""><body>1</body></html>');
+    res.send('<html lang=""><body>Redis be okay</body></html>');
   });
+
+  app.get("/version", (req, res) => {
+    console.log("-------------------\nversion");
+    const data = fs.readFileSync('build-image.out', 'utf8')
+    res.send(data);
+  })
 
   //=======================================================
   // Catch all
