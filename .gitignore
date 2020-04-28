@@ -8,7 +8,6 @@
 bower_components
 **/public/dist
 **/server/lib
-version.txt
 
 # Created by https://www.gitignore.io/api/node,eclipse
 
