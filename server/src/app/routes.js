@@ -407,7 +407,7 @@ module.exports = function(app) {
 
   app.get("/version", (req, res) => {
     console.log("-------------------\nversion");
-    const data = fs.readFileSync('build-image.out', 'utf8')
+    const data = fs.readFileSync('version.txt', 'utf8')
     res.send(data);
   })
 

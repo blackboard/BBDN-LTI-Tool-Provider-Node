@@ -8,7 +8,7 @@
 bower_components
 **/public/dist
 **/server/lib
-build-image.out
+version.txt
 
 # Created by https://www.gitignore.io/api/node,eclipse
 
