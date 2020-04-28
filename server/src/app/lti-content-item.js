@@ -115,7 +115,7 @@ module.exports = {
         {
           mediaType: "application/vnd.ims.lti.v1.ltilink",
           "@type": "LtiLinkItem",
-          url: `${config.provider_domain}lti`,
+          url: `${config.frontend_url}lti`,
           title: "Sample LTI launch",
           text:
             "This is an example of an LTI launch link set via the Content-Item launch message.  Please launch it to pass the related certification test.",

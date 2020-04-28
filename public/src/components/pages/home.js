@@ -23,12 +23,6 @@ class LaunchEndpoint extends React.Component {
   }
 
   render() {
-    const baseUrl =
-      this.state.config.provider_domain +
-      (this.state.config.provider_port !== "NA"
-        ? ":" + this.state.config.provider_port
-        : "");
-
     return (
       <div>
         <Typography variant="h4" gutterBottom component="h2">
@@ -36,7 +30,7 @@ class LaunchEndpoint extends React.Component {
         </Typography>
         <Typography variant="subtitle1" gutterBottom component="h2">
           Your configuration
-          <p>LTI Tool Base URL: {baseUrl}</p>
+          <p>LTI Tool Frontend URL: {this.state.config.frontend_url}</p>
           <p>Blackboard Client ID: {this.state.setupData.applicationId}</p>
           <p>Developer Portal URL: {this.state.setupData.devPortalHost}</p>
           <p>
