@@ -182,7 +182,7 @@ let oauth2JWT = function(setup) {
   let json = {
     iss: "lti-tool",
     sub: setup.applicationId,
-    aud: setup.tokenEndPoint,
+    aud: [setup.tokenEndPoint, 'foo'],
     iat: now,
     exp: now + 5 * 60,
     jti: crypto.randomBytes(16).toString("hex")
