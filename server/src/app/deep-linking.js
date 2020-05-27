@@ -139,7 +139,7 @@ let deepLinkingLTILink = function() {
     type: "ltiResourceLink",
     title: "A title for LTI Link",
     text: "A description",
-    url:  `${config.frontend_url}lti13`,
+    url:  `${config.frontend_url}lti13?foo=bar`,
     available: {
       startDateTime: start,
       endDateTime: end

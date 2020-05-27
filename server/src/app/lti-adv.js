@@ -152,6 +152,10 @@ exports.tokenGrab = function(req, res, jwtPayload, setup) {
 exports.security1 = function(req, res, jwtPayload, setup) {
   let state = uuid.v4();
   let nonce = uuid.v4();
+
+  // The redirect_uri can't have extra query params on it if they were registered
+  const redirectUri = req.query.target_link_uri.split('?')[0];
+
   let url =
     setup.oidcAuthUrl +
     "?response_type=id_token" +
@@ -163,7 +167,7 @@ exports.security1 = function(req, res, jwtPayload, setup) {
     "&state=" +
     state +
     "&redirect_uri=" +
-    encodeURIComponent(req.query.target_link_uri) +
+    encodeURIComponent(redirectUri) +
     "&client_id=" +
     setup.applicationId +
     "&nonce=" +
@@ -178,7 +182,7 @@ let oauth2JWT = function(setup) {
   let json = {
     iss: "lti-tool",
     sub: setup.applicationId,
-    aud: setup.tokenEndPoint,
+    aud: [setup.tokenEndPoint, 'foo'],
     iat: now,
     exp: now + 5 * 60,
     jti: crypto.randomBytes(16).toString("hex")
