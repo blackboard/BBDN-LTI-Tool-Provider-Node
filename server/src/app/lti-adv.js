@@ -1,5 +1,7 @@
 "use strict";
 
+import config from "../config/config";
+
 let srequest = require("sync-request");
 let jwt = require("jsonwebtoken");
 let crypto = require("crypto");
@@ -33,6 +35,7 @@ exports.verifyToken = function(id_token, jwtPayload, setup) {
       ].return_url;
     jwtPayload.error_url = jwtPayload.return_url;
   }
+
   if (
     jwtPayload.body[
       "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"
@@ -40,6 +43,7 @@ exports.verifyToken = function(id_token, jwtPayload, setup) {
   ) {
     jwtPayload.names_roles = true;
   }
+
   if (
     jwtPayload.body[
       "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"
@@ -47,12 +51,21 @@ exports.verifyToken = function(id_token, jwtPayload, setup) {
   ) {
     jwtPayload.grading = true;
   }
+
   if (
       jwtPayload.body[
           "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice"
           ] !== undefined
   ) {
     jwtPayload.groups = true;
+  }
+
+  if (
+      jwtPayload.body[
+          "https://purl.imsglobal.org/spec/lti/claim/target_link_uri"
+          ] !== undefined
+  ) {
+    jwtPayload.target_link_uri = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/target_link_uri"];
   }
 
   // Verify launch is from correct party
@@ -153,8 +166,8 @@ exports.security1 = function(req, res, jwtPayload, setup) {
   let state = uuid.v4();
   let nonce = uuid.v4();
 
-  // The redirect_uri can't have extra query params on it if they were registered
-  const redirectUri = req.query.target_link_uri.split('?')[0];
+  // This tool only supports one redirect_uri...the routing is handled by looking at target_link_uri claim or custom params
+  const redirectUri = `${config.frontend_url}lti13`;
 
   let url =
     setup.oidcAuthUrl +

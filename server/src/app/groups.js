@@ -22,7 +22,7 @@ exports.groups = (req, res, groupsPayload) => {
 exports.getGroups = (req, res, groupsPayload, setup) => {
   // Get OAuth2 token and make call to Learn
   let scope =
-    "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly";
+    "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly";
   ltiAdv.getOauth2Token(setup, scope).then(
     function(token) {
       let body = JSON.parse(token);
@@ -97,7 +97,7 @@ exports.groupSets = (req, res, groupSetsPayload, setup) => {
 
   // Get OAuth2 token and make call to Learn
   let scope =
-    "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly";
+    "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly";
   ltiAdv.getOauth2Token(setup, scope).then(
     function(token) {
       let body = JSON.parse(token);
