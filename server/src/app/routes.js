@@ -181,29 +181,24 @@ module.exports = function(app) {
     age : "77"
   };
 
+  // This is our single redirect_uri entry point; we can use customer parameters or target_link_uri to determine how
+  // to route from here
   app.post("/lti13", (req, res) => {
     console.log("--------------------\nlti13");
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
     res.cookie("userData-legacy", users);
     res.cookie("userData", users,  { sameSite: 'none', secure: true });
-    res.redirect("/lti_adv_view");
-  });
 
-  app.post("/ltiAdv", (req, res) => {
-    console.log("--------------------\nltiAdvantage");
-    jwtPayload = new JWTPayload();
-    ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
-    res.cookie("userData-legacy", users);
-    res.cookie("userData", users,  { sameSite: 'none', secure: true });
-    res.redirect("/lti_adv_view");
-  });
-
-  app.post("/lti13bobcat", (req, res) => {
-    console.log("--------------------\nlti13bobcat");
-    jwtPayload = new JWTPayload();
-    ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
-    res.redirect("/lti_bobcat_view");
+    if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
+      res.redirect('/deep_link_options');
+    } else if ( jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
+      res.redirect("/lti_bobcat_view");
+    } else if ( jwtPayload.target_link_uri.endsWith('lti13')) {
+      res.redirect("/lti_adv_view");
+    } else {
+      res.send(`Sorry Dave, I can't use that target_link_uri ${jwtPayload.target_link_uri}` );
+    }
   });
 
   app.get("/jwtPayloadData", (req, res) => {
@@ -217,30 +212,13 @@ module.exports = function(app) {
 
   //=======================================================
   // Deep Linking
-  let dlPayload;
-
-  app.post("/deepLink", (req, res) => {
-    console.log("--------------------\ndeepLink");
-    dlPayload = new JWTPayload();
-    ltiAdv.verifyToken(req.body.id_token, dlPayload, setup);
-    deepLink(req, res, dlPayload, setup);
-    res.redirect("/deep_link");
-  });
-
   app.get("/dlPayloadData", (req, res) => {
-    res.send(dlPayload);
-  });
-
-  app.post("/deepLinkOptions", (req, res) => {
-    console.log("--------------------\ndeepLinkOptions");
-    dlPayload = new JWTPayload();
-    ltiAdv.verifyToken(req.body.id_token, dlPayload, setup);
-    res.redirect("/deep_link_options");
+    res.send(jwtPayload);
   });
 
   app.post("/deepLinkContent", (req, res) => {
     console.log("--------------------\ndeepLinkContent");
-    deepLinkContent(req, res, dlPayload, setup);
+    deepLinkContent(req, res, jwtPayload, setup);
     res.redirect("/deep_link");
   });
 
