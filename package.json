@@ -21,7 +21,7 @@
     "ims-caliper": "^1.1.0",
     "ims-lti": "^3.0.2",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "mongodb": "^2.2.11",
     "oauth-signature": "^1.5.0",
