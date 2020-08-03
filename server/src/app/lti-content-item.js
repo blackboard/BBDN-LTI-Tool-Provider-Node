@@ -22,7 +22,8 @@ module.exports = {
           custom: {
             chapter: "12",
             section: "3",
-            duedate: "2018-03-31T11:15:00+01:00"
+            duedate: "2018-03-31T11:15:00+01:00",
+            source: "link"
           },
           placementAdvice: {
             displayHeight: 100,
@@ -45,7 +46,8 @@ module.exports = {
           custom: {
             chapter: "12",
             section: "4",
-            duedate: "2019-05-24T23:15:00+01:00"
+            duedate: "2019-05-24T23:15:00+01:00",
+            source: "link"
           },
           placementAdvice: {
             displayHeight: 100,
@@ -151,7 +153,8 @@ module.exports = {
             dueDate: "$ResourceLink.submission.endDateTime",
             userName: "$User.username",
             userEmail: "$Person.email.primary",
-            userSysRoles: "@X@user.role@X@"
+            userSysRoles: "@X@user.role@X@",
+            source: "link"
           }
         }
       ]
@@ -217,7 +220,8 @@ module.exports = {
           text: "Read this section prior to your tutorial.",
           custom: {
             chapter: "12",
-            section: "3"
+            section: "3",
+            source: "link"
           },
           placementAdvice: {
             displayHeight: 100,
@@ -238,7 +242,8 @@ module.exports = {
           text: "Read this section prior to your tutorial.",
           custom: {
             chapter: "12",
-            section: "4"
+            section: "4",
+            source: "link"
           },
           placementAdvice: {
             displayHeight: 100,
@@ -302,7 +307,8 @@ module.exports = {
           text: "Read this section prior to your tutorial.",
           custom: {
             chapter: "12",
-            section: "3"
+            section: "3",
+            source: "link"
           },
           placementAdvice: {
             displayHeight: 100,
