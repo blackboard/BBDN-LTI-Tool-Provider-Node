@@ -40,9 +40,26 @@ class AssignGradesView extends React.Component {
     const delcol =
       this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
         <form action="/agsDeleteCol" method="post">
-          <input type="submit" value="Delete Column" />
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.lineItem} />
+          <table>
+            <tbody>
+            <tr>
+              <td>
+                <input type="submit" value="Delete Column"/>
+                <input type="hidden" name="body" defaultValue={body}/>
+                <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
+                <input type="hidden" name="itemsUrl" defaultValue={this.state.lineItems}/>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="columnId"
+                  size="10"
+                  placeholder="Column ID"
+                />
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -189,6 +206,14 @@ class AssignGradesView extends React.Component {
                         name="columnId"
                         size="10"
                         placeholder="Column ID"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name="dueDate"
+                        size="20"
+                        placeholder="Due Date"
                       />
                     </td>
                   </tr>
