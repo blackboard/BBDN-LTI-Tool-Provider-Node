@@ -95,7 +95,6 @@ exports.addCol = (req, res, agPayload, setup) => {
         scoreMaximum: agPayload.form.score,
         label: label,
         resourceId: setup.applicationId,
-        resourceLinkId: "abcde",
         tag: label + " tag",
         endDateTime: dueDate ? dueDate : null
       };
