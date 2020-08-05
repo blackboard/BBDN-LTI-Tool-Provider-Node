@@ -156,6 +156,7 @@ The Deep Linking Request should launch to http://localhost/deepLinkOptions to be
 
 Docker specific files are included (Dockerfile, docker-compose.yml, launch.sh).
 
-Use config_override.json (same entries as config.json) to override redis host name from localhost to redis so it can access the redis docker container.
+Use config_override.json (same entries as config.json) to override `redis_host` from localhost to redis so it can access the redis docker container. 
+If running the docker image on the same machine as the learn instance then the `docker-compose.yml` needs to contain the ip address of the machine being used. 
 
-If running the docker image on the same machine as the learn instance then the docker-compose.yml needs to contain the ip address of the machine being used. Start containers using __docker-compose up__
+Build the LTI tool container with `docker build -t lti-tool .`. Then start containers using `docker-compose up`.
