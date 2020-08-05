@@ -137,9 +137,9 @@ let deepLinkingLTILink = function() {
 
   return {
     type: "ltiResourceLink",
-    title: "A title for LTI Link",
+    title: "A title for LTI 1.3 Link",
     text: "A description",
-    url:  `${config.frontend_url}lti13?foo=bar`,
+    url:  `${config.frontend_url}lti13`,
     available: {
       startDateTime: start,
       endDateTime: end
@@ -172,7 +172,8 @@ let deepLinkingLTILink = function() {
       dueDate: "$ResourceLink.submission.endDateTime",
       userName: "$User.username",
       userEmail: "$Person.email.primary",
-      userSysRoles: "@X@user.role@X@"
+      userSysRoles: "@X@user.role@X@",
+      source: "link"
     }
   };
 };

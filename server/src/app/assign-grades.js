@@ -88,13 +88,16 @@ exports.addCol = (req, res, agPayload, setup) => {
       agPayload.token = body.access_token;
       let label = agPayload.form.label;
       let columnId = agPayload.form.columnId;
-      console.log("Add column ID: " + columnId);
+      let dueDate = agPayload.form.dueDate;
+      console.log(`Add/update column ID: ${columnId}, label: ${label}, dueDate: ${dueDate}`);
 
-      let add = {
+      let newBody = {
         scoreMaximum: agPayload.form.score,
         label: label,
         resourceId: setup.applicationId,
-        tag: label + " tag"
+        resourceLinkId: "abcde",
+        tag: label + " tag",
+        endDateTime: dueDate ? dueDate : null
       };
       let options = {};
 
@@ -107,7 +110,7 @@ exports.addCol = (req, res, agPayload, setup) => {
             "content-type": "application/vnd.ims.lis.v2.lineitem+json",
             Authorization: "Bearer " + agPayload.token
           },
-          body: JSON.stringify(add)
+          body: JSON.stringify(newBody)
         };
       } else {
         // This is a create
@@ -118,7 +121,7 @@ exports.addCol = (req, res, agPayload, setup) => {
             "content-type": "application/vnd.ims.lis.v2.lineitem+json",
             Authorization: "Bearer " + agPayload.token
           },
-          body: JSON.stringify(add)
+          body: JSON.stringify(newBody)
         };
       }
 
@@ -152,32 +155,47 @@ exports.delCol = (req, res, agPayload, setup) => {
     function(token) {
       let body = JSON.parse(token);
       agPayload.token = body.access_token;
+      let columnId = agPayload.form.columnId;
+
+      let url = agPayload.form.url;
+
+      if (columnId) {
+        url = `${agPayload.form.itemsUrl}/${columnId}`;
+      }
+      console.log(`AGS Delete URL ${url}`);
 
       let options = {
         method: "DELETE",
-        uri: agPayload.form.url,
+        uri: url,
         headers: {
           Authorization: "Bearer " + agPayload.token
         }
       };
 
       request(options, function(err, response, body) {
-        let json = JSON.parse(body);
+        if (response.statusCode === 204) {
+          console.log(`Column deleted successfully`);
+        } else {
+          let json = {};
+          if (body) {
+            json = JSON.parse(body);
+          }
 
-        if (err) {
-          console.log(
-            "AGS Delete Column Error - request failed: " + err.message
-          );
-        } else if (response.statusCode !== 200) {
-          console.log(
-            "AGS Delete Column Error - Service call failed: " +
+          if (err) {
+            console.log(
+              "AGS Delete Column Error - request failed: " + err.message
+            );
+          } else if (response.statusCode !== 204) {
+            console.log(
+              "AGS Delete Column Error - Service call failed: " +
               response.statusCode +
               "\n" +
               options.uri
-          );
-          agPayload.body = json;
-        } else {
-          agPayload.body = json;
+            );
+            agPayload.body = json;
+          } else {
+            agPayload.body = json;
+          }
         }
         res.redirect("/assign_grades_view");
       });
