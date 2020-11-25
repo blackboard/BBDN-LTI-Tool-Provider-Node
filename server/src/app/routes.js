@@ -192,8 +192,12 @@ module.exports = function(app) {
 
     if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
       res.redirect('/deep_link_options');
+    } else if ( jwtPayload.target_link_uri.endsWith('CIMRequest')) {
+      res.redirect("/deep_link_options");
     } else if ( jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
       res.redirect("/lti_bobcat_view");
+    } else if ( jwtPayload.target_link_uri.endsWith('lti')) {
+      res.redirect("/lti_adv_view");
     } else if ( jwtPayload.target_link_uri.endsWith('lti13')) {
       res.redirect("/lti_adv_view");
     } else {

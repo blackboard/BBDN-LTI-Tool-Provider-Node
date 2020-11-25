@@ -53,6 +53,9 @@ exports.deepLinkContent = function(req, res, dlPayload, setup) {
       for (let i = 0; i < req.body.embed_ltilinks; i++, total++) {
         items[total] = deepLinkingEmbedLTILink();
       }
+      for (let i = 0; i < req.body.new_ltilinks; i++, total++) {
+        items[total] = deepLinkingNewWindowLTILink();
+      }
       for (let i = 0; i < req.body.custom_contentlinks; i++, total++) {
         items[total] = deepLinkingContentLink();
       }
@@ -174,6 +177,24 @@ let deepLinkingLTILink = function() {
       userEmail: "$Person.email.primary",
       userSysRoles: "@X@user.role@X@",
       source: "link"
+    }
+  };
+};
+
+let deepLinkingNewWindowLTILink = function() {
+  return {
+    type: "ltiResourceLink",
+    title: "A New Window LTI Link",
+    text: "A new window description",
+    url:  `${config.frontend_url}lti13bobcat`,
+    lineItem: {
+      scoreMaximum: 100,
+      label: "New Window quiz",
+      resourceId: "xyzpdasdfq1234",
+      tag: "originality"
+    },
+    window: {
+      targetName: "_blank"
     }
   };
 };

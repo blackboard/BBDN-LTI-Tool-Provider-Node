@@ -56,6 +56,12 @@ class DeepLinkOptions extends React.Component {
                           </CustomTableCell>
                         </TableRow>
                         <TableRow>
+                          <CustomTableCell>New Window LTI Links:</CustomTableCell>
+                          <CustomTableCell>
+                            <input type="text" size="2" name="new_ltilinks"/>
+                          </CustomTableCell>
+                        </TableRow>
+                        <TableRow>
                           <CustomTableCell>Content Links:</CustomTableCell>
                           <CustomTableCell>
                             <input type="text" size="2" name="custom_contentlinks"/>
