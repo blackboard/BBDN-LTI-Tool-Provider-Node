@@ -1,5 +1,6 @@
 # BBDN-LTI-Tool-Provider-Node
-This project is a multi-purpose application designed to demonstrate several integration methods available with Blackboard Learn. The application is an LTI 1.1 and Advantage Tool Provider.
+This project is a multi-purpose application designed to demonstrate several integration methods available with Blackboard Learn. The application is an LTI 1.1, LTI 1.3, and Advantage Tool Provider. It also has code to emit Caliper events, as well as act as a very basic caliper eventstore. 
+
 Upon launch of the LTI Tool, the user is given a few options:
 
 - Send Outcomes: Send a Grade to the Tool Consumer with LTI Outcomes
@@ -11,9 +12,9 @@ Upon launch of the LTI Tool, the user is given a few options:
 - Return to Learn: This will take the return URL in the LTI Launch and return the user to that place in Blackboard Learn. If no URL is provided, the user is returned to the top-level domain they came from.
 
 ## Requirements
-- [Node and npm](http://nodejs.org)
+- [Node and npm](http://nodejs.org) - Installing node on Windows requires installing a number of additional packages. It will warn you and if you don't want the script to do it automatically, the installer will give you a link to instructions to run the installs manually.
 - [Redis](http:redis.io) - On Mac it's easiest to `brew install redis`. The code assumes the default
-host and port (localhost:6379). If you need to run redis on a different host or port, update your config_override.json
+host and port (localhost:6379). On Windows, its easiest to use docker. Running `docker pull redis` will download the latest redis release in a docker image that you can run as required. If you need to run redis on a different host or port, update your config_override.json
 
 ## Configuration
 You can override a number of configuration properties by creating a config_override.json file in server/config. Below is an example:
@@ -27,7 +28,7 @@ You can override a number of configuration properties by creating a config_overr
 }
 ```
 
-If you want to run under SSL you should use a reverse proxy, like nginx.
+If you want to run under SSL you should use a reverse proxy, like nginx or ngrok.
 
 ## How To Run the code
 All packages needed are in the package.json.
@@ -44,11 +45,10 @@ To launch the Content Provider simulation call the tool with this url, http://lo
 Add the parameter "custom_option" with a value of 1 - 5 (e.g. CIMRequest?custom_option=1) and the corresponding predefined message load from the menu
 
 ## Usage
-The application is very simple in its current iteration. Essentially there is one page with a bunch of buttons. Click the one you want. I
-f you are testing caliper, ensure you click the register caliper button at least once. This registers your tool with Blackboard and provides the application with the API Key and Caliper end point.
+The application is very simple in its current iteration. Essentially there is one page with a bunch of buttons. Click the one you want. If you are testing caliper, ensure you click the register caliper button at least once. This registers your tool with Blackboard and provides the application with the API Key and Caliper end point.
 Also, if you wish to ingest Blackbaord's caliper events, you will need to register your application as a caliper event store, which is done in Blackboard Learn.
 
-See the <a href="https://community.blackboard.com/community/developers/standards" target="_blank">community site</a> for more details.
+See the <a href="https://docs.blackboard.com/standards/caliper/getting-started/caliper-event-store-for-learn" target="_blank">developer documentation site</a> for more details.
 
 ## Developing
 This is not meant to be a Node.JS tutorial. It is simply an example of how one might implement the various features therein. Pull requests are welcome!
@@ -64,6 +64,8 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
 1. Install and start redis
 
    On Mac it's easiest to `brew install redis`. The code assumes the default host and port (localhost:6379).
+   
+   On Windows, it's easiest to use the redis docker image. With Docker Desktop installed, at a command prompt, run `docker pull redis` and then `docker run -p 6379:6379 --name lti-redis -d redis`.
 
 2. Start the server with `npm start`.
 
@@ -83,7 +85,7 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
    Setup URL: https://example.com/setup
    ```
 
-4. Register your application on the Blackboard Developer Portal
+3. Register your application on the Blackboard Developer Portal
 
    - Create an account on https://developer.blackboard.com .
    - Navigate to *My Apps* and register a new application
@@ -104,7 +106,7 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
    - Click *Done*
    - Make a note of the *Application ID*
 
-5. Configure the server
+4. Configure the server
 
    Navigate to https://example.com/setup and enter the following fields:
    - *Developer portal URL*: https://developer.blackboard.com
@@ -116,14 +118,14 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
 
    Click *SAVE*
 
-6. Add the tool to your Learn instance
+5. Add the tool to your Learn instance
 
   - Sign into your Learn instance as an administrator
   - Navigate to *Administrator Tools* > *Integrations* > *LTI Tool Providers* > *Register LTI 1.3 Tool*
   - In the *Client ID* field enter the *Application ID* copied from the developer portal
   - Click *Submit*
 
-7. Create a placement for the tool
+6. Create a placement for the tool
 
    In the *LTI Tool Providers* list, select *LTI 1.3 Example App* > *Manage Placements* > *Create Placement*
    Enter the following fields:
@@ -134,7 +136,7 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
 
    Click *Submit*
 
-8. Launch the tool
+7. Launch the tool
 
    Navigate to a course. Under *Course Management* > *Course Tools* you should see your LTI 1.3 Example App
 
