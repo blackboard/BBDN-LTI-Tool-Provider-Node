@@ -151,12 +151,12 @@ let deepLinkingLTILink = function() {
       endDateTime: end
     },
     icon: {
-      url: "https://lti.example.com/image.jpg",
+      url: "https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg",
       width: 100,
       height: 100
     },
     thumbnail: {
-      url: "https://lti.example.com/thumb.jpg",
+      url: "https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg",
       width: 90,
       height: 90
     },
@@ -187,6 +187,11 @@ let deepLinkingNewWindowLTILink = function() {
     title: "A New Window LTI Link",
     text: "A new window description",
     url:  `${config.frontend_url}lti13bobcat`,
+    icon: {
+      url: "https://photos.smugmug.com/photos/i-PhqNP5C/0/7be04c91/Th/i-PhqNP5C-Th.jpg",
+      width: 100,
+      height: 100
+    },
     lineItem: {
       scoreMaximum: 100,
       label: "New Window quiz",
@@ -234,12 +239,12 @@ let deepLinkingContentLink = function() {
     title: "My Home Page",
     url: "http://google.com",
     icon: {
-      url: "https://lti.example.com/image.jpg",
+      url: "https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg",
       width: 100,
       height: 100
     },
     thumbnail: {
-      url: "https://lti.example.com/thumb.jpg",
+      url: "https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg",
       width: 90,
       height: 90
     }
@@ -254,7 +259,7 @@ let deepLinkingFile = function() {
     mediaType: "application/pdf",
     expiresAt: "2018-03-06T20:05:02Z",
     thumbnail: {
-      url: "https://lti.example.com/thumb.jpg",
+      url: "https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg",
       width: 50,
       height: 50
     }
@@ -271,7 +276,7 @@ let deepLinkingHTML = function() {
 let deepLinkingImage = function() {
   return {
     type: "image",
-    url: "https://www.example.com/pic.jpg",
+    url: "https://flic.kr/p/2imo4TA",
     width: 300,
     height: 240
   };
