@@ -196,6 +196,8 @@ module.exports = function(app) {
       res.redirect("/deep_link_options");
     } else if ( jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
       res.redirect("/lti_bobcat_view");
+    } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
+      res.redirect("/proctoring_view");
     } else if ( jwtPayload.target_link_uri.endsWith('lti')) {
       res.redirect("/lti_adv_view");
     } else if ( jwtPayload.target_link_uri.endsWith('lti13')) {
@@ -224,6 +226,12 @@ module.exports = function(app) {
     console.log("--------------------\ndeepLinkContent");
     deepLinkContent(req, res, jwtPayload, setup);
     res.redirect("/deep_link");
+  });
+
+  //=======================================================
+  // Proctoring Service
+  app.get("/proctoringServicePayloadData", (req, res) => {
+    res.send(jwtPayload);
   });
 
   //=======================================================
