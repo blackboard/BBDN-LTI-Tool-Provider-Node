@@ -33,6 +33,7 @@ import NamesRolesView from "./namesRolesView";
 import GroupsView from "./groupsView";
 import GroupSetsView from "./groupSetsView";
 import SetupView from "./setupView";
+import ProctoringServicePayloadView from "./proctoringServiceView";
 import SnackBar from "../page_objects/snackbar";
 
 class Dashboard extends React.Component {
@@ -138,6 +139,7 @@ class Dashboard extends React.Component {
               <Route path="/names_roles_view" component={NamesRolesView}/>
               <Route path="/groups_view" component={GroupsView}/>
               <Route path="/group_sets_view" component={GroupSetsView}/>
+              <Route path="/proctoring_view" component={ProctoringServicePayloadView}/>
               <Route
                 path="/assign_grades_view"
                 component={AssignGradesView}
