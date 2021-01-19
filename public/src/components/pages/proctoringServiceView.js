@@ -16,6 +16,8 @@ class ProctoringServicePayloadView extends React.Component {
         this.setState({
           header: proctoringServicePayload.header,
           body: proctoringServicePayload.body,
+          jwt: proctoringServicePayload.jwt,
+          startAssessmentUrl: proctoringServicePayload.start_assessment_url,
         });
       });
   }
@@ -30,6 +32,13 @@ class ProctoringServicePayloadView extends React.Component {
           <Typography variant="body1" gutterBottom>
             We have received your proctoring service launch.
           </Typography>
+          <Typography variant="body1">
+            What would you like to do?
+          </Typography>
+          <form action={this.state.startAssessmentUrl} method="post">
+            <input type="hidden" name="JWT" defaultValue={this.state.jwt} />
+            <input type="submit" value="Start Assessment" />
+          </form>
           <br />
           <Typography variant="h5">
             Proctoring Service Request

@@ -7,6 +7,7 @@ import assignGrades from "./assign-grades";
 import * as content_item from "./content-item";
 import eventstore from './eventstore';
 import {deepLink, deepLinkContent} from "./deep-linking";
+import {proctoringContent} from "./proctoring";
 import * as lti from "./lti";
 import ltiAdv from "./lti-adv";
 import namesRoles from "./names-roles";
@@ -231,6 +232,7 @@ module.exports = function(app) {
   //=======================================================
   // Proctoring Service
   app.get("/proctoringServicePayloadData", (req, res) => {
+    proctoringContent(req, res, jwtPayload, setup);
     res.send(jwtPayload);
   });
 
