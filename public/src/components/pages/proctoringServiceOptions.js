@@ -37,7 +37,7 @@ class ProctoringServiceOptionsView extends React.Component {
     return (
       <div>
         <Typography variant="h4" gutterBottom>
-          Proctoring Service Launch
+          Proctoring Options
         </Typography>
         <div>
           <Typography variant="body1" gutterBottom>
@@ -74,12 +74,14 @@ class ProctoringServiceOptionsView extends React.Component {
                   </TableRow>
                 </TableBody>
               </Table>
+              <br />
               <input type="submit" value="Build payload" />
           </form>
           <br />
           <Typography variant="h5">
-            Proctoring Service Request
+            Request JWT
           </Typography>
+          <br />
           <Typography variant="body1">
             <b>JWT Header</b>
           </Typography>

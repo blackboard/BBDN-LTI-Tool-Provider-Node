@@ -42,7 +42,6 @@ exports.buildProctoringServiceReturnPayload = function(req, res, proctoringPaylo
   }
 
   proctoringPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
-  proctoringPayload.return_url = proctoringPayload.return_url;
   proctoringPayload.start_assessment_url = proctoringPayload.body["https://purl.imsglobal.org/spec/lti-ap/claim/start_assessment_url"];
-  proctoringPayload.return_json = json;
+  proctoringPayload.decodedJwt = jwt.decode(proctoringPayload.jwt, { complete: true });
 };
