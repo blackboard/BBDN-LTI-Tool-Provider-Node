@@ -1,23 +1,20 @@
 import React from "react";
-import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
-import {styles} from "../../common/styles/custom.js";
 
-class ProctoringServicePayloadView extends React.Component {
+class ProctoringServiceActionsView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   componentDidMount() {
-    fetch("proctoringServicePayloadData")
+    fetch("getProctoringServicePayloadData")
       .then(result => result.json())
       .then(proctoringServicePayload => {
         this.setState({
-          header: proctoringServicePayload.header,
-          body: proctoringServicePayload.body,
           jwt: proctoringServicePayload.jwt,
           startAssessmentUrl: proctoringServicePayload.start_assessment_url,
+          errorUrl: proctoringServicePayload.error_url,
         });
       });
   }
@@ -30,31 +27,23 @@ class ProctoringServicePayloadView extends React.Component {
         </Typography>
         <div>
           <Typography variant="body1" gutterBottom>
-            We have received your proctoring service launch.
+            Your return payload is ready.
           </Typography>
           <Typography variant="body1">
-            What would you like to do?
+            What would you like to do with it?
           </Typography>
           <form action={this.state.startAssessmentUrl} method="post">
             <input type="hidden" name="JWT" defaultValue={this.state.jwt} />
             <input type="submit" value="Start Assessment" />
           </form>
           <br />
-          <Typography variant="h5">
-            Proctoring Service Request
-          </Typography>
-          <Typography variant="body1">
-            <b>JWT Header</b>
-          </Typography>
-          <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
-          <Typography variant="body1">
-            <b>JWT Body</b>
-          </Typography>
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <form action={this.state.errorUrl} method="post">
+            <input type="submit" value="Return with error" />
+          </form>
         </div>
       </div>
     );
   }
 }
 
-export default ProctoringServicePayloadView;
+export default ProctoringServiceActionsView;
