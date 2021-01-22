@@ -139,6 +139,7 @@ console.log("LTI 1.3 Redirect URL:      " + frontendUrl + "lti13");
 console.log("LTI 1.3 Direct Target URL: " + frontendUrl + "lti13");
 console.log("LTI 1.3 Deep Linking  URL: " + frontendUrl + "deepLinkOptions");
 console.log("LTI 1.3 Bobcat Target URL: " + frontendUrl + "lti13bobcat");
+console.log("LTI 1.3 Proctoring URL:    " + frontendUrl + "proctoring");
 console.log("JWKS URL:                  " + frontendUrl + ".well-known/jwks.json");
 console.log("Setup URL:                 " + frontendUrl + "setup");
 console.log("Listening on " + listenPort);
