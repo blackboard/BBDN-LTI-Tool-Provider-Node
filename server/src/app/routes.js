@@ -7,6 +7,7 @@ import assignGrades from "./assign-grades";
 import * as content_item from "./content-item";
 import eventstore from './eventstore';
 import {deepLink, deepLinkContent} from "./deep-linking";
+import {buildProctoringServiceReturnPayload} from "./proctoring";
 import * as lti from "./lti";
 import ltiAdv from "./lti-adv";
 import namesRoles from "./names-roles";
@@ -197,7 +198,7 @@ module.exports = function(app) {
     } else if ( jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
       res.redirect("/lti_bobcat_view");
     } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
-      res.redirect("/proctoring_view");
+      res.redirect("/proctoring_options_view");
     } else if ( jwtPayload.target_link_uri.endsWith('lti')) {
       res.redirect("/lti_adv_view");
     } else if ( jwtPayload.target_link_uri.endsWith('lti13')) {
@@ -230,8 +231,14 @@ module.exports = function(app) {
 
   //=======================================================
   // Proctoring Service
-  app.get("/proctoringServicePayloadData", (req, res) => {
+
+  app.get("/getProctoringServicePayloadData", (req, res) => {
     res.send(jwtPayload);
+  });
+
+  app.post("/buildProctoringServiceReturnPayload", (req, res) => {
+    buildProctoringServiceReturnPayload(req, res, jwtPayload, setup);
+    res.redirect("/proctoring_actions_view");
   });
 
   //=======================================================
