@@ -186,7 +186,7 @@ let deepLinkingNewWindowLTILink = function() {
     type: "ltiResourceLink",
     title: "A New Window LTI Link",
     text: "A new window description",
-    url:  `${config.frontend_url}lti13bobcat`,
+    url:  `${config.frontend_url}lti13`,
     icon: {
       url: "https://photos.smugmug.com/photos/i-PhqNP5C/0/7be04c91/Th/i-PhqNP5C-Th.jpg",
       width: 100,
@@ -215,15 +215,13 @@ let deepLinkingEmbedLTILink = function() {
     type: "ltiResourceLink",
     title: "An Embedded LTI Link",
     text: "Bobcat art",
-    url: `${config.frontend_url}lti13bobcat`,
+    url: `${config.frontend_url}lti13`,
     iframe: {
       width: 600,
       height: 600
     },
     custom: {
-      key1: "some value",
-      contextHistory: "$Context.id.history",
-      resourceHistory: "$ResourceLink.id.history",
+      deeplinkkey1: "from deep linking item",
       userName: "$User.username",
       userEmail: "$Person.email.primary",
       userSysRoles: "@X@user.role@X@",
