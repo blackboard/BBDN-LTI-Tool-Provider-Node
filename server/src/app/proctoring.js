@@ -17,6 +17,7 @@ exports.buildProctoringServiceReturnPayload = function(req, res, proctoringPaylo
     "https://purl.imsglobal.org/spec/lti/claim/resource_link": proctoringPayload.body["https://purl.imsglobal.org/spec/lti/claim/resource_link"],
     "https://purl.imsglobal.org/spec/lti-ap/claim/session_data": proctoringPayload.body["https://purl.imsglobal.org/spec/lti-ap/claim/session_data"],
     "https://purl.imsglobal.org/spec/lti-ap/claim/attempt_number": proctoringPayload.body["https://purl.imsglobal.org/spec/lti-ap/claim/attempt_number"],
+    "https://purl.imsglobal.org/spec/lti/claim/custom": proctoringPayload.body["https://purl.imsglobal.org/spec/lti/claim/custom"],
   };
 
   proctoringPayload.error_url = proctoringPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
