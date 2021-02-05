@@ -48,6 +48,7 @@ class ProctoringServiceOptionsView extends React.Component {
           </Typography>
           <br />
           <form action="buildProctoringServiceReturnPayload" method="POST">
+            <Typography variant="h5">Messages</Typography>
             <Table style={{width: "45%"}}>
                 <TableHead>
                   <TableRow style={{fontSize: "14px"}}>
@@ -74,6 +75,13 @@ class ProctoringServiceOptionsView extends React.Component {
                   </TableRow>
                 </TableBody>
               </Table>
+              <br />
+              <Typography variant="h5">Other Options</Typography>
+              <br />
+              <Typography variant="body2">
+                <input id="end-assessment-return-checkbox" type="checkbox" name="end_assessment_return"/>
+                <label for="end-assessment-return-checkbox">End Assessment Return</label>
+              </Typography>
               <br />
               <input type="submit" value="Build payload" />
           </form>

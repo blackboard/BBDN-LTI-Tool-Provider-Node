@@ -41,6 +41,9 @@ exports.buildProctoringServiceReturnPayload = function(req, res, proctoringPaylo
       proctoringPayload.error_url = `${proctoringPayload.error_url}&lti_errorlog=${encodeURI(req.body.custom_error)}`;
     }
   }
+  if (req.body.end_assessment_return) {
+    json["https://purl.imsglobal.org/spec/lti-ap/claim/end_assessment_return"] = true;
+  }
 
   proctoringPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
   proctoringPayload.start_assessment_url = proctoringPayload.body["https://purl.imsglobal.org/spec/lti-ap/claim/start_assessment_url"];

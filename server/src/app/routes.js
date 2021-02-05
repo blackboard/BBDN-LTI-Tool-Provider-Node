@@ -198,7 +198,14 @@ module.exports = function(app) {
     } else if ( jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
       res.redirect("/lti_bobcat_view");
     } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
-      res.redirect("/proctoring_options_view");
+      const messageType = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/message_type"];
+      if (messageType === "LtiStartProctoring") {
+        res.redirect("/proctoring_options_view");
+      } else if (messageType === "LtiEndAssessment") {
+        res.redirect("/proctoring_end_view");
+      } else {
+        res.send(`Unrecognized proctoring message type: ${messageType}`);
+      }
     } else if ( jwtPayload.target_link_uri.endsWith('lti')) {
       res.redirect("/lti_adv_view");
     } else if ( jwtPayload.target_link_uri.endsWith('lti13')) {
