@@ -77,11 +77,27 @@ class ProctoringServiceOptionsView extends React.Component {
               </Table>
               <br />
               <Typography variant="h5">Other Options</Typography>
-              <br />
-              <Typography variant="body2">
-                <input id="end-assessment-return-checkbox" type="checkbox" name="end_assessment_return"/>
-                <label for="end-assessment-return-checkbox">End Assessment Return</label>
-              </Typography>
+
+              <Table style={{width: "45%"}}>
+                <TableHead>
+                  <TableRow style={{fontSize: "14px"}}>
+                    <CustomTableCell>Option</CustomTableCell>
+                    <CustomTableCell align="center">Value</CustomTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <CustomTableCell>End Assessment Return</CustomTableCell>
+                    <CustomTableCell align="center">
+                      <input
+                        id="end-assessment-return-checkbox"
+                        type="checkbox"
+                        name="end_assessment_return"
+                      />
+                    </CustomTableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
               <br />
               <input type="submit" value="Build payload" />
           </form>
@@ -93,11 +109,15 @@ class ProctoringServiceOptionsView extends React.Component {
           <Typography variant="body1">
             <b>JWT Header</b>
           </Typography>
-          <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          {this.state.header &&
+            <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          }
           <Typography variant="body1">
             <b>JWT Body</b>
           </Typography>
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          {this.state.body &&
+            <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          }
         </div>
       </div>
     );
