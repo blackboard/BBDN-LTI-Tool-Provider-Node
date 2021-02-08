@@ -34,8 +34,8 @@ let eventStoreUrl = "";
 let apiKey = "";
 
 //REST
-let app_key = `${config.appKey}`;//"4afc84d0-3d94-4411-b973-6571535bdc5a";
-let app_secret = `${config.appSecret}`; //"maNo11pfDrLH2pirIfNnjPiarJ8277dq";
+let app_key = `${config.appKey}`;
+let app_secret = `${config.appSecret}`;
 let access_token = "";
 let token_type = "";
 let expires_in = "";

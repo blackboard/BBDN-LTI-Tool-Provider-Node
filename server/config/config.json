@@ -3,6 +3,6 @@
   "provider_port": "3000",
   "redis_host": "localhost",
   "redis_port": 6379,
-  "appKey": "",
-  "appSecret": ""
+  "appKey": "abc",
+  "appSecret": "xyz"
 }
