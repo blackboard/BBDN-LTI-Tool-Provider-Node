@@ -42,7 +42,7 @@ class ProctoringEndOptionsView extends React.Component {
     return (
       <div>
         <Typography variant="h4" gutterBottom>
-          Proctoring End Options
+          Proctoring End: Options
         </Typography>
         <br />
         <div style={{ marginBottom: '30px' }}>

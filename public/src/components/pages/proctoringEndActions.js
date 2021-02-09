@@ -21,7 +21,7 @@ class ProctoringEndActionsView extends React.Component {
     return (
       <div>
         <Typography variant="h4" gutterBottom>
-          Proctoring End Actions
+          Proctoring End: Actions
         </Typography>
         <br />
         <Typography variant="h5" gutterBottom>

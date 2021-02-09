@@ -26,7 +26,7 @@ class ProctoringServiceActionsView extends React.Component {
     return (
       <div>
         <Typography variant="h4" gutterBottom>
-          Proctoring Start Actions
+          Proctoring Start: Actions
         </Typography>
         <br />
         <div style={{ marginBottom: '20px' }}>

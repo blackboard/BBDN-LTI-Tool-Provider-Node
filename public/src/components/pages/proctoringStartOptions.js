@@ -37,7 +37,7 @@ class ProctoringServiceOptionsView extends React.Component {
     return (
       <div>
         <Typography variant="h4" gutterBottom>
-          Proctoring Options
+          Proctoring Start: Options
         </Typography>
         <div style={{ marginBottom: '30px' }}>
           <Typography variant="body1" gutterBottom>
