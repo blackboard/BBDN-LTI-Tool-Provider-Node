@@ -2,7 +2,7 @@
 
 let jwt = require("jsonwebtoken");
 
-exports.buildProctoringServiceReturnPayload = function(req, res, proctoringPayload, setup) {
+exports.buildProctoringStartReturnPayload = function(req, res, proctoringPayload, setup) {
   let now = Math.trunc(new Date().getTime() / 1000);
   let json = {
     locale: "en_US",
@@ -20,25 +20,25 @@ exports.buildProctoringServiceReturnPayload = function(req, res, proctoringPaylo
     "https://purl.imsglobal.org/spec/lti/claim/custom": proctoringPayload.body["https://purl.imsglobal.org/spec/lti/claim/custom"],
   };
 
-  proctoringPayload.error_url = proctoringPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
+  proctoringPayload.return_url = proctoringPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
   if (req.body.custom_message !== "") {
     if (req.body.custom_message_msg) {
       json["https://purl.imsglobal.org/spec/lti-dl/claim/msg"] = req.body.custom_message;
-      proctoringPayload.error_url = `${proctoringPayload.error_url}&lti_msg=${encodeURI(req.body.custom_message)}`;
+      proctoringPayload.return_url = `${proctoringPayload.return_url}&lti_msg=${encodeURI(req.body.custom_message)}`;
     }
     if (req.body.custom_message_log) {
       json["https://purl.imsglobal.org/spec/lti-dl/claim/log"] = req.body.custom_message;
-      proctoringPayload.error_url = `${proctoringPayload.error_url}&lti_log=${encodeURI(req.body.custom_message)}`;
+      proctoringPayload.return_url = `${proctoringPayload.return_url}&lti_log=${encodeURI(req.body.custom_message)}`;
     }
   }
   if (req.body.custom_error !== "") {
     if (req.body.custom_error_msg) {
       json["https://purl.imsglobal.org/spec/lti-dl/claim/errormsg"] = req.body.custom_error;
-      proctoringPayload.error_url = `${proctoringPayload.error_url}&lti_errormsg=${encodeURI(req.body.custom_error)}`;
+      proctoringPayload.return_url = `${proctoringPayload.return_url}&lti_errormsg=${encodeURI(req.body.custom_error)}`;
     }
     if (req.body.custom_error_log) {
       json["https://purl.imsglobal.org/spec/lti-dl/claim/errorlog"] = req.body.custom_error;
-      proctoringPayload.error_url = `${proctoringPayload.error_url}&lti_errorlog=${encodeURI(req.body.custom_error)}`;
+      proctoringPayload.return_url = `${proctoringPayload.return_url}&lti_errorlog=${encodeURI(req.body.custom_error)}`;
     }
   }
   if (req.body.end_assessment_return) {
@@ -49,3 +49,23 @@ exports.buildProctoringServiceReturnPayload = function(req, res, proctoringPaylo
   proctoringPayload.start_assessment_url = proctoringPayload.body["https://purl.imsglobal.org/spec/lti-ap/claim/start_assessment_url"];
   proctoringPayload.decodedJwt = jwt.decode(proctoringPayload.jwt, { complete: true });
 };
+
+exports.buildProctoringEndReturnPayload = function(req, res, proctoringPayload, setup) {
+  proctoringPayload.return_url = proctoringPayload.body["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"].return_url;
+  if (req.body.custom_message !== "") {
+    if (req.body.custom_message_msg) {
+      proctoringPayload.return_url = `${proctoringPayload.return_url}&lti_msg=${encodeURI(req.body.custom_message)}`;
+    }
+    if (req.body.custom_message_log) {
+      proctoringPayload.return_url = `${proctoringPayload.return_url}&lti_log=${encodeURI(req.body.custom_message)}`;
+    }
+  }
+  if (req.body.custom_error !== "") {
+    if (req.body.custom_error_msg) {
+      proctoringPayload.return_url = `${proctoringPayload.return_url}&lti_errormsg=${encodeURI(req.body.custom_error)}`;
+    }
+    if (req.body.custom_error_log) {
+      proctoringPayload.return_url = `${proctoringPayload.return_url}&lti_errorlog=${encodeURI(req.body.custom_error)}`;
+    }
+  }
+}
