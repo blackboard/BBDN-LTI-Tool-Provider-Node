@@ -38,8 +38,6 @@ exports.getGroups = (req, res, groupsPayload, setup) => {
         method: "GET",
         uri: url,
         headers: {
-          "content-type":
-            "application/vnd.ims.lti-gs.v1.contextgroupcontainer+json",
           Authorization: "Bearer " + groupsPayload.token
         }
       };
@@ -107,8 +105,6 @@ exports.groupSets = (req, res, groupSetsPayload, setup) => {
         method: "GET",
         uri: groupSetsPayload.url,
         headers: {
-          "content-type":
-            "application/vnd.ims.lti-gs.v1.contextgroupcontainer+json",
           Authorization: "Bearer " + groupSetsPayload.token
         }
       };

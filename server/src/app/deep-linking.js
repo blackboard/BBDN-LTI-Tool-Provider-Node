@@ -198,6 +198,13 @@ let deepLinkingNewWindowLTILink = function() {
       resourceId: "xyzpdasdfq1234",
       tag: "originality"
     },
+    custom: {
+      key1: "new window link value",
+      userName: "$User.username",
+      userEmail: "$Person.email.primary",
+      userSysRoles: "@X@user.role@X@",
+      source: "new window link"
+    },
     window: {
       targetName: "_blank"
     }

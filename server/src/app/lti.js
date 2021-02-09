@@ -1,4 +1,5 @@
 "use strict";
+import config from "../config/config";
 
 let lti = require("ims-lti");
 let caliper = require('ims-caliper');
@@ -33,8 +34,8 @@ let eventStoreUrl = "";
 let apiKey = "";
 
 //REST
-let app_key = "YourKeyHere";
-let app_secret = "YourSecretHere";
+let app_key = `${config.appKey}`;
+let app_secret = `${config.appSecret}`;
 let access_token = "";
 let token_type = "";
 let expires_in = "";
@@ -384,7 +385,7 @@ exports.rest_auth = function(req, res) {
 
       res.render("lti", {
         title: "REST Token Response Received!",
-        content: '<pre>${JSON.stringify(json, null, "  ")}</pre>',
+        content: `<pre>${JSON.stringify(json, null, "  ")}</pre>`,
         return_url: return_url,
         return_onclick: "location.href=" + "'" + return_url + "';"
       });

@@ -30,8 +30,6 @@ exports.namesRoles = (req, res, nrPayload, setup) => {
         method: "GET",
         uri: nrPayload.url,
         headers: {
-          "content-type":
-            "application/vnd.ims.lti-nprs.v2.membershipcontainer+json",
           Authorization: "Bearer " + nrPayload.token
         }
       };
