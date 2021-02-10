@@ -63,7 +63,7 @@ class DeepLinkPayloadView extends React.Component {
             theme={"dark_vscode_tribute"}
             style={{body: styles.jsonEditor}}
             locale={locale}
-            height="900px"
+            height={"100%"}
             width={"100%"}
           />
 
@@ -98,7 +98,7 @@ class DeepLinkPayloadView extends React.Component {
             theme={"dark_vscode_tribute"}
             style={{body: styles.jsonEditor}}
             locale={locale}
-            height="1500px"
+            height={"100%"}
             width={"100%"}
           />
         </div>

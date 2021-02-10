@@ -1,8 +1,9 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import JSONTree from "react-json-tree";
 import {Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
-import {styles} from "../../common/styles/custom.js";
+import locale from "react-json-editor-ajrm/locale/en";
+import JSONInput from "react-json-editor-ajrm";
+import {styles} from "../../common/styles/custom";
 
 const CustomTableCell = withStyles(theme => ({
   head: {
@@ -85,21 +86,40 @@ class ProctoringEndOptionsView extends React.Component {
             <input type="submit" value="Build return URL" />
           </form>
         </div>
-        <Typography variant="h5">
+        <Typography variant="h5" gutterBottom>
           Request JWT
         </Typography>
         <br />
-        <Typography variant="body1">
+        <Typography variant="body1" gutterBottom>
           <b>JWT Header</b>
         </Typography>
         {this.state.header &&
-          <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+        <JSONInput
+          id='jwt_header'
+          viewOnly={true}
+          confirmGood={false}
+          placeholder={this.state.header}
+          theme={"dark_vscode_tribute"}
+          locale={locale}
+          height="100px"
+          width={"500px"}
+        />
         }
-        <Typography variant="body1">
+        <Typography variant="body1" gutterBottom>
           <b>JWT Body</b>
         </Typography>
         {this.state.body &&
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+        <JSONInput
+          id='jwt_body'
+          viewOnly={true}
+          confirmGood={false}
+          placeholder={this.state.body}
+          theme={"dark_vscode_tribute"}
+          style={{body: styles.jsonEditor}}
+          locale={locale}
+          height={"100%"}
+          width={"100%"}
+        />
         }
       </div>
     );
