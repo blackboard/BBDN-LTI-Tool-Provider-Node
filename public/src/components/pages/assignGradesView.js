@@ -1,8 +1,8 @@
+import JSONInput from "react-json-editor-ajrm";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import {styles} from "../../common/styles/custom.js";
 import locale from "react-json-editor-ajrm/locale/en";
-import JSONInput from "react-json-editor-ajrm";
+import {styles} from "../../common/styles/custom.js";
 
 class AssignGradesView extends React.Component {
   constructor(props) {
@@ -29,9 +29,9 @@ class AssignGradesView extends React.Component {
     const readcol =
       this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
         <form action="/agsReadCols" method="post">
-          <input type="submit" value="Read Column" />
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.lineItem} />
+          <input type="submit" value="Read Column"/>
+          <input type="hidden" name="body" defaultValue={body}/>
+          <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -70,9 +70,9 @@ class AssignGradesView extends React.Component {
     const results =
       this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
         <form action="/agsResults" method="post">
-          <input type="submit" value="Read Results" />
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.lineItem} />
+          <input type="submit" value="Read Results"/>
+          <input type="hidden" name="body" defaultValue={body}/>
+          <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -239,7 +239,7 @@ class AssignGradesView extends React.Component {
             </li>
           </ul>
 
-          <br />
+          <br/>
           <Typography variant="h5">
             Assignment and Grades Response
           </Typography>

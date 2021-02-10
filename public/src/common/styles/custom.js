@@ -18,6 +18,6 @@ export class styles {
   };
 
   static jsonEditor = {
-    fontSize:"16px"
+    fontSize: "16px"
   };
 }

@@ -1,10 +1,10 @@
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import JSONInput from "react-json-editor-ajrm";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import {styles} from "../../common/styles/custom.js";
 import locale from "react-json-editor-ajrm/locale/en";
-import JSONInput from "react-json-editor-ajrm";
+import {styles} from "../../common/styles/custom.js";
 
 class GroupSetsView extends React.Component {
   constructor(props) {
@@ -32,8 +32,8 @@ class GroupSetsView extends React.Component {
       this.state.nextUrl !== "" ? (
         <form action="/groupsets" method="POST">
           <Button type={"submit"} variant={"contained"} color={"secondary"}>Group Sets Next</Button>
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.nextUrl} />
+          <input type="hidden" name="body" defaultValue={body}/>
+          <input type="hidden" name="url" defaultValue={this.state.nextUrl}/>
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -69,9 +69,9 @@ class GroupSetsView extends React.Component {
             <Grid item xs>
               {next}
             </Grid>
-        </Grid>
+          </Grid>
 
-          <br />
+          <br/>
           <Typography variant="h5">
             Group Sets Response
           </Typography>

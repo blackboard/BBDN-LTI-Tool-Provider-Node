@@ -1,9 +1,9 @@
 import Button from "@material-ui/core/Button/index";
-import IconButton from "@material-ui/core/IconButton/index";
-import Snackbar from "@material-ui/core/Snackbar/index";
-import { withStyles } from "@material-ui/core/styles/index";
 import CloseIcon from "@material-ui/icons/Close";
+import IconButton from "@material-ui/core/IconButton/index";
 import React from "react";
+import Snackbar from "@material-ui/core/Snackbar/index";
+import {withStyles} from "@material-ui/core/styles/index";
 
 let openSnackbarFn;
 
@@ -19,7 +19,7 @@ class SimpleSnackbar extends React.Component {
     message: ""
   };
 
-  openSnackbar = ({ message }) => {
+  openSnackbar = ({message}) => {
     this.setState({
       open: true,
       message
@@ -35,14 +35,14 @@ class SimpleSnackbar extends React.Component {
       return;
     }
 
-    this.setState({ open: false, message: "" });
+    this.setState({open: false, message: ""});
   };
 
   render() {
     const message = (
       <span
         id="snackbar-message-id"
-        dangerouslySetInnerHTML={{ __html: this.state.message }}
+        dangerouslySetInnerHTML={{__html: this.state.message}}
       />
     );
     return (
@@ -75,7 +75,7 @@ class SimpleSnackbar extends React.Component {
               aria-label="Close"
               color="inherit"
               onClick={this.handleClose}>
-              <CloseIcon />
+              <CloseIcon/>
             </IconButton>
           ]}
         />
@@ -84,8 +84,8 @@ class SimpleSnackbar extends React.Component {
   }
 }
 
-export function openSnackbar({ message }) {
-  openSnackbarFn({ message });
+export function openSnackbar({message}) {
+  openSnackbarFn({message});
 }
 
 export default withStyles(styles)(SimpleSnackbar);

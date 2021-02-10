@@ -1,8 +1,8 @@
+import JSONInput from "react-json-editor-ajrm";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import {styles} from "../../common/styles/custom.js";
-import JSONInput from "react-json-editor-ajrm";
 import locale from "react-json-editor-ajrm/locale/en";
+import {styles} from "../../common/styles/custom.js";
 
 class DeepLinkPayloadView extends React.Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class DeepLinkPayloadView extends React.Component {
       </Typography>
     ) : (
       <Typography variant="body1" style={styles.failed}>
-]        Verify failed
+        ] Verify failed
       </Typography>
     );
 
@@ -48,8 +48,8 @@ class DeepLinkPayloadView extends React.Component {
             We have received your Deep Linking launch. You can view the JSON below.
           </Typography>
           <form action={this.state.returnUrl} method="POST">
-            <input type="hidden" name="JWT" defaultValue={this.state.jwt} />
-            <input type="submit" value="Return Deep Linking" />
+            <input type="hidden" name="JWT" defaultValue={this.state.jwt}/>
+            <input type="submit" value="Return Deep Linking"/>
           </form>
 
           <Typography variant="body1">
@@ -67,7 +67,7 @@ class DeepLinkPayloadView extends React.Component {
             width={"100%"}
           />
 
-          <br />
+          <br/>
           <Typography variant="h5">
             Deep Linking Request
           </Typography>

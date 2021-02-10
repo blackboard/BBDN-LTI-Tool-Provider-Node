@@ -1,8 +1,8 @@
+import JSONInput from "react-json-editor-ajrm";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import {Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
 import locale from "react-json-editor-ajrm/locale/en";
-import JSONInput from "react-json-editor-ajrm";
+import {Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
 import {styles} from "../../common/styles/custom";
 
 const CustomTableCell = withStyles(theme => ({
@@ -40,19 +40,19 @@ class ProctoringServiceOptionsView extends React.Component {
         <Typography variant="h4" gutterBottom>
           Proctoring Start: Options
         </Typography>
-        <div style={{ marginBottom: '30px' }}>
+        <div style={{marginBottom: '30px'}}>
           <Typography variant="body1" gutterBottom>
             We have received your proctoring service launch.
           </Typography>
           <Typography variant="body1">
             You can customize a return payload using the following options.
           </Typography>
-          <br />
+          <br/>
           <form action="buildProctoringStartReturnPayload" method="POST">
             <Typography variant="h5">Messages</Typography>
-            <Table style={{ width: "45%", marginBottom: '20px' }}>
+            <Table style={{width: "45%", marginBottom: '20px'}}>
               <TableHead>
-                <TableRow style={{ fontSize: "14px" }}>
+                <TableRow style={{fontSize: "14px"}}>
                   <CustomTableCell>&nbsp;</CustomTableCell>
                   <CustomTableCell>Return messages</CustomTableCell>
                   <CustomTableCell align="center">Display</CustomTableCell>
@@ -63,23 +63,23 @@ class ProctoringServiceOptionsView extends React.Component {
                 <TableRow>
                   <CustomTableCell>Message</CustomTableCell>
                   <CustomTableCell><input type="text" size="50" name="custom_message"
-                    defaultValue="I have a message" /></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_msg" /></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_log" /></CustomTableCell>
+                                          defaultValue="I have a message"/></CustomTableCell>
+                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_msg"/></CustomTableCell>
+                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_log"/></CustomTableCell>
                 </TableRow>
                 <TableRow>
                   <CustomTableCell>Error</CustomTableCell>
                   <CustomTableCell><input type="text" size="50" name="custom_error"
-                    defaultValue="I have an error" /></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_msg" /></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_log" /></CustomTableCell>
+                                          defaultValue="I have an error"/></CustomTableCell>
+                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_msg"/></CustomTableCell>
+                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_log"/></CustomTableCell>
                 </TableRow>
               </TableBody>
             </Table>
             <Typography variant="h5">Other Options</Typography>
-            <Table style={{ width: "45%" }}>
+            <Table style={{width: "45%"}}>
               <TableHead>
-                <TableRow style={{ fontSize: "14px" }}>
+                <TableRow style={{fontSize: "14px"}}>
                   <CustomTableCell>Option</CustomTableCell>
                   <CustomTableCell align="center">Value</CustomTableCell>
                 </TableRow>
@@ -97,14 +97,14 @@ class ProctoringServiceOptionsView extends React.Component {
                 </TableRow>
               </TableBody>
             </Table>
-            <br />
-            <input type="submit" value="Build payload" />
+            <br/>
+            <input type="submit" value="Build payload"/>
           </form>
         </div>
         <Typography variant="h5" gutterBottom>
           Request JWT
         </Typography>
-        <br />
+        <br/>
         <Typography variant="body1" gutterBottom>
           <b>JWT Header</b>
         </Typography>

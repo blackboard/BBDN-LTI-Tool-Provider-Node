@@ -86,7 +86,7 @@ class GroupsView extends React.Component {
             <Grid item xs>
               {next}
             </Grid>
-        </Grid>
+          </Grid>
 
           <br/>
           <Typography variant="h5">

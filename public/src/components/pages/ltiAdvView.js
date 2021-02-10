@@ -3,12 +3,12 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import Grid from "@material-ui/core/Grid";
 import JSONInput from 'react-json-editor-ajrm';
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import locale from 'react-json-editor-ajrm/locale/en';
 import {styles} from "../../common/styles/custom.js";
-import Grid from "@material-ui/core/Grid";
 
 
 class LtiAdvView extends React.Component {
@@ -60,7 +60,7 @@ class LtiAdvView extends React.Component {
     const namesRoles = this.state.namesRoles ? (
       <form action="/namesAndRoles" method="POST">
         <Button variant="contained" type={"submit"} color={"secondary"}>Names and Roles</Button>
-        <input type="hidden" name="body" value={body} />
+        <input type="hidden" name="body" value={body}/>
       </form>
     ) : (
       <Typography variant="body1" style={styles.notAvailable}>
@@ -70,7 +70,7 @@ class LtiAdvView extends React.Component {
     const grading = this.state.grading ? (
       <form action="/assignAndGrades" method="POST">
         <Button variant={"contained"} type="submit" color={"secondary"}>Assignments and Grades</Button>
-        <input type="hidden" name="body" value={body} />
+        <input type="hidden" name="body" value={body}/>
       </form>
     ) : (
       <Typography variant="body1" style={styles.notAvailable}>
@@ -144,11 +144,11 @@ class LtiAdvView extends React.Component {
             </Grid>
           </Grid>
 
-          <br />
-          <Typography variant="h5">
+          <br/>
+          <Typography variant="h5" gutterBottom>
             Resource Launch
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" gutterBottom>
             <b>JWT Header</b>
           </Typography>
           <JSONInput
@@ -164,7 +164,7 @@ class LtiAdvView extends React.Component {
           {verified ?
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                <Typography variant="body1">
+                <Typography variant="body1" gutterBottom>
                   <b>JWT Body</b>
                 </Typography>
               </ExpansionPanelSummary>
