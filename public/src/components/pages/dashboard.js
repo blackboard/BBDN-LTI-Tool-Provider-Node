@@ -33,8 +33,10 @@ import NamesRolesView from "./namesRolesView";
 import GroupsView from "./groupsView";
 import GroupSetsView from "./groupSetsView";
 import SetupView from "./setupView";
-import ProctoringServiceOptionsView from "./proctoringServiceOptions";
-import ProctoringServiceActionsView from "./proctoringServiceActions";
+import ProctoringStartOptionsView from "./proctoringStartOptions";
+import ProctoringStartActionsView from "./proctoringStartActions";
+import ProctoringEndOptionsView from "./proctoringEndOptions";
+import ProctoringEndActionsView from "./proctoringEndActions";
 import SnackBar from "../page_objects/snackbar";
 
 class Dashboard extends React.Component {
@@ -140,8 +142,10 @@ class Dashboard extends React.Component {
               <Route path="/names_roles_view" component={NamesRolesView}/>
               <Route path="/groups_view" component={GroupsView}/>
               <Route path="/group_sets_view" component={GroupSetsView}/>
-              <Route path="/proctoring_options_view" component={ProctoringServiceOptionsView}/>
-              <Route path="/proctoring_actions_view" component={ProctoringServiceActionsView}/>
+              <Route path="/proctoring_start_options_view" component={ProctoringStartOptionsView}/>
+              <Route path="/proctoring_start_actions_view" component={ProctoringStartActionsView}/>
+              <Route path="/proctoring_end_options_view" component={ProctoringEndOptionsView}/>
+              <Route path="/proctoring_end_actions_view" component={ProctoringEndActionsView}/>
               <Route
                 path="/assign_grades_view"
                 component={AssignGradesView}
