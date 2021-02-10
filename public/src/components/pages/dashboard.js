@@ -35,6 +35,7 @@ import GroupSetsView from "./groupSetsView";
 import SetupView from "./setupView";
 import ProctoringServiceOptionsView from "./proctoringServiceOptions";
 import ProctoringServiceActionsView from "./proctoringServiceActions";
+import MicrosoftTeamsView from "./msTeamsView";
 import SnackBar from "../page_objects/snackbar";
 
 class Dashboard extends React.Component {
@@ -142,6 +143,7 @@ class Dashboard extends React.Component {
               <Route path="/group_sets_view" component={GroupSetsView}/>
               <Route path="/proctoring_options_view" component={ProctoringServiceOptionsView}/>
               <Route path="/proctoring_actions_view" component={ProctoringServiceActionsView}/>
+              <Route path="/ms_teams_view" component={MicrosoftTeamsView}/>
               <Route
                 path="/assign_grades_view"
                 component={AssignGradesView}

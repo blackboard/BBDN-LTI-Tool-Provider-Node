@@ -17,6 +17,10 @@ export class styles {
     listStyleType: "none"
   };
 
+  static jsonEditor = {
+    fontSize:"16px"
+  };
+
   static monokai = {
     scheme: 'monokai',
     author: 'wimer hazenberg (http://www.monokai.nl)',

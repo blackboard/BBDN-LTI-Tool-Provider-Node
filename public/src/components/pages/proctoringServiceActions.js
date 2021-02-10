@@ -1,7 +1,8 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import JSONTree from "react-json-tree";
 import {styles} from "../../common/styles/custom.js";
+import JSONInput from "react-json-editor-ajrm";
+import locale from "react-json-editor-ajrm/locale/en";
 
 class ProctoringServiceActionsView extends React.Component {
   constructor(props) {
@@ -48,18 +49,34 @@ class ProctoringServiceActionsView extends React.Component {
         <br />
         {this.state.decodedJwt &&
           <div>
-            <Typography variant="h5">
-              Response JWT
-            </Typography>
-            <br />
             <Typography variant="body1">
-                <b>JWT Header</b>
+              <b>JWT Header</b>
             </Typography>
-            <JSONTree data={this.state.decodedJwt.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+            <JSONInput
+              id='jwt_header'
+              viewOnly={true}
+              confirmGood={false}
+              placeholder={this.state.header}
+              theme={"dark_vscode_tribute"}
+              style={{body: styles.jsonEditor}}
+              locale={locale}
+              height="500px"
+              width={"100%"}
+            />
             <Typography variant="body1">
               <b>JWT Body</b>
             </Typography>
-            <JSONTree data={this.state.decodedJwt.payload} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+            <JSONInput
+              id='jwt_body'
+              viewOnly={true}
+              confirmGood={false}
+              placeholder={this.state.body}
+              theme={"dark_vscode_tribute"}
+              style={{body: styles.jsonEditor}}
+              locale={locale}
+              height="1500px"
+              width={"100%"}
+            />
           </div>
         }
       </div>

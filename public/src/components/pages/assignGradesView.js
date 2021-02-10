@@ -1,7 +1,8 @@
 import React from "react";
-import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
 import {styles} from "../../common/styles/custom.js";
+import locale from "react-json-editor-ajrm/locale/en";
+import JSONInput from "react-json-editor-ajrm";
 
 class AssignGradesView extends React.Component {
   constructor(props) {
@@ -246,12 +247,32 @@ class AssignGradesView extends React.Component {
           <Typography variant="body1">
             <b>Claims</b>
           </Typography>
-          <JSONTree data={this.state.claim} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='jwt_header'
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.claim}
+            theme={"dark_vscode_tribute"}
+            style={{body: styles.jsonEditor}}
+            locale={locale}
+            height="500px"
+            width={"100%"}
+          />
 
           <Typography variant="body1">
             <b>Response</b>
           </Typography>
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='jwt_body'
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.body}
+            theme={"dark_vscode_tribute"}
+            style={{body: styles.jsonEditor}}
+            locale={locale}
+            height="1500px"
+            width={"100%"}
+          />
         </div>
       </div>
     );
