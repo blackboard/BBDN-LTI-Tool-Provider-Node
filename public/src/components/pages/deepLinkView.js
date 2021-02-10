@@ -1,7 +1,8 @@
 import React from "react";
-import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
 import {styles} from "../../common/styles/custom.js";
+import JSONInput from "react-json-editor-ajrm";
+import locale from "react-json-editor-ajrm/locale/en";
 
 class DeepLinkPayloadView extends React.Component {
   constructor(props) {
@@ -54,7 +55,17 @@ class DeepLinkPayloadView extends React.Component {
           <Typography variant="body1">
             <b>Return JSON</b>
           </Typography>
-          <JSONTree data={this.state.returnJSON} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='jwt_return_json'
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.returnJSON}
+            theme={"dark_vscode_tribute"}
+            style={{body: styles.jsonEditor}}
+            locale={locale}
+            height="900px"
+            width={"100%"}
+          />
 
           <br />
           <Typography variant="h5">
@@ -65,12 +76,31 @@ class DeepLinkPayloadView extends React.Component {
           <Typography variant="body1">
             <b>JWT Header</b>
           </Typography>
-          <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
-
+          <JSONInput
+            id='jwt_header'
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.header}
+            theme={"dark_vscode_tribute"}
+            style={{body: styles.jsonEditor}}
+            locale={locale}
+            height="500px"
+            width={"100%"}
+          />
           <Typography variant="body1">
             <b>JWT Body</b>
           </Typography>
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='jwt_body'
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.body}
+            theme={"dark_vscode_tribute"}
+            style={{body: styles.jsonEditor}}
+            locale={locale}
+            height="1500px"
+            width={"100%"}
+          />
         </div>
       </div>
     );
