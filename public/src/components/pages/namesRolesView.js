@@ -1,10 +1,10 @@
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import JSONInput from "react-json-editor-ajrm";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import {styles} from "../../common/styles/custom.js";
 import locale from "react-json-editor-ajrm/locale/en";
-import JSONInput from "react-json-editor-ajrm";
-import Grid from "@material-ui/core/Grid";
+import {styles} from "../../common/styles/custom.js";
 
 class NamesRolesView extends React.Component {
   constructor(props) {
@@ -33,8 +33,8 @@ class NamesRolesView extends React.Component {
       this.state.differenceUrl !== "" ? (
         <form action="/namesAndRoles2" method="POST">
           <Button type={"submit"} variant={"contained"} color={"secondary"}>NRPS Difference</Button>
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.differenceUrl} />
+          <input type="hidden" name="body" defaultValue={body}/>
+          <input type="hidden" name="url" defaultValue={this.state.differenceUrl}/>
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -45,8 +45,8 @@ class NamesRolesView extends React.Component {
       this.state.nextUrl !== "" ? (
         <form action="/namesAndRoles2" method="POST">
           <Button type={"submit"} variant={"contained"} color={"secondary"}>NRPS Next</Button>
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.nextUrl} />
+          <input type="hidden" name="body" defaultValue={body}/>
+          <input type="hidden" name="url" defaultValue={this.state.nextUrl}/>
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -87,7 +87,7 @@ class NamesRolesView extends React.Component {
             </Grid>
           </Grid>
 
-          <br />
+          <br/>
           <Typography variant="h5">
             Names and Roles Response
           </Typography>

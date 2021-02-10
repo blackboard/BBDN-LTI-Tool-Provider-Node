@@ -86,7 +86,7 @@ class GroupsView extends React.Component {
             <Grid item xs>
               {next}
             </Grid>
-        </Grid>
+          </Grid>
 
           <br/>
           <Typography variant="h5">
@@ -100,7 +100,7 @@ class GroupsView extends React.Component {
             theme={"dark_vscode_tribute"}
             style={{body: styles.jsonEditor}}
             locale={locale}
-            height="1500px"
+            height={"100%"}
             width={"100%"}
           />
         </div>
