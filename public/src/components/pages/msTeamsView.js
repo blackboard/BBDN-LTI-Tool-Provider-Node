@@ -67,6 +67,7 @@ class MsTeamsView extends React.Component {
       encodeURI("An error has occurred") +
       "&lti_errorlog=" +
       encodeURI("Log this error");
+    // switch this to use whatever we're going to use in the end via microservice
     const namesRoles = this.state.namesRoles ? (
       <Grid item xs>
         <Typography variant={"h6"} gutterBottom>
