@@ -1,5 +1,5 @@
 {
-  "frontend_url": "http://localhost/",
+  "frontend_url": "https://06ae0f890cf8.ngrok.io/",
   "provider_port": "3000",
   "redis_host": "localhost",
   "redis_port": 6379,
