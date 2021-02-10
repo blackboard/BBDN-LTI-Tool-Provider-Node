@@ -6,7 +6,6 @@ import config from "../config/config";
 import assignGrades from "./assign-grades";
 import * as content_item from "./content-item";
 import eventstore from './eventstore';
-import * as msTeams from "./msTeams";
 import {deepLink, deepLinkContent} from "./deep-linking";
 import {buildProctoringStartReturnPayload, buildProctoringEndReturnPayload} from "./proctoring";
 import * as lti from "./lti";

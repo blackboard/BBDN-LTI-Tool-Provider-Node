@@ -43,17 +43,6 @@ class MsTeamsView extends React.Component {
           learnVersion: jwtPayload.body[claimToolPlatform].version
         });
       });
-    fetch("nrPayloadData")
-      .then(result => result.json())
-      .then(nrPayload => {
-        this.setState({
-          url: nrPayload.url,
-          nrBody: nrPayload.body,
-          differenceUrl: nrPayload.difference_url,
-          nextUrl: nrPayload.next_url,
-          origBody: this.state.body,
-        });
-      });
   }
 
   render() {
@@ -78,16 +67,23 @@ class MsTeamsView extends React.Component {
       encodeURI("An error has occurred") +
       "&lti_errorlog=" +
       encodeURI("Log this error");
-    /*const namesRoles = this.state.namesRoles ? (
-      <form action="/namesAndRoles" method="POST">
-        <Button variant="contained" type={"submit"} color={"secondary"}>Names and Roles</Button>
-        <input type="hidden" name="body" value={JSON.stringify(this.state.body)}/>
-      </form>
+    const namesRoles = this.state.namesRoles ? (
+      <Grid item xs>
+        <Typography variant={"h6"} gutterBottom>
+          Click this button to view all users in the course and their roles
+        </Typography>
+        <form action="/namesAndRoles" method="POST">
+          <Button variant="contained" type={"submit"} color={"secondary"}>Names and Roles</Button>
+          <input type="hidden" name="body" value={JSON.stringify(this.state.body)}/>
+        </form>
+      </Grid>
     ) : (
-      <Typography variant="body1" style={styles.notAvailable}>
-        <b>Names and Roles not available</b>
-      </Typography>
-    );*/
+      <Grid item xs>
+        <Typography variant="body1" style={styles.notAvailable}>
+          <b>Names and Roles not available</b>
+        </Typography>
+      </Grid>
+    );
 
     return (
       <div>
@@ -95,11 +91,6 @@ class MsTeamsView extends React.Component {
           <Typography variant="h4" gutterBottom>
             Microsoft Teams Simulator
           </Typography>
-        </div>
-        <div align={"center"} style={{margin: "auto", padding: 50, width: "80%"}}>
-          <Paper style={{margin: "auto", padding:20}} elevation={2}>
-            <img src={'https://github.com/OfficeDev/msteams-meetings-template/blob/master/doc/Splash.gif?raw=true'} alt={"teams"} width={"80%"} height={"auto"}/>
-          </Paper>
         </div>
         <div>
           <Typography variant="h5" gutterBottom>
@@ -112,12 +103,15 @@ class MsTeamsView extends React.Component {
             For testing purposes, the version of Learn being used is {this.state.learnVersion}<br/>
           </Typography>
           <br/>
-          {/*{namesRoles}*/}
           <br/>
           <Grid
             container
             direction={"column"}
             spacing={8}>
+            {namesRoles}
+            <Typography variant={"h6"} gutterBottom>
+              Click any of these buttons to return to Learn
+            </Typography>
             <Grid item xs>
               <Button
                 id={"return_button"}
@@ -147,45 +141,39 @@ class MsTeamsView extends React.Component {
             </Grid>
           </Grid>
           <br/>
-          <Grid item xs>
-            <JSONInput
-              id='jwt_body'
-              viewOnly={true}
-              confirmGood={false}
-              placeholder={this.state.nrBody}
-              theme={"dark_vscode_tribute"}
-              style={{body: styles.jsonEditor}}
-              locale={locale}
-              height="100%"
-              width={"100%"}
-            />
-          </Grid>
+          <br/>
+          <div align={"center"} style={{margin: "auto", padding: 50, width: "80%"}}>
+            <Paper style={{margin: "auto", padding: 20}} elevation={2}>
+              <img src={'https://github.com/OfficeDev/msteams-meetings-template/blob/master/doc/Splash.gif?raw=true'}
+                   alt={"teams"} width={"80%"} height={"auto"}/>
+            </Paper>
+          </div>
           <br/>
           {verified ?
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-              <Typography variant="body1">
-                <b>JWT Body</b>
-              </Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <JSONInput
-                id='jwt_body'
-                viewOnly={true}
-                confirmGood={false}
-                placeholder={this.state.body}
-                theme={"dark_vscode_tribute"}
-                style={{body: styles.jsonEditor}}
-                locale={locale}
-                height="100%"
-                width={"100%"}
-              />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                <Typography variant="body1">
+                  <b>JWT Body</b>
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <JSONInput
+                  id='jwt_body'
+                  viewOnly={true}
+                  confirmGood={false}
+                  placeholder={this.state.body}
+                  theme={"dark_vscode_tribute"}
+                  style={{body: styles.jsonEditor}}
+                  locale={locale}
+                  height="100%"
+                  width={"100%"}
+                />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
             :
             <Typography variant={'h4'}>
               Not verified
-            </Typography> }
+            </Typography>}
         </div>
       </div>
     );
