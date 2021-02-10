@@ -11,14 +11,14 @@ class ProctoringServiceActionsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("getProctoringServicePayloadData")
+    fetch("getProctoringPayloadData")
       .then(result => result.json())
       .then(proctoringServicePayload => {
         this.setState({
           jwt: proctoringServicePayload.jwt,
           decodedJwt: proctoringServicePayload.decodedJwt,
           startAssessmentUrl: proctoringServicePayload.start_assessment_url,
-          errorUrl: proctoringServicePayload.error_url,
+          returnUrl: proctoringServicePayload.return_url,
         });
       });
   }
@@ -27,14 +27,19 @@ class ProctoringServiceActionsView extends React.Component {
     return (
       <div>
         <Typography variant="h4" gutterBottom>
-          Proctoring Actions
+          Proctoring Start: Actions
         </Typography>
-        <div>
+        <br />
+        <div style={{ marginBottom: '20px' }}>
+          <Typography variant="h5">
+            Actions
+          </Typography>
+          <br />
           <Typography variant="body1" gutterBottom>
             Choose Start Assessment to send a response JWT (shown below) to the request's start_assessment_url.
           </Typography>
           <Typography variant="body1">
-            Choose Return Error to call the request's launch_presentation URL. Any message options will be included as URL parameters.
+            Choose Return to call the request's launch_presentation URL. Any message options will be included as URL parameters.
           </Typography>
           <br />
           <form action={this.state.startAssessmentUrl} method="post">
@@ -42,8 +47,8 @@ class ProctoringServiceActionsView extends React.Component {
             <input type="submit" value="Start Assessment" />
           </form>
           <br />
-          <form action={this.state.errorUrl} method="post">
-            <input type="submit" value="Return Error" />
+          <form action={this.state.returnUrl} method="post">
+            <input type="submit" value="Return" />
           </form>
         </div>
         <br />
