@@ -142,13 +142,6 @@ class MsTeamsView extends React.Component {
           </Grid>
           <br/>
           <br/>
-          <div align={"center"} style={{margin: "auto", padding: 50, width: "80%"}}>
-            <Paper style={{margin: "auto", padding: 20}} elevation={2}>
-              <img src={'https://github.com/OfficeDev/msteams-meetings-template/blob/master/doc/Splash.gif?raw=true'}
-                   alt={"teams"} width={"80%"} height={"auto"}/>
-            </Paper>
-          </div>
-          <br/>
           {verified ?
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
