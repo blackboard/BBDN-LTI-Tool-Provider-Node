@@ -1,24 +1,24 @@
 import Button from "@material-ui/core/Button/index";
-import React from "react";
 import Typography from "@material-ui/core/Typography/index";
+import React from "react";
 
 class LaunchEndpoint extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {config: {}, setupData: {}};
+    this.state = { config: {}, setupData: {} };
   }
 
   componentDidMount() {
     fetch("config")
       .then(result => result.json())
       .then(config => {
-        this.setState({config: config});
+        this.setState({ config: config });
       });
 
     fetch("setupData")
       .then(result => result.json())
       .then(setupData => {
-        this.setState({setupData: setupData});
+        this.setState({ setupData: setupData });
       });
   }
 
@@ -37,7 +37,7 @@ class LaunchEndpoint extends React.Component {
             Your cookies: {JSON.stringify(this.state.cookies)}
           </p>
         </Typography>
-        <br/>
+        <br />
         <div>
           <Button variant={"outlined"} color={"secondary"} href={"/testRedis"}>
             Test Redis

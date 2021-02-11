@@ -1,11 +1,11 @@
-import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
 import Fab from "@material-ui/core/Fab";
 import Icon from "@material-ui/core/Icon";
+import { withStyles } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from "@material-ui/icons/Delete";
 import NavigationIcon from "@material-ui/icons/Navigation";
 import PropTypes from "prop-types";
 import React from "react";
-import {withStyles} from "@material-ui/core/styles";
 
 const styles = theme => ({
   fab: {
@@ -22,11 +22,11 @@ const styles = theme => ({
 });
 
 const FloatingAddButton = props => {
-  const {classes} = props;
+  const { classes } = props;
   return (
     <div>
       <Fab color="secondary" aria-label="Add" className={classes.fab}>
-        <AddIcon/>
+        <AddIcon />
       </Fab>
     </div>
   );
@@ -46,17 +46,17 @@ const FloatingDeleteButton = () => {
   return (
     <div>
       <Fab disabled aria-label="Delete">
-        <DeleteIcon/>
+        <DeleteIcon />
       </Fab>
     </div>
   );
 };
 
-const WideFloatingButton = ({message}) => {
+const WideFloatingButton = ({ message }) => {
   return (
     <div>
       <Fab variant="extended" id={"wide-fab-id"}>
-        <NavigationIcon/>
+        <NavigationIcon />
         {message}
       </Fab>
     </div>
@@ -84,4 +84,4 @@ const EditFab = withStyles(styles)(FloatingEditButton);
 const DeleteFab = withStyles(styles)(FloatingDeleteButton);
 const WideFab = withStyles(styles)(WideFloatingButton);
 
-export {AddFab, EditFab, DeleteFab, WideFab};
+export { AddFab, EditFab, DeleteFab, WideFab };

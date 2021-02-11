@@ -1,15 +1,7 @@
-import Button from "@material-ui/core/Button";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Grid from "@material-ui/core/Grid";
-import JSONInput from 'react-json-editor-ajrm';
 import React from "react";
+import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
-import locale from 'react-json-editor-ajrm/locale/en';
 import {styles} from "../../common/styles/custom.js";
-
 
 class LtiAdvView extends React.Component {
   constructor(props) {
@@ -59,8 +51,8 @@ class LtiAdvView extends React.Component {
       encodeURI("Log this error");
     const namesRoles = this.state.namesRoles ? (
       <form action="/namesAndRoles" method="POST">
-        <Button variant="contained" type={"submit"} color={"secondary"}>Names and Roles</Button>
-        <input type="hidden" name="body" value={body}/>
+        <input type="submit" value="Names and Roles" />
+        <input type="hidden" name="body" value={body} />
       </form>
     ) : (
       <Typography variant="body1" style={styles.notAvailable}>
@@ -69,8 +61,8 @@ class LtiAdvView extends React.Component {
     );
     const grading = this.state.grading ? (
       <form action="/assignAndGrades" method="POST">
-        <Button variant={"contained"} type="submit" color={"secondary"}>Assignments and Grades</Button>
-        <input type="hidden" name="body" value={body}/>
+        <input type="submit" value="submit" value="Assignments and Grades" />
+        <input type="hidden" name="body" value={body} />
       </form>
     ) : (
       <Typography variant="body1" style={styles.notAvailable}>
@@ -79,7 +71,7 @@ class LtiAdvView extends React.Component {
     );
     const groups = this.state.groups ? (
       <form action="/groups" method="POST">
-        <Button variant={"contained"} type="submit" color={"secondary"}>Groups</Button>
+        <input type="submit" value="Groups"/>
         <input type="hidden" name="body" value={body}/>
       </form>
     ) : (
@@ -89,7 +81,7 @@ class LtiAdvView extends React.Component {
     );
     const groupSets = this.state.groups ? (
       <form action="/groupsets" method="POST">
-        <Button variant={"contained"} type="submit" color={"secondary"}>Group Sets</Button>
+        <input type="submit" value="Group Sets"/>
         <input type="hidden" name="body" value={body}/>
       </form>
     ) : (
@@ -108,84 +100,38 @@ class LtiAdvView extends React.Component {
           <Typography variant="body1" gutterBottom>
             We have received your LTI launch. You can view the JSON below.
           </Typography>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1">
             What would you like to do?
           </Typography>
-          <Grid
-            container
-            direction={"column"}
-            spacing={8}>
-            <Grid item xs>
-              <form action={this.state.returnUrl} method="post">
-                <Button variant={"contained"} type="submit" color={"secondary"}>Return to Learn</Button>
-              </form>
-            </Grid>
-            <Grid item xs>
-              <form action={msgReturn} method="post">
-                <Button variant={"contained"} type="submit" color={"secondary"}>Return with Message</Button>
-              </form>
-            </Grid>
-            <Grid item xs>
-              <form action={errorReturn} method="post">
-                <Button variant={"contained"} type="submit" color={"secondary"}>Return with Error</Button>
-              </form>
-            </Grid>
-            <Grid item xs>
-              {namesRoles}
-            </Grid>
-            <Grid item xs>
-              {grading}
-            </Grid>
-            <Grid item xs>
-              {groups}
-            </Grid>
-            <Grid item xs>
-              {groupSets}
-            </Grid>
-          </Grid>
+          <form action={this.state.returnUrl} method="post">
+            <input type="submit" value="Return to Learn" />
+          </form>
+          <form action={msgReturn} method="post">
+            <input type="submit" value="Return with message" />
+          </form>
+          <form action={errorReturn} method="post">
+            <input type="submit" value="Return with error" />
+          </form>
+          {namesRoles}
+          {grading}
+          {groups}
+          {groupSets}
 
-          <br/>
-          <Typography variant="h5" gutterBottom>
+          <br />
+          <Typography variant="h5">
             Resource Launch
           </Typography>
-          <Typography variant="body1" gutterBottom>
+          {verified}
+
+          <Typography variant="body1">
             <b>JWT Header</b>
           </Typography>
-          <JSONInput
-            id='jwt_header'
-            viewOnly={true}
-            confirmGood={false}
-            placeholder={this.state.header}
-            theme={"dark_vscode_tribute"}
-            locale={locale}
-            height="100px"
-            width={"500px"}
-          /> <br/>
-          {verified ?
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                <Typography variant="body1" gutterBottom>
-                  <b>JWT Body</b>
-                </Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <JSONInput
-                  id='jwt_body'
-                  viewOnly={true}
-                  confirmGood={false}
-                  placeholder={this.state.body}
-                  theme={"dark_vscode_tribute"}
-                  style={{body: styles.jsonEditor}}
-                  locale={locale}
-                  height="100%"
-                  width={"100%"}
-                />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            :
-            <Typography variant={'h4'}>
-              Not verified
-            </Typography>}
+          <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+
+          <Typography variant="body1">
+            <b>JWT Body</b>
+          </Typography>
+          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
         </div>
       </div>
     );

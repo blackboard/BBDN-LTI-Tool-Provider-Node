@@ -1,7 +1,11 @@
 const path = require("path");
 const webpack = require("webpack");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
+  optimization: {
+    minimizer: [new UglifyJsPlugin({ parallel: true })]
+  },
   mode: "development",
   entry: "./public/src/app.js",
   output: {

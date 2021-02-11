@@ -140,8 +140,8 @@ let deepLinkingLTILink = function() {
 
   return {
     type: "ltiResourceLink",
-    title: "A title for LTI 1.3 Link",
-    text: "A description",
+    title: "A title for LTI & 1.3 \" Link",
+    text: "A & description with quotes \"",
     url:  `${config.frontend_url}lti13`,
     available: {
       startDateTime: start,
@@ -167,7 +167,7 @@ let deepLinkingLTILink = function() {
       tag: "originality"
     },
     custom: {
-      key1: "some value",
+      key1: "some & value",
       contextHistory: "$Context.id.history",
       resourceHistory: "$ResourceLink.id.history",
       firstAvailable: "$ResourceLink.available.startDateTime",
@@ -184,8 +184,8 @@ let deepLinkingLTILink = function() {
 let deepLinkingNewWindowLTILink = function() {
   return {
     type: "ltiResourceLink",
-    title: "A New Window LTI Link",
-    text: "A new window description",
+    title: "A New Window & LTI Link",
+    text: "A new window & \" description",
     url:  `${config.frontend_url}lti13`,
     icon: {
       url: "https://photos.smugmug.com/photos/i-PhqNP5C/0/7be04c91/Th/i-PhqNP5C-Th.jpg",
@@ -199,7 +199,7 @@ let deepLinkingNewWindowLTILink = function() {
       tag: "originality"
     },
     custom: {
-      key1: "new window link value",
+      key1: "new window & link value",
       userName: "$User.username",
       userEmail: "$Person.email.primary",
       userSysRoles: "@X@user.role@X@",
@@ -220,15 +220,15 @@ let deepLinkingEmbedLTILink = function() {
 
   return {
     type: "ltiResourceLink",
-    title: "An Embedded LTI Link",
-    text: "Bobcat art",
+    title: "An Embedded LTI & \" Link",
+    text: "Bobcat & art",
     url: `${config.frontend_url}lti13`,
     iframe: {
       width: 600,
       height: 600
     },
     custom: {
-      deeplinkkey1: "from deep linking item",
+      deeplinkkey1: "from deep linking & item",
       userName: "$User.username",
       userEmail: "$Person.email.primary",
       userSysRoles: "@X@user.role@X@",
@@ -241,8 +241,8 @@ let deepLinkingEmbedLTILink = function() {
 let deepLinkingContentLink = function() {
   return {
     type: "link",
-    title: "My Home Page",
-    url: "http://google.com",
+    title: "My &Home\" Page",
+    url: "http://google.com&foo=bar",
     icon: {
       url: "https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg",
       width: 100,

@@ -1,8 +1,8 @@
 import Button from "@material-ui/core/Button/index";
-import React, {Component} from "react";
 import TextField from "@material-ui/core/TextField/index";
 import Typography from "@material-ui/core/Typography/index";
-import {openSnackbar} from "../page_objects/snackbar";
+import React, { Component } from "react";
+import { openSnackbar } from "../page_objects/snackbar";
 
 class SetupView extends Component {
   constructor(props) {
@@ -39,12 +39,12 @@ class SetupView extends Component {
       },
       body: data
     }).then(result => {
-      if (result.status === 200) openSnackbar({message: "Settings saved!"});
+      if (result.status === 200) openSnackbar({ message: "Settings saved!" });
     });
   }
 
   handleChange(event) {
-    this.setState({[event.target.name]: event.target.value});
+    this.setState({ [event.target.name]: event.target.value });
   }
 
   render() {
@@ -53,7 +53,7 @@ class SetupView extends Component {
         <Typography variant="h4" gutterBottom component="h2">
           LTI Advantage Settings
         </Typography>
-        <br/>
+        <br />
         <form id={"setupForm"}>
           <TextField
             required
@@ -67,8 +67,8 @@ class SetupView extends Component {
             value={this.state.devPortalHost || ""}
             onInput={this.handleChange}
           />
-          <br/>
-          <br/>
+          <br />
+          <br />
           <TextField
             required
             label="Application ID"
@@ -81,8 +81,8 @@ class SetupView extends Component {
             value={this.state.applicationId || ""}
             onInput={this.handleChange}
           />
-          <br/>
-          <br/>
+          <br />
+          <br />
           <TextField
             required
             label="OAuth2 Token End Point"
@@ -95,8 +95,8 @@ class SetupView extends Component {
             value={this.state.tokenEndPoint || ""}
             onInput={this.handleChange}
           />
-          <br/>
-          <br/>
+          <br />
+          <br />
           <TextField
             required
             label="OIDC Auth URL"
@@ -109,8 +109,8 @@ class SetupView extends Component {
             value={this.state.oidcAuthUrl || ""}
             onInput={this.handleChange}
           />
-          <br/>
-          <br/>
+          <br />
+          <br />
           <TextField
             required
             label="Issuer"
@@ -123,8 +123,8 @@ class SetupView extends Component {
             value={this.state.issuer || ""}
             onInput={this.handleChange}
           />
-          <br/>
-          <br/>
+          <br />
+          <br />
           <Button
             id={"save_button"}
             variant="contained"
@@ -136,10 +136,10 @@ class SetupView extends Component {
 
         <div>
           <p>
-            Your cookies: {JSON.stringify(this.state.cookies)}
+          Your cookies: {JSON.stringify(this.state.cookies)}
           </p>
           <p>
-            Your external host: {this.state.host}
+          Your external host: {this.state.host}
           </p>
         </div>
       </div>

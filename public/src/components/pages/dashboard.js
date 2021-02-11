@@ -1,48 +1,44 @@
 import AppBar from "@material-ui/core/AppBar/index";
-import AssignGradesView from "./assignGradesView";
 import Badge from "@material-ui/core/Badge/index";
-import CIMRequestView from "./cimRequestView";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ContentItemView from "./contentItemView";
 import CssBaseline from "@material-ui/core/CssBaseline/index";
-import DeepLinkOptions from "./deepLinkOptions";
-import DeepLinkPayloadView from "./deepLinkView";
 import Divider from "@material-ui/core/Divider/index";
 import Drawer from "@material-ui/core/Drawer/index";
-import ErrorBoundary from "../errorBoundary";
-import GroupSetsView from "./groupSetsView";
-import GroupsView from "./groupsView";
 import IconButton from "@material-ui/core/IconButton/index";
-import LaunchEndpoint from "./home";
 import List from "@material-ui/core/List/index";
-import LtiAdvView from "./ltiAdvView";
-import LtiBobcatView from "./ltiBobcatView";
-import MenuIcon from "@material-ui/icons/Menu";
+import { MuiThemeProvider, withStyles } from "@material-ui/core/styles/index";
+import Toolbar from "@material-ui/core/Toolbar/index";
+import Tooltip from "@material-ui/core/Tooltip/index";
+import Typography from "@material-ui/core/Typography/index";
 import ModeButton from "@material-ui/icons/Brightness4Outlined";
-import NamesRolesView from "./namesRolesView";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import MenuIcon from "@material-ui/icons/Menu";
+import MicrosoftTeamsView from './msTeamsView';
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import ProctoringEndActionsView from "./proctoringEndActions";
-import ProctoringEndOptionsView from "./proctoringEndOptions";
-import ProctoringStartActionsView from "./proctoringStartActions";
-import ProctoringStartOptionsView from "./proctoringStartOptions";
+import classNames from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
+import {BrowserRouter, Route} from 'react-router-dom';
+import { darkMode, lightMode } from "../../common/styles/palette";
+import { styles } from "../../common/styles/styles";
+import ErrorBoundary from "../errorBoundary";
+import { fullListItems } from "../page_objects/listItems";
+import AssignGradesView from "./assignGradesView";
+import CIMRequestView from "./cimRequestView";
+import ContentItemView from "./contentItemView";
+import DeepLinkOptions from "./deepLinkOptions";
+import DeepLinkPayloadView from "./deepLinkView";
+import LaunchEndpoint from "./home";
+import LtiAdvView from "./ltiAdvView";
+import LtiBobcatView from "./ltiBobcatView";
+import NamesRolesView from "./namesRolesView";
+import GroupsView from "./groupsView";
+import GroupSetsView from "./groupSetsView";
 import SetupView from "./setupView";
 import ProctoringStartOptionsView from "./proctoringStartOptions";
 import ProctoringStartActionsView from "./proctoringStartActions";
 import ProctoringEndOptionsView from "./proctoringEndOptions";
 import ProctoringEndActionsView from "./proctoringEndActions";
-import MicrosoftTeamsView from "./msTeamsView";
 import SnackBar from "../page_objects/snackbar";
-import Toolbar from "@material-ui/core/Toolbar/index";
-import Tooltip from "@material-ui/core/Tooltip/index";
-import Typography from "@material-ui/core/Typography/index";
-import classNames from "classnames";
-import {Route} from 'react-router-dom';
-import {MuiThemeProvider, withStyles} from "@material-ui/core/styles/index";
-import {darkMode, lightMode} from "../../common/styles/palette";
-import {fullListItems} from "../page_objects/listItems";
-import {styles} from "../../common/styles/styles";
 
 class Dashboard extends React.Component {
   state = {
@@ -52,24 +48,24 @@ class Dashboard extends React.Component {
   };
 
   handleDrawerOpen = () => {
-    this.setState({open: true});
+    this.setState({ open: true });
   };
 
   handleDrawerClose = () => {
-    this.setState({open: false});
+    this.setState({ open: false });
   };
 
   handleDarkMode = evt => {
     console.log(evt);
     if (!this.state.darkMode) {
-      this.setState({theme: darkMode, darkMode: true});
+      this.setState({ theme: darkMode, darkMode: true });
     } else {
-      this.setState({theme: lightMode, darkMode: false});
+      this.setState({ theme: lightMode, darkMode: false });
     }
   };
 
   render() {
-    const {classes} = this.props;
+    const { classes } = this.props;
     let drawerList = <List>{fullListItems}</List>;
 
     return (

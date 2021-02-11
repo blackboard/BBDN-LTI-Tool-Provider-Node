@@ -23,12 +23,12 @@ class ProctoringEndActionsView extends React.Component {
         <Typography variant="h4" gutterBottom>
           Proctoring End: Actions
         </Typography>
-        <br/>
+        <br />
         <Typography variant="h5" gutterBottom>
           Return URL
         </Typography>
         <Typography variant="body1">
-          <a href={this.state.returnUrl} style={{overflowWrap: 'break-word'}}>{this.state.returnUrl}</a>
+          <a href={this.state.returnUrl} style={{ overflowWrap: 'break-word' }}>{this.state.returnUrl}</a>
         </Typography>
       </div>
     );

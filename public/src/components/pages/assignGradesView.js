@@ -1,7 +1,6 @@
-import JSONInput from "react-json-editor-ajrm";
 import React from "react";
+import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
-import locale from "react-json-editor-ajrm/locale/en";
 import {styles} from "../../common/styles/custom.js";
 
 class AssignGradesView extends React.Component {
@@ -29,9 +28,9 @@ class AssignGradesView extends React.Component {
     const readcol =
       this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
         <form action="/agsReadCols" method="post">
-          <input type="submit" value="Read Column"/>
-          <input type="hidden" name="body" defaultValue={body}/>
-          <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
+          <input type="submit" value="Read Column" />
+          <input type="hidden" name="body" defaultValue={body} />
+          <input type="hidden" name="url" defaultValue={this.state.lineItem} />
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -70,9 +69,9 @@ class AssignGradesView extends React.Component {
     const results =
       this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
         <form action="/agsResults" method="post">
-          <input type="submit" value="Read Results"/>
-          <input type="hidden" name="body" defaultValue={body}/>
-          <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
+          <input type="submit" value="Read Results" />
+          <input type="hidden" name="body" defaultValue={body} />
+          <input type="hidden" name="url" defaultValue={this.state.lineItem} />
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -239,7 +238,7 @@ class AssignGradesView extends React.Component {
             </li>
           </ul>
 
-          <br/>
+          <br />
           <Typography variant="h5">
             Assignment and Grades Response
           </Typography>
@@ -247,32 +246,12 @@ class AssignGradesView extends React.Component {
           <Typography variant="body1">
             <b>Claims</b>
           </Typography>
-          <JSONInput
-            id='jwt_header'
-            viewOnly={true}
-            confirmGood={false}
-            placeholder={this.state.claim}
-            theme={"dark_vscode_tribute"}
-            style={{body: styles.jsonEditor}}
-            locale={locale}
-            height="500px"
-            width={"100%"}
-          />
+          <JSONTree data={this.state.claim} hideRoot={true} theme={styles.monokai} invertTheme={true} />
 
           <Typography variant="body1">
             <b>Response</b>
           </Typography>
-          <JSONInput
-            id='jwt_body'
-            viewOnly={true}
-            confirmGood={false}
-            placeholder={this.state.body}
-            theme={"dark_vscode_tribute"}
-            style={{body: styles.jsonEditor}}
-            locale={locale}
-            height={"100%"}
-            width={"100%"}
-          />
+          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
         </div>
       </div>
     );

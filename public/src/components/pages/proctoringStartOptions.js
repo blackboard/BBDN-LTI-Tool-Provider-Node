@@ -1,9 +1,8 @@
-import JSONInput from "react-json-editor-ajrm";
 import React from "react";
+import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
-import locale from "react-json-editor-ajrm/locale/en";
+import {styles} from "../../common/styles/custom.js";
 import {Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
-import {styles} from "../../common/styles/custom";
 
 const CustomTableCell = withStyles(theme => ({
   head: {
@@ -40,19 +39,19 @@ class ProctoringServiceOptionsView extends React.Component {
         <Typography variant="h4" gutterBottom>
           Proctoring Start: Options
         </Typography>
-        <div style={{marginBottom: '30px'}}>
+        <div style={{ marginBottom: '30px' }}>
           <Typography variant="body1" gutterBottom>
             We have received your proctoring service launch.
           </Typography>
           <Typography variant="body1">
             You can customize a return payload using the following options.
           </Typography>
-          <br/>
+          <br />
           <form action="buildProctoringStartReturnPayload" method="POST">
             <Typography variant="h5">Messages</Typography>
-            <Table style={{width: "45%", marginBottom: '20px'}}>
+            <Table style={{ width: "45%", marginBottom: '20px' }}>
               <TableHead>
-                <TableRow style={{fontSize: "14px"}}>
+                <TableRow style={{ fontSize: "14px" }}>
                   <CustomTableCell>&nbsp;</CustomTableCell>
                   <CustomTableCell>Return messages</CustomTableCell>
                   <CustomTableCell align="center">Display</CustomTableCell>
@@ -63,23 +62,23 @@ class ProctoringServiceOptionsView extends React.Component {
                 <TableRow>
                   <CustomTableCell>Message</CustomTableCell>
                   <CustomTableCell><input type="text" size="50" name="custom_message"
-                                          defaultValue="I have a message"/></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_msg"/></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_log"/></CustomTableCell>
+                    defaultValue="I have a message" /></CustomTableCell>
+                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_msg" /></CustomTableCell>
+                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_log" /></CustomTableCell>
                 </TableRow>
                 <TableRow>
                   <CustomTableCell>Error</CustomTableCell>
                   <CustomTableCell><input type="text" size="50" name="custom_error"
-                                          defaultValue="I have an error"/></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_msg"/></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_log"/></CustomTableCell>
+                    defaultValue="I have an error" /></CustomTableCell>
+                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_msg" /></CustomTableCell>
+                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_log" /></CustomTableCell>
                 </TableRow>
               </TableBody>
             </Table>
             <Typography variant="h5">Other Options</Typography>
-            <Table style={{width: "45%"}}>
+            <Table style={{ width: "45%" }}>
               <TableHead>
-                <TableRow style={{fontSize: "14px"}}>
+                <TableRow style={{ fontSize: "14px" }}>
                   <CustomTableCell>Option</CustomTableCell>
                   <CustomTableCell align="center">Value</CustomTableCell>
                 </TableRow>
@@ -97,44 +96,25 @@ class ProctoringServiceOptionsView extends React.Component {
                 </TableRow>
               </TableBody>
             </Table>
-            <br/>
-            <input type="submit" value="Build payload"/>
+            <br />
+            <input type="submit" value="Build payload" />
           </form>
         </div>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5">
           Request JWT
         </Typography>
-        <br/>
-        <Typography variant="body1" gutterBottom>
+        <br />
+        <Typography variant="body1">
           <b>JWT Header</b>
         </Typography>
         {this.state.header &&
-        <JSONInput
-          id='jwt_header'
-          viewOnly={true}
-          confirmGood={false}
-          placeholder={this.state.header}
-          theme={"dark_vscode_tribute"}
-          locale={locale}
-          height="100px"
-          width={"500px"}
-        />
+          <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
         }
-        <Typography variant="body1" gutterBottom>
+        <Typography variant="body1">
           <b>JWT Body</b>
         </Typography>
         {this.state.body &&
-        <JSONInput
-          id='jwt_body'
-          viewOnly={true}
-          confirmGood={false}
-          placeholder={this.state.body}
-          theme={"dark_vscode_tribute"}
-          style={{body: styles.jsonEditor}}
-          locale={locale}
-          height={"100%"}
-          width={"100%"}
-        />
+          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
         }
       </div>
     );

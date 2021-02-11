@@ -1,10 +1,6 @@
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import JSONInput from "react-json-editor-ajrm";
 import React from "react";
+import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
-import locale from "react-json-editor-ajrm/locale/en";
-import {TextField} from "@material-ui/core";
 import {styles} from "../../common/styles/custom.js";
 
 class GroupsView extends React.Component {
@@ -32,7 +28,7 @@ class GroupsView extends React.Component {
     const next =
       this.state.nextUrl !== "" ? (
         <form action="/getgroups" method="POST">
-          <Button type={"submit"} variant={"contained"} color={"secondary"}>Groups Next</Button>
+          <input type="submit" value="Groups Next"/>
           <input type="hidden" name="body" defaultValue={body}/>
           <input type="hidden" name="url" defaultValue={this.state.nextUrl}/>
         </form>
@@ -49,60 +45,48 @@ class GroupsView extends React.Component {
         </Typography>
 
         <div>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1">
             What would you like to do?
           </Typography>
-          <Grid
-            container
-            direction={"column"}
-            spacing={8}>
-            <Grid item xs>
+          <ul style={styles.ulNoDecoration}>
+            <li>
               <form action={this.state.returnUrl} method="post">
-                <Button type={"submit"} variant={"contained"} color={"secondary"}>Return to Learn</Button>
+                <input type="submit" value="Return to Learn"/>
               </form>
-            </Grid>
-            <Grid item xs>
+            </li>
+            <li>
               <form action="/getgroups" method="post">
                 <table>
                   <tbody>
                   <tr>
                     <td>
-                      <Button type={"submit"} variant={"contained"} color={"secondary"}>Groups</Button>
+                      <input type="submit" value="Groups"/>
                       <input type="hidden" name="body" defaultValue={body}/>
                       <input type="hidden" name="url" defaultValue={this.state.url}/>
                     </td>
                     <td>
-                      <TextField
-                        variant={"outlined"}
-                        name={"userid"}
-                        placeholder={"User UUID"}
+                      <input
+                        type="text"
+                        name="userid"
+                        size="10"
+                        placeholder="User UUID"
                       />
                     </td>
                   </tr>
                   </tbody>
                 </table>
               </form>
-            </Grid>
-            <Grid item xs>
+            </li>
+            <li>
               {next}
-            </Grid>
-          </Grid>
+            </li>
+          </ul>
 
           <br/>
           <Typography variant="h5">
             Groups Response
           </Typography>
-          <JSONInput
-            id='jwt_body'
-            viewOnly={true}
-            confirmGood={false}
-            placeholder={this.state.body}
-            theme={"dark_vscode_tribute"}
-            style={{body: styles.jsonEditor}}
-            locale={locale}
-            height={"100%"}
-            width={"100%"}
-          />
+          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true}/>
         </div>
       </div>
     );

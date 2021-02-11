@@ -101,31 +101,31 @@ class ContentItemView extends React.Component {
             encType="application/x-www-form-urlencoded">
             <table>
               <tbody>
-              <tr>
-                <td className="ci">lti_message_type</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="lti_message_type"
-                    value="ContentItemSelection"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">lti_version</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="lti_version"
-                    value={this.state.ltiVersion}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">content_items</td>
-                <td className="ci">
+                <tr>
+                  <td className="ci">lti_message_type</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="lti_message_type"
+                      value="ContentItemSelection"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">lti_version</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="lti_version"
+                      value={this.state.ltiVersion}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">content_items</td>
+                  <td className="ci">
                     <textarea
                       className="ci"
                       cols="75"
@@ -133,105 +133,105 @@ class ContentItemView extends React.Component {
                       name="content_items"
                       value={items}
                     />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">data</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="data"
-                    value={this.state.tcData}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">oauth_version</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="oauth_version"
-                    defaultValue="1.0"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">oauth_nonce</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="oauth_nonce"
-                    value={this.state.oauth_nonce}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">oauth_timestamp</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="oauth_timestamp"
-                    value={this.state.oauth_timestamp}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">oauth_consumer_key</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="oauth_consumer_key"
-                    value={this.state.consumerKey}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">oauth_callback</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="oauth_callback"
-                    value="about:blank"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">oauth_signature_method</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="oauth_signature_method"
-                    value={this.state.oauth_signature_method}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="ci">oauth_signature</td>
-                <td className="ci">
-                  <input
-                    className="ci"
-                    type="text"
-                    name="oauth_signature"
-                    value={this.state.oauth_signature}
-                  />
-                </td>
-              </tr>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">data</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="data"
+                      value={this.state.tcData}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">oauth_version</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="oauth_version"
+                      defaultValue="1.0"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">oauth_nonce</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="oauth_nonce"
+                      value={this.state.oauth_nonce}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">oauth_timestamp</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="oauth_timestamp"
+                      value={this.state.oauth_timestamp}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">oauth_consumer_key</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="oauth_consumer_key"
+                      value={this.state.consumerKey}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">oauth_callback</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="oauth_callback"
+                      value="about:blank"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">oauth_signature_method</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="oauth_signature_method"
+                      value={this.state.oauth_signature_method}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="ci">oauth_signature</td>
+                  <td className="ci">
+                    <input
+                      className="ci"
+                      type="text"
+                      name="oauth_signature"
+                      value={this.state.oauth_signature}
+                    />
+                  </td>
+                </tr>
               </tbody>
             </table>
-            <input type="submit" value="Submit"/>
+            <input type="submit" value="Submit" />
           </form>
         </div>
 
         <div>
           <b>Request body received:</b>
-          <DataItemList dataItems={this.state.ciData}/>
+          <DataItemList dataItems={this.state.ciData} />
         </div>
       </div>
     );
