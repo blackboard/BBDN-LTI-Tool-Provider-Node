@@ -208,7 +208,7 @@ module.exports = function(app) {
       }
     } else if ( jwtPayload.target_link_uri.endsWith('lti')) {
       res.redirect("/lti_adv_view");
-    } else if ( jwtPayload.target_link_uri.endsWith('lti13&foo=bar')) {
+    } else if ( jwtPayload.target_link_uri.endsWith('lti13')) {
       res.redirect("/lti_adv_view");
     } else {
       res.send(`Sorry Dave, I can't use that target_link_uri ${jwtPayload.target_link_uri}` );
