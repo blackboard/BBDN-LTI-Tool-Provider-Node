@@ -242,7 +242,7 @@ let deepLinkingContentLink = function() {
   return {
     type: "link",
     title: "My &Home\" Page",
-    url: "http://google.com&foo=bar",
+    url: "https://www.google.com?foo=bar&a=b&url=https%3A%2F%2Fwww.google.com%3Ffoo%3Dbar%26a%3Db",
     icon: {
       url: "https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg",
       width: 100,
