@@ -33,9 +33,9 @@ export const lightMode = createMuiTheme({
   },
   palette: {
     primary: {
-      main: "#616161",
+      main: '#212121',
       light: "#ffffff",
-      dark: "#212121",
+      dark: '#111111',
       contrastText: "#000000"
     },
     secondary: {
