@@ -210,6 +210,8 @@ module.exports = function(app) {
       res.redirect("/lti_adv_view");
     } else if ( jwtPayload.target_link_uri.endsWith('lti13')) {
       res.redirect("/lti_adv_view");
+    } else if ( jwtPayload.target_link_uri.endsWith('msteams')) {
+      res.redirect("/ms_teams_view");
     } else {
       res.send(`Sorry Dave, I can't use that target_link_uri ${jwtPayload.target_link_uri}` );
     }

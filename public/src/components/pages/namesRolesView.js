@@ -1,6 +1,9 @@
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import JSONInput from "react-json-editor-ajrm";
 import React from "react";
-import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
+import locale from "react-json-editor-ajrm/locale/en";
 import {styles} from "../../common/styles/custom.js";
 
 class NamesRolesView extends React.Component {
@@ -29,9 +32,9 @@ class NamesRolesView extends React.Component {
     const diff =
       this.state.differenceUrl !== "" ? (
         <form action="/namesAndRoles2" method="POST">
-          <input type="submit" value="NRPS Difference" />
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.differenceUrl} />
+          <Button type={"submit"} variant={"contained"} color={"secondary"}>NRPS Difference</Button>
+          <input type="hidden" name="body" defaultValue={body}/>
+          <input type="hidden" name="url" defaultValue={this.state.differenceUrl}/>
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -41,9 +44,9 @@ class NamesRolesView extends React.Component {
     const next =
       this.state.nextUrl !== "" ? (
         <form action="/namesAndRoles2" method="POST">
-          <input type="submit" value="NRPS Next" />
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.nextUrl} />
+          <Button type={"submit"} variant={"contained"} color={"secondary"}>NRPS Next</Button>
+          <input type="hidden" name="body" defaultValue={body}/>
+          <input type="hidden" name="url" defaultValue={this.state.nextUrl}/>
         </form>
       ) : (
         <Typography variant="body1" style={styles.notAvailable}>
@@ -58,34 +61,47 @@ class NamesRolesView extends React.Component {
         </Typography>
 
         <div>
-          <Typography variant="body1">
+          <Typography variant="body1" gutterBottom>
             What would you like to do?
           </Typography>
-          <ul style={styles.ulNoDecoration}>
-            <li>
+          <Grid
+            container
+            direction={"column"}
+            spacing={8}>
+            <Grid item xs>
               <form action={this.state.returnUrl} method="post">
-                <input type="submit" value="Return to Learn"/>
+                <Button type={"submit"} variant={"contained"} color={"secondary"}>Return to Learn</Button>
               </form>
-            </li>
-            <li>
+            </Grid>
+            <Grid item xs>
               <form action="/namesAndRoles" method="post">
-                <input type="submit" value="Names and Roles"/>
+                <Button type={"submit"} variant={"contained"} color={"secondary"}>Names and Roles</Button>
                 <input type="hidden" name="body" defaultValue={body}/>
               </form>
-            </li>
-            <li>
+            </Grid>
+            <Grid item xs>
               {diff}
-            </li>
-            <li>
+            </Grid>
+            <Grid item xs>
               {next}
-            </li>
-          </ul>
+            </Grid>
+          </Grid>
 
-          <br />
+          <br/>
           <Typography variant="h5">
             Names and Roles Response
           </Typography>
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='jwt_body'
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.body}
+            theme={"dark_vscode_tribute"}
+            style={{body: styles.jsonEditor}}
+            locale={locale}
+            height={"100%"}
+            width={"100%"}
+          />
         </div>
       </div>
     );

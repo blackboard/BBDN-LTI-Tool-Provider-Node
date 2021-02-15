@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography/index";
 import ModeButton from "@material-ui/icons/Brightness4Outlined";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MenuIcon from "@material-ui/icons/Menu";
+import MicrosoftTeamsView from './msTeamsView';
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import classNames from "classnames";
 import PropTypes from "prop-types";
@@ -146,6 +147,7 @@ class Dashboard extends React.Component {
               <Route path="/proctoring_start_actions_view" component={ProctoringStartActionsView}/>
               <Route path="/proctoring_end_options_view" component={ProctoringEndOptionsView}/>
               <Route path="/proctoring_end_actions_view" component={ProctoringEndActionsView}/>
+              <Route path="/ms_teams_view" component={MicrosoftTeamsView}/>
               <Route
                 path="/assign_grades_view"
                 component={AssignGradesView}
