@@ -311,7 +311,7 @@ exports.send_outcomes = function(req, res) {
   let outcomes_service = new lti.OutcomeService(options);
 
   outcomes_service.send_replace_result(grade, function(err, result) {
-    console.log(result); //True or false
+    console.log(`Replace result ${result}`); //True or false
 
     if (result) {
       res.render("lti", {
@@ -323,6 +323,37 @@ exports.send_outcomes = function(req, res) {
     } else {
       res.render("lti", {
         title: "Outcome Failed!",
+        content: err,
+        return_url: return_url,
+        return_onclick: "location.href=" + "'" + return_url + "';"
+      });
+    }
+  });
+};
+
+exports.get_outcomes = function(req, res) {
+  let options = {};
+
+  options.consumer_key = req.body.key;
+  options.consumer_secret = req.body.secret;
+  options.service_url = req.body.url;
+  options.source_did = req.body.sourcedid;
+
+  let outcomes_service = new lti.OutcomeService(options);
+
+  outcomes_service.send_read_result(function(err, result) {
+    console.log(`Outcomes read result ${result}`);
+
+    if (result || result === 0) {
+      res.render("lti", {
+        title: "Outcome successfully read!",
+        content: `Score: ${result}`,
+        return_url: return_url,
+        return_onclick: "location.href=" + "'" + return_url + "';"
+      });
+    } else {
+      res.render("lti", {
+        title: "Outcome read failed!",
         content: err,
         return_url: return_url,
         return_onclick: "location.href=" + "'" + return_url + "';"

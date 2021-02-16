@@ -95,6 +95,9 @@ module.exports = function(app) {
   app.post("/lti/send_outcomes", (req, res) => {
     lti.send_outcomes(req, res);
   });
+  app.post("/lti/get_outcomes", (req, res) => {
+    lti.get_outcomes(req, res);
+  });
   app.get("/lti/membership", (req, res) => {
     lti.get_membership(req, res);
   });
