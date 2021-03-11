@@ -10,7 +10,7 @@ exports.namesRoles = (req, res, nrPayload, setup) => {
       nrPayload.orig_body[
         "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"
       ];
-    nrPayload.url = namesRoles.context_memberships_url + "&groups=true";
+    nrPayload.url = namesRoles.context_memberships_url + "?groups=true";
     nrPayload.version = namesRoles.service_version;
     nrPayload.return_url =
       nrPayload.orig_body[
