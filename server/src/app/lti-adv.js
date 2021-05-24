@@ -2,24 +2,20 @@
 
 import config from "../config/config";
 
-let srequest = require("sync-request");
+let axios = require('axios');
 let jwt = require("jsonwebtoken");
 let crypto = require("crypto");
 let request = require("request");
 let uuid = require("uuid");
 let jwk2pem = require('pem-jwk').jwk2pem
-
-exports.toolLaunch = function(req, res, jwtPayload) {
-  let id_token = req.body.id_token;
-
-  this.verifyToken(id_token, jwtPayload);
-};
+import {JWTPayload} from "../common/restTypes";
 
 // Pass in JWT and jwtPayload will be populated with results
-exports.verifyToken = function(id_token, jwtPayload, setup) {
+exports.verifyToken = async function(id_token, setup) {
   let parts = id_token.split(".");
 
   // Parse and store payload data from launch
+  let jwtPayload = new JWTPayload();
   jwtPayload.header = JSON.parse(Buffer.from(parts[0], "base64").toString());
   jwtPayload.body = JSON.parse(Buffer.from(parts[1], "base64").toString());
   jwtPayload.verified = false;
@@ -87,28 +83,18 @@ exports.verifyToken = function(id_token, jwtPayload, setup) {
     clientId +
     "/jwks.json";
 
-  // Do a synchronous call to dev portal
-  let res;
   try {
-    res = srequest("GET", url);
-  } catch (err) {
-    return console.log("Verify Error - request failed: " + err);
-  }
-
-  if (res.statusCode !== 200) {
-    return console.log(
-      "Verify Error - jwks.json call failed: " + res.statusCode + "\n" + url
-    );
-  }
-
-  try {
-    jwt.verify(id_token, jwk2pem(JSON.parse(res.getBody("UTF-8")).keys[0]));
+    const response = await axios.get(url);
+    const key = response.data.keys.find(k => k.kid === jwtPayload.header.kid);
+    jwt.verify(id_token, jwk2pem(key));
     jwtPayload.verified = true;
     console.log("JWT verified " + jwtPayload.verified);
   } catch (err) {
     console.log("Verify Error - verify failed: " + err);
     jwtPayload.verified = false;
   }
+
+  return jwtPayload;
 };
 
 exports.getOauth2Token = function(setup, scope) {

@@ -117,13 +117,6 @@ module.exports = function(app) {
     if (req.body.lti_message_type === "basic-lti-launch-request") {
       lti.got_launch(req, res);
     }
-
-    if (req.body.id_token) {
-      console.log("Redirecting to LTI 1.3");
-      jwtPayload = new JWTPayload();
-      ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
-      res.redirect("/lti_adv_view");
-    }
   });
 
   //=======================================================
@@ -187,7 +180,7 @@ module.exports = function(app) {
 
   // This is our single redirect_uri entry point; we can use customer parameters or target_link_uri to determine how
   // to route from here
-  app.post("/lti13", (req, res) => {
+  app.post("/lti13", async (req, res) => {
     console.log("--------------------\nlti13");
 
     // Per the OIDC best practices, ensure the state parameter passed in here matches the one in our cookie
@@ -197,8 +190,7 @@ module.exports = function(app) {
       return;
     }
 
-    jwtPayload = new JWTPayload();
-    ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+    jwtPayload = await ltiAdv.verifyToken(req.body.id_token, setup);
 
     if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
       res.redirect('/deep_link_options');
