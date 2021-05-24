@@ -21,7 +21,7 @@ class LtiAdvView extends React.Component {
           verified: jwtPayload.verified,
           namesRoles: jwtPayload.names_roles,
           grading: jwtPayload.grading,
-          groups: jwtPayload.groups
+          groups: jwtPayload.groups,
         });
       });
   }

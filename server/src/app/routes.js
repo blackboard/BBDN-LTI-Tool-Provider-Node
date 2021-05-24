@@ -189,10 +189,16 @@ module.exports = function(app) {
   // to route from here
   app.post("/lti13", (req, res) => {
     console.log("--------------------\nlti13");
+
+    // Per the OIDC best practices, ensure the state parameter passed in here matches the one in our cookie
+    const cookieState = req.cookies['state'];
+    if (cookieState !== req.body.state) {
+      res.send(`The state field is missing or doesn't match. Maybe cookies are blocked?`);
+      return;
+    }
+
     jwtPayload = new JWTPayload();
     ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
-    res.cookie("userData-legacy", users);
-    res.cookie("userData", users,  { sameSite: 'none', secure: true });
 
     if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
       res.redirect('/deep_link_options');
@@ -226,7 +232,10 @@ module.exports = function(app) {
 
   app.get("/login", (req, res) => {
     console.log("--------------------\nlogin");
-    ltiAdv.security1(req, res, jwtPayload, setup);
+    // Set some cookies for giggles
+    res.cookie("userData-legacy", users);
+    res.cookie("userData", users,  { sameSite: 'none', secure: true });
+    ltiAdv.oidcLogin(req, res, jwtPayload, setup);
   });
 
   //=======================================================

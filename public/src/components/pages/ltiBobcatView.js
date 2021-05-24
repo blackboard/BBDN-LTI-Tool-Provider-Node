@@ -21,7 +21,14 @@ class LtiBadgerView extends React.Component {
           verified: jwtPayload.verified,
           namesRoles: jwtPayload.names_roles,
           grading: jwtPayload.grading,
-          groups: jwtPayload.groups
+          groups: jwtPayload.groups,
+          sub: jwtPayload.body.sub,
+          userName: jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/custom"]["userNameLTI"],
+          userBatchUid: jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/lis"]["person_sourcedid"],
+          courseId: jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/custom"]["courseIDLrn"],
+          courseBatchUid: jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/custom"]["courseBatchUIDLrn"],
+          courseTitle: jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/context"]["title"],
+          courseUUID: jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/context"]["id"],
         });
       });
   }
@@ -39,7 +46,21 @@ class LtiBadgerView extends React.Component {
 
     return (
       <div>
-        <p>We have received your LTI launch.</p>
+        <p>We have received your LTI 1.3 launch. Thanks for playing.</p>
+        <p>
+          Username: {this.state.userName}<br/>
+          User UUID: {this.state.sub}<br/>
+          User BatchUID: {this.state.userBatchUid}<br/>
+          Course ID: {this.state.courseId}<br/>
+          Course Title: {this.state.courseTitle}<br/>
+          Course UUID: {this.state.courseUUID}<br/>
+          Course BatchUID: {this.state.courseBatchUid}<br/>
+        </p>
+        {/*
+        <p>
+          Body: {JSON.stringify(this.state.body)}
+        </p>
+        */}
         <p>
           <pre>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( \<br/>
@@ -56,6 +77,13 @@ class LtiBadgerView extends React.Component {
           </pre>
         </p>
         <p>{verified}</p>
+
+        <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+
+        <Typography variant="body1">
+          <b>JWT Body</b>
+        </Typography>
+        <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
       </div>
     );
   }

@@ -162,7 +162,7 @@ exports.tokenGrab = function(req, res, jwtPayload, setup) {
   );
 };
 
-exports.security1 = function(req, res, jwtPayload, setup) {
+exports.oidcLogin = function(req, res, jwtPayload, setup) {
   let state = uuid.v4();
   let nonce = uuid.v4();
 
@@ -185,6 +185,9 @@ exports.security1 = function(req, res, jwtPayload, setup) {
     setup.applicationId +
     "&nonce=" +
     nonce;
+
+  // Per the OIDC best practices, save the state in a cookie, and check it on the way back in
+  res.cookie('state', state,  { sameSite: 'none', secure: true, httpOnly: true });
 
   console.log("LTI JWT login init; redirecting to: " + url);
   res.redirect(url);
