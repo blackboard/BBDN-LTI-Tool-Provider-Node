@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import uuid from 'uuid';
 import cookieParser from "cookie-parser";
-import {AGPayload, ContentItem, JWTPayload, NRPayload, GroupsPayload, SetupParameters} from "../common/restTypes";
+import {AGPayload, ContentItem, NRPayload, GroupsPayload, SetupParameters} from "../common/restTypes";
 import config from "../config/config";
 import assignGrades from "./assign-grades";
 import * as content_item from "./content-item";
@@ -24,32 +24,6 @@ const ltiScopes = 'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembers
   'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly ' +
   'https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly ' +
   'https://purl.imsglobal.org/spec/lti-ags/scope/score';
-
-/*
-const FULL_KEYS = "{\n" +
-  "  \"kty\": \"RSA\",\n" +
-  "  \"d\": \"o_OPanHKvMvkM1D0_u52AHhZDRCMyxsDTHW-6rCmi7DhXNcfLGJMpL05pLiGSz3OGZN7uI83IP748f-WgRxc5H5nyXYe-7fEMue1T6ZF1p5-e1rBZ_ukXULHaiLff834YOMuMa0t8X7sKLMI4eInKH2SK_uSqxCT12hh3IukhxS1wbB9kSvE1v7PNXAU1enXC3M1wFRmmKPMuK_AKbtqKv-y2UG1GeisWg7HLuOYHINga8gY60KJDBp-wDsJOpIrMCRDP99OnkJWMbC-k8gWzDGCtdQHTGQnfgGxJVmKVUG-7JOCnlu-S21yofvj1K_aTAtAS8ByJHBLBzIjUBotuQ\",\n" +
-  "  \"e\": \"AQAB\",\n" +
-  "  \"use\": \"sig\",\n" +
-  "  \"kid\": \"12345\",\n" +
-  "  \"alg\": \"RS256\",\n" +
-  "  \"n\": \"sB3jz6IZBOuerqkZ-RUpCoZuNeaL2A2ODOC4W9dJcL649-dYGzJMR6R8chuOL5EQAEZyzbxGU49rkLCa0d0yt4PIJE_k86Ib9PBZhhyj1WuIPHYuJqzPlwdHXJDSA6pEdSsOS5fWCLs75IETnbmPtV0wM8C32QHd6U8M2iZSmy5XFut5H-DisplW7rTaeCzVIqZXEnvBp0ZsxVyXkYJj1emnhX0TqgsdQy8H7evVvM2--dIBIENbKmxNQQH8pwTdRgMWJqAFjo8Tkj2PKLb075aEE-wEtlF0Ms7Y2ASo22Jya57E-CPfeCPE5vIJ_SyC0B8GeIE41qdra-lfzVi_zQ\"\n" +
-  "}";
-
-const PUBLIC_KEY_SET = "{\n" +
-  "  \"keys\": [\n" +
-  "    {\n" +
-  "      \"kty\": \"RSA\",\n" +
-  "      \"e\": \"AQAB\",\n" +
-  "      \"use\": \"sig\",\n" +
-  "      \"kid\": \"12345\",\n" +
-  "      \"alg\": \"RS256\",\n" +
-  "      \"n\": \"sB3jz6IZBOuerqkZ-RUpCoZuNeaL2A2ODOC4W9dJcL649-dYGzJMR6R8chuOL5EQAEZyzbxGU49rkLCa0d0yt4PIJE_k86Ib9PBZhhyj1WuIPHYuJqzPlwdHXJDSA6pEdSsOS5fWCLs75IETnbmPtV0wM8C32QHd6U8M2iZSmy5XFut5H-DisplW7rTaeCzVIqZXEnvBp0ZsxVyXkYJj1emnhX0TqgsdQy8H7evVvM2--dIBIENbKmxNQQH8pwTdRgMWJqAFjo8Tkj2PKLb075aEE-wEtlF0Ms7Y2ASo22Jya57E-CPfeCPE5vIJ_SyC0B8GeIE41qdra-lfzVi_zQ\"\n" +
-  "    }\n" +
-  "  ]\n" +
-  "}";
-
- */
 
 module.exports = function(app) {
   app.use(cookieParser());
@@ -177,7 +151,6 @@ module.exports = function(app) {
 
   //=======================================================
   // LTI Advantage Message processing
-  let jwtPayload;
   let users = {
     name : "Fyodor",
     age : "77"
@@ -204,8 +177,8 @@ module.exports = function(app) {
     }
 
     // Parse, verify and save the id_token JWT
-    jwtPayload = await ltiAdv.verifyToken(req.body.id_token, setup);
-    redisUtil.redisSave(state, jwtPayload);
+    const jwtPayload = await ltiAdv.verifyToken(req.body.id_token, setup);
+    redisUtil.redisSave(state + ':jwt', jwtPayload);
 
     // Now we have the JWT but next we need to get an OAuth2 bearer token for REST calls.
     // Before we can do that we need to get an authorization code for the current user.
@@ -227,34 +200,31 @@ module.exports = function(app) {
       console.log(`The state field is missing or doesn't match.`);
     }
 
-    redisUtil.redisGet(req.query.state).then(data => {
-      jwtPayload = data;
-    });
+    const jwtPayload = await redisUtil.redisGet(state + ':jwt');
 
     // If we have a 3LO auth code, let's get us a bearer token here.
     const redirectUri = `${config.frontend_url}tlocode`;
     const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
     const learnUrl = lmsServer + `/learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
-    const nonce = uuid.v4();
 
-    // Cache the nonce
-    redisUtil.redisSave(nonce, 'nonce');
+    // Cache the nonce which is our state value
+    redisUtil.redisSave(state, 'nonce');
 
-    const restToken = await restService.getLearnRestToken(learnUrl, nonce);
+    const restToken = await restService.getLearnRestToken(learnUrl, state);
     console.log(`Learn REST token ${restToken}`);
 
     // Now get the LTI OAuth 2 bearer token (shame they aren't the same)
-    const ltiToken = await ltiTokenService.getLTIToken(setup.applicationId, setup.tokenEndPoint, ltiScopes, nonce);
+    const ltiToken = await ltiTokenService.getLTIToken(setup.applicationId, setup.tokenEndPoint, ltiScopes, state);
     console.log(`LMS LTI token ${ltiToken}`);
 
     // Now finally redirect to the UI
     //res.redirect(`/?nonce=${nonce}&returnurl=${returnUrl}&cname=${courseName}&student=${isStudent}&dl=${isDeepLinking}&setLang=${lmsLocale}#/viewAssignment`);
     if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
-      res.redirect('/deep_link_options');
+      res.redirect(`/deep_link_options?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('CIMRequest')) {
-      res.redirect("/deep_link_options");
+      res.redirect(`/deep_link_options?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
-      res.redirect("/lti_bobcat_view");
+      res.redirect(`/lti_bobcat_view?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
       const messageType = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/message_type"];
       if (messageType === "LtiStartProctoring") {
@@ -265,24 +235,27 @@ module.exports = function(app) {
         res.send(`Unrecognized proctoring message type: ${messageType}`);
       }
     } else if ( jwtPayload.target_link_uri.endsWith('lti')) {
-      res.redirect("/lti_adv_view");
+      res.redirect(`/lti_adv_view?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('lti13')) {
-      res.redirect("/lti_adv_view");
+      res.redirect(`/lti_adv_view?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('msteams')) {
-      res.redirect("/ms_teams_view");
+      res.redirect(`/ms_teams_view?nonce=${state}`);
     } else {
       res.send(`Sorry Dave, I can't use that target_link_uri ${jwtPayload.target_link_uri}` );
     }
-
   });
 
-  app.get("/jwtPayloadData", (req, res) => {
+  app.get("/jwtPayloadData", async (req, res) => {
+    const nonce = req.query.nonce;
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
     res.send(jwtPayload);
   });
 
   //=======================================================
   // Deep Linking
-  app.get("/dlPayloadData", (req, res) => {
+  app.get("/dlPayloadData", async (req, res) => {
+    const nonce = req.query.nonce;
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
     res.send(jwtPayload);
   });
 

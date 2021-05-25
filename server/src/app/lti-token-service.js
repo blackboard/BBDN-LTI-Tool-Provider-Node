@@ -26,7 +26,6 @@ exports.getLTIToken = async (clientId, tokenUrl, scope, nonce) => {
   try {
     const response = await axios.post(tokenUrl, qs.stringify(body), options);
     const token = response.data.access_token;
-    console.log(`getLTIToken token ${token}`);
 
     // Cache the LTI token
     cacheToken(token, nonce);

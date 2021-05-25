@@ -2,15 +2,18 @@ import React from "react";
 import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
 import {styles} from "../../common/styles/custom.js";
+import { parameters } from '../../util/parameters';
 
-class LtiBadgerView extends React.Component {
+const params = parameters.getInstance();
+
+class LtiBobcatView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   componentDidMount() {
-    fetch("jwtPayloadData")
+    fetch(`jwtPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
       .then(jwtPayload => {
         this.setState({
@@ -31,6 +34,8 @@ class LtiBadgerView extends React.Component {
           courseUUID: jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/context"]["id"],
         });
       });
+
+    console.log(`LtiBobcatView nonce ${params.getNonce()}`);
   }
 
   render() {
@@ -89,4 +94,4 @@ class LtiBadgerView extends React.Component {
   }
 }
 
-export default LtiBadgerView;
+export default LtiBobcatView;

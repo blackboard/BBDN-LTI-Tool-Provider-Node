@@ -2,6 +2,9 @@ import React from "react";
 import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
 import {styles} from "../../common/styles/custom.js";
+import { parameters } from '../../util/parameters';
+
+const params = parameters.getInstance();
 
 class LtiAdvView extends React.Component {
   constructor(props) {
@@ -10,7 +13,7 @@ class LtiAdvView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("jwtPayloadData")
+    fetch(`jwtPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
       .then(jwtPayload => {
         this.setState({

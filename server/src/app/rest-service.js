@@ -17,7 +17,6 @@ exports.getLearnRestToken = async (learnUrl, nonce) => {
   try {
     const response = await axios.post(learnUrl, 'grant_type=authorization_code', options);
     const token = response.data.access_token;
-    console.log(`Got bearer token`);
 
     // Cache the REST token
     redisUtil.redisSave(`${nonce}:rest`, token);
