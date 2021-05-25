@@ -1,6 +1,7 @@
 "use strict";
 
-let jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import ltiAdv from "./lti-adv";
 
 exports.buildProctoringStartReturnPayload = function(req, res, proctoringPayload, setup) {
   let now = Math.trunc(new Date().getTime() / 1000);
@@ -45,7 +46,7 @@ exports.buildProctoringStartReturnPayload = function(req, res, proctoringPayload
     json["https://purl.imsglobal.org/spec/lti-ap/claim/end_assessment_return"] = true;
   }
 
-  proctoringPayload.jwt = jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
+  proctoringPayload.jwt = ltiAdv.signJwt(json);
   proctoringPayload.start_assessment_url = proctoringPayload.body["https://purl.imsglobal.org/spec/lti-ap/claim/start_assessment_url"];
   proctoringPayload.decodedJwt = jwt.decode(proctoringPayload.jwt, { complete: true });
 };

@@ -98,6 +98,8 @@ exports.verifyToken = async function(id_token, setup) {
 };
 
 exports.getOauth2Token = function(setup, scope) {
+  const jwt = this.oauth2JWT(setup.applicationId, setup.tokenEndPoint);
+  console.log(`getOauth2Token jwt: ${jwt}`);
   return new Promise(function(resolve, reject) {
     let options = {
       method: "POST",
@@ -109,7 +111,7 @@ exports.getOauth2Token = function(setup, scope) {
         grant_type: "client_credentials",
         client_assertion_type:
           "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-        client_assertion: oauth2JWT(setup),
+        client_assertion: jwt,
         scope: scope
       }
     };
@@ -135,20 +137,7 @@ exports.getOauth2Token = function(setup, scope) {
   });
 };
 
-exports.tokenGrab = function(req, res, jwtPayload, setup) {
-  let scope =
-    "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly";
-  this.getOauth2Token(setup, scope).then(
-    function(token) {
-      res.send(token);
-    },
-    function(error) {
-      res.send(error);
-    }
-  );
-};
-
-exports.oidcLogin = function(req, res, jwtPayload, setup) {
+exports.oidcLogin = function(req, res, setup) {
   let state = uuid.v4();
   let nonce = uuid.v4();
 
@@ -179,16 +168,28 @@ exports.oidcLogin = function(req, res, jwtPayload, setup) {
   res.redirect(url);
 };
 
-let oauth2JWT = function(setup) {
+exports.oauth2JWT = function(clientId, tokenUrl) {
   let now = Math.trunc(new Date().getTime() / 1000);
   let json = {
     iss: "lti-tool",
-    sub: setup.applicationId,
-    aud: [setup.tokenEndPoint, 'foo'],
+    sub: clientId,
+    aud: [tokenUrl, 'foo'],
     iat: now,
     exp: now + 5 * 60,
     jti: crypto.randomBytes(16).toString("hex")
   };
 
-  return jwt.sign(json, setup.privateKey, { algorithm: "RS256", keyid: "12345" });
+  return this.signJwt(json);
 };
+
+exports.signJwt = function(json) {
+  try {
+    let privateKey = jwk2pem(config.privateKey);
+    const signedJwt = jwt.sign(json, privateKey, {algorithm: 'RS256', keyid: '12345'});
+    console.log(`signedJwt ${signedJwt}`);
+    return signedJwt
+  } catch (exception) {
+    console.log(`Something bad happened in signing ${exception}`);
+  }
+};
+
