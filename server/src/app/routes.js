@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import uuid from 'uuid';
+import axios from "axios";
 import cookieParser from "cookie-parser";
 import {AGPayload, ContentItem, NRPayload, GroupsPayload, SetupParameters} from "../common/restTypes";
 import config from "../config/config";
@@ -249,6 +249,26 @@ module.exports = function(app) {
     const nonce = req.query.nonce;
     const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
     res.send(jwtPayload);
+  });
+
+  app.get("/courseData", async (req, res) => {
+    const nonce = req.query.nonce;
+    const restToken = await restService.getCachedToken(nonce);
+    console.log(`courseData nonce: ${nonce}, restToken: ${restToken}`)
+    const jwt = await redisUtil.redisGet(nonce + ':jwt');
+    const lmsServer = jwt.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+    const courseUUID = jwt.body["https://purl.imsglobal.org/spec/lti/claim/context"]["id"];
+    const xhrConfig = {
+      headers: {Authorization: `Bearer ${restToken}`}
+    };
+
+    try {
+      const courseResponse = await axios.get(`${lmsServer}/learn/api/public/v2/courses/uuid:${courseUUID}`, xhrConfig);
+      console.log(`Got course; Ultra status is ${courseResponse.data.ultraStatus}, and PK1 is: ${courseResponse.data.id}`);
+      res.send(courseResponse.data);
+    } catch (exception) {
+      console.log(`Error getting courseData for ${courseUUID}: ${JSON.stringify(exception)}, from: ${lmsServer}`);
+    }
   });
 
   //=======================================================

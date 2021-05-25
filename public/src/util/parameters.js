@@ -1,6 +1,7 @@
 export class parameters {
   static #instance;
   #nonce = '';
+  #courseId = '';
 
   static getInstance() {
     if (!this.#instance) {
@@ -15,5 +16,13 @@ export class parameters {
 
   setNonce(nonce) {
     this.#nonce = nonce;
+  }
+
+  getCourseId() {
+    return this.#courseId;
+  }
+
+  setCourseId(courseId) {
+    this.#courseId = courseId;
   }
 }
