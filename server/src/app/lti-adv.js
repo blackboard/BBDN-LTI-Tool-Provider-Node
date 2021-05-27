@@ -20,6 +20,36 @@ exports.verifyToken = async function(id_token, setup) {
   jwtPayload.body = JSON.parse(Buffer.from(parts[1], "base64").toString());
   jwtPayload.verified = false;
 
+  // Verify launch is from correct party
+  // aud could be an array or a single entry
+  let clientId;
+  if (jwtPayload.body.aud instanceof Array) {
+    clientId = jwtPayload.body.aud[0];
+  } else {
+    clientId = jwtPayload.body.aud;
+  }
+
+  if (clientId === undefined) {
+    clientId = setup.applicationId;
+  }
+
+  let url =
+    setup.devPortalHost +
+    "/api/v1/management/applications/" +
+    clientId +
+    "/jwks.json";
+
+  try {
+    const response = await axios.get(url);
+    const key = response.data.keys.find(k => k.kid === jwtPayload.header.kid);
+    jwt.verify(id_token, jwk2pem(key));
+    jwtPayload.verified = true;
+    console.log("JWT verified " + jwtPayload.verified);
+  } catch (err) {
+    console.log("Verify Error - verify failed: " + err);
+    jwtPayload.verified = false;
+  }
+
   if (
     jwtPayload.body[
       "https://purl.imsglobal.org/spec/lti/claim/launch_presentation"
@@ -62,36 +92,6 @@ exports.verifyToken = async function(id_token, setup) {
           ] !== undefined
   ) {
     jwtPayload.target_link_uri = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/target_link_uri"];
-  }
-
-  // Verify launch is from correct party
-  // aud could be an array or a single entry
-  let clientId;
-  if (jwtPayload.body.aud instanceof Array) {
-    clientId = jwtPayload.body.aud[0];
-  } else {
-    clientId = jwtPayload.body.aud;
-  }
-
-  if (clientId === undefined) {
-    clientId = setup.applicationId;
-  }
-
-  let url =
-    setup.devPortalHost +
-    "/api/v1/management/applications/" +
-    clientId +
-    "/jwks.json";
-
-  try {
-    const response = await axios.get(url);
-    const key = response.data.keys.find(k => k.kid === jwtPayload.header.kid);
-    jwt.verify(id_token, jwk2pem(key));
-    jwtPayload.verified = true;
-    console.log("JWT verified " + jwtPayload.verified);
-  } catch (err) {
-    console.log("Verify Error - verify failed: " + err);
-    jwtPayload.verified = false;
   }
 
   return jwtPayload;

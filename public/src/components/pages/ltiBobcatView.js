@@ -10,7 +10,6 @@ class LtiBobcatView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.course = {};
   }
 
   componentDidMount() {
@@ -20,12 +19,7 @@ class LtiBobcatView extends React.Component {
         this.setState({
           header: jwtPayload.header,
           body: jwtPayload.body,
-          returnUrl: jwtPayload.return_url,
-          errorUrl: jwtPayload.error_url,
           verified: jwtPayload.verified,
-          namesRoles: jwtPayload.names_roles,
-          grading: jwtPayload.grading,
-          groups: jwtPayload.groups,
           sub: jwtPayload.body.sub,
           userName: jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/custom"]["userNameLTI"],
           userBatchUid: jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/lis"]["person_sourcedid"],

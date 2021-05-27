@@ -218,7 +218,6 @@ module.exports = function(app) {
     console.log(`LMS LTI token ${ltiToken}`);
 
     // Now finally redirect to the UI
-    //res.redirect(`/?nonce=${nonce}&returnurl=${returnUrl}&cname=${courseName}&student=${isStudent}&dl=${isDeepLinking}&setLang=${lmsLocale}#/viewAssignment`);
     if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
       res.redirect(`/deep_link_options?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('CIMRequest')) {
