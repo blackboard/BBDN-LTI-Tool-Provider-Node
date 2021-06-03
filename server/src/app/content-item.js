@@ -1,54 +1,52 @@
-"use strict";
+import lti_content_items from './lti-content-item.js';
 
-import lti_content_items from "./lti-content-item.js";
-
-let HMAC_SHA = require("./hmac-sha1");
-let url = require("url");
-let uuid = require("uuid");
+let HMAC_SHA = require('./hmac-sha1');
+let url = require('url');
+let uuid = require('uuid');
 
 //LTI Variables
-let consumerKey = "12345";
-let consumerSecret = "secret";
-let returnUrl = "";
-let sha_method = "";
+let consumerKey = '12345';
+let consumerSecret = 'secret';
+let returnUrl = '';
+let sha_method = '';
 
 export function got_launch(req, res, contentItemData) {
   returnUrl = req.body.content_item_return_url;
   sha_method = req.body.oauth_signature_method;
-  console.log("Signature Method: " + sha_method);
+  console.log('Signature Method: ' + sha_method);
 
   // Populate contentItemData
   contentItemData.data = req.body;
   contentItemData.consumer_key = consumerKey;
   contentItemData.consumer_secret = consumerSecret;
   switch (req.body.custom_option) {
-    case "1":
-      contentItemData.content_items = lti_content_items.constructLTIContentItem1();
-      break;
+  case '1':
+    contentItemData.content_items = lti_content_items.constructLTIContentItem1();
+    break;
 
-    case "2":
-      contentItemData.content_items = lti_content_items.constructLTIContentItem2();
-      break;
+  case '2':
+    contentItemData.content_items = lti_content_items.constructLTIContentItem2();
+    break;
 
-    case "3":
-      contentItemData.content_items = lti_content_items.constructLTIContentItem3();
-      break;
+  case '3':
+    contentItemData.content_items = lti_content_items.constructLTIContentItem3();
+    break;
 
-    case "4":
-      contentItemData.content_items = lti_content_items.constructLTIContentItem4();
-      break;
+  case '4':
+    contentItemData.content_items = lti_content_items.constructLTIContentItem4();
+    break;
 
-    case "5":
-      contentItemData.content_items = lti_content_items.constructLTIContentItem5();
-      break;
+  case '5':
+    contentItemData.content_items = lti_content_items.constructLTIContentItem5();
+    break;
 
-    case "6":
-      contentItemData.content_items = JSON.parse(req.body.custom_content);
-      break;
+  case '6':
+    contentItemData.content_items = JSON.parse(req.body.custom_content);
+    break;
 
-    default:
-      contentItemData.content_items = lti_content_items.constructLTIContentItem1();
-      break;
+  default:
+    contentItemData.content_items = lti_content_items.constructLTIContentItem1();
+    break;
   }
   contentItemData.oauth_signature_method = sha_method;
 
@@ -59,11 +57,11 @@ export function got_launch(req, res, contentItemData) {
     return_url: returnUrl,
     params: req.body,
     content_items: contentItemData.content_items,
-    oauth_version: "1.0",
+    oauth_version: '1.0',
     oauth_signature_method: sha_method
   };
 
-  if (sha_method === "HMAC-SHA256") {
+  if (sha_method === 'HMAC-SHA256') {
     options.signer = new HMAC_SHA.HMAC_SHA2();
   } else {
     options.signer = new HMAC_SHA.HMAC_SHA1();
@@ -75,35 +73,35 @@ export function got_launch(req, res, contentItemData) {
 
   console.log(headers);
 
-  contentItemData.oauth_nonce = get_value("oauth_nonce", headers.Authorization);
+  contentItemData.oauth_nonce = get_value('oauth_nonce', headers.Authorization);
   contentItemData.oauth_timestamp = get_value(
-    "oauth_timestamp",
+    'oauth_timestamp',
     headers.Authorization
   );
   contentItemData.oauth_signature = get_value(
-    "oauth_signature",
+    'oauth_signature',
     headers.Authorization
   );
 
-  console.log("--- Content Item ---");
+  console.log('--- Content Item ---');
   console.log(contentItemData);
 
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     resolve();
   });
 }
 
-let _build_headers = function(options, parts) {
+let _build_headers = function (options, parts) {
   let headers = {},
-    key = "",
-    val = "";
+    key = '',
+    val = '';
 
   headers = {
     content_items: JSON.stringify(options.content_items),
     data: options.params.data,
-    lti_message_type: "ContentItemSelection",
+    lti_message_type: 'ContentItemSelection',
     lti_version: options.params.lti_version,
-    oauth_callback: "about:blank",
+    oauth_callback: 'about:blank',
     oauth_version: options.oauth_version,
     oauth_nonce: uuid.v4(),
     oauth_timestamp: Math.round(Date.now() / 1000),
@@ -114,7 +112,7 @@ let _build_headers = function(options, parts) {
   headers.oauth_signature = options.signer.build_signature_raw(
     returnUrl,
     parts,
-    "POST",
+    'POST',
     headers,
     options.consumer_secret
   );
@@ -123,7 +121,7 @@ let _build_headers = function(options, parts) {
   return {
     Authorization:
       'OAuth realm="",' +
-      (function() {
+      ( function () {
         let results;
         results = [];
         for (key in headers) {
@@ -133,16 +131,16 @@ let _build_headers = function(options, parts) {
           }
         }
         return results;
-      })().join(","),
-    "Content-Type": "application/xml",
-    "Content-Length": 0
+      } )().join(','),
+    'Content-Type': 'application/xml',
+    'Content-Length': 0
   };
 };
 
-let get_value = function(key, source) {
+let get_value = function (key, source) {
   let offset1, offset2;
 
-  key = key + "=";
+  key = key + '=';
   offset1 = source.indexOf(key) + key.length + 1;
   offset2 = source.indexOf('"', offset1);
   return source.substring(offset1, offset2);

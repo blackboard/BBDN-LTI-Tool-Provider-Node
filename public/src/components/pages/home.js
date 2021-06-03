@@ -1,51 +1,30 @@
-import Button from "@material-ui/core/Button/index";
-import Typography from "@material-ui/core/Typography/index";
-import React from "react";
+import React from 'react';
+import Typography from '@material-ui/core/Typography/index';
 
-class LaunchEndpoint extends React.Component {
+export default class LaunchEndpoint extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { config: {}, setupData: {} };
+    this.state = { config: {} };
   }
 
   componentDidMount() {
-    fetch("config")
+    fetch('config')
       .then(result => result.json())
       .then(config => {
         this.setState({ config: config });
-      });
-
-    fetch("setupData")
-      .then(result => result.json())
-      .then(setupData => {
-        this.setState({ setupData: setupData });
       });
   }
 
   render() {
     return (
       <div>
-        <Typography variant="h4" gutterBottom component="h2">
+        <Typography variant="h4" gutterBottom>
           Welcome to the LTI Testing Tool
         </Typography>
-        <Typography variant="subtitle1" gutterBottom component="h2">
-          Your configuration
-          <p>LTI Tool Frontend URL: {this.state.config.frontend_url}</p>
-          <p>Blackboard Client ID: {this.state.setupData.applicationId}</p>
-          <p>Developer Portal URL: {this.state.setupData.devPortalHost}</p>
-          <p>
-            Your cookies: {JSON.stringify(this.state.cookies)}
-          </p>
+        <Typography variant="h5" gutterBottom>
+          Click Applications in the menu to view a list of all registered apps.
         </Typography>
-        <br />
-        <div>
-          <Button variant={"outlined"} color={"secondary"} href={"/testRedis"}>
-            Test Redis
-          </Button>
-        </div>
       </div>
     );
   }
 }
-
-export default LaunchEndpoint;

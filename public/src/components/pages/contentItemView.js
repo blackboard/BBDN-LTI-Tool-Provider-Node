@@ -35,7 +35,7 @@ class DataItemList extends React.Component {
   }
 }
 
-class ContentItemView extends React.Component {
+export default class ContentItemView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -237,5 +237,3 @@ class ContentItemView extends React.Component {
     );
   }
 }
-
-export default ContentItemView;

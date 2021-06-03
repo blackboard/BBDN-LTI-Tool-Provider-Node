@@ -1,77 +1,76 @@
-"use strict";
+import request from 'request';
+import * as ltiAdv from './lti-adv';
 
-import request from "request";
-import ltiAdv from "./lti-adv";
-
-exports.namesRoles = (req, res, nrPayload, setup) => {
-  if (nrPayload.url === "") {
+export const namesRoles = (req, res, nrPayload) => {
+  if (nrPayload.url === '') {
     nrPayload.orig_body = JSON.parse(req.body.body);
     let namesRoles =
       nrPayload.orig_body[
-        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"
-      ];
-    nrPayload.url = namesRoles.context_memberships_url + "?groups=true";
+        'https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice'
+        ];
+    nrPayload.url = namesRoles.context_memberships_url + '?groups=true';
     nrPayload.version = namesRoles.service_version;
     nrPayload.return_url =
       nrPayload.orig_body[
-        "https://purl.imsglobal.org/spec/lti/claim/launch_presentation"
-      ].return_url;
+        'https://purl.imsglobal.org/spec/lti/claim/launch_presentation'
+        ].return_url;
   }
+  const client_id = nrPayload.orig_body.aud;
 
   // Get OAuth2 token and make call to Learn
   let scope =
-    "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly";
-  ltiAdv.getOauth2Token(setup, scope).then(
-    function(token) {
+    'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly';
+  ltiAdv.getOauth2Token(scope, client_id).then(
+    function (token) {
       let body = JSON.parse(token);
       nrPayload.token = body.access_token;
 
       let options = {
-        method: "GET",
+        method: 'GET',
         uri: nrPayload.url,
         headers: {
-          Authorization: "Bearer " + nrPayload.token
+          Authorization: 'Bearer ' + nrPayload.token
         }
       };
 
-      request(options, function(err, response, body) {
+      request(options, function (err, response, body) {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log("Names and Roles Error - request failed: " + err.message);
+          console.log('Names and Roles Error - request failed: ' + err.message);
         } else if (response.statusCode !== 200) {
           console.log(
-            "Names and Roles Error - Service call failed: " +
-              response.statusCode +
-              "\n" +
-              options.uri
+            'Names and Roles Error - Service call failed: ' +
+            response.statusCode +
+            '\n' +
+            options.uri
           );
           nrPayload.body = json;
-          nrPayload.difference_url = "";
-          nrPayload.next_url = "";
+          nrPayload.difference_url = '';
+          nrPayload.next_url = '';
         } else {
           nrPayload.body = json;
-          let links = response.headers.link.split(",");
+          let links = response.headers.link.split(',');
           links.forEach(link => {
-            if (link.includes("difference")) {
+            if (link.includes('difference')) {
               nrPayload.difference_url = getLink(link);
             }
-            if (link.includes("next")) {
+            if (link.includes('next')) {
               nrPayload.next_url = getLink(link);
             }
           });
         }
-        res.redirect("/names_roles_view");
+        res.redirect('/names_roles_view');
       });
     },
-    function(error) {
+    function (error) {
       console.log(error);
     }
   );
 };
 
-let getLink = function(link) {
-  let start = link.indexOf("http");
-  let end = link.indexOf(";") - 1;
+const getLink = (link) => {
+  let start = link.indexOf('http');
+  let end = link.indexOf(';') - 1;
   return link.substring(start, end);
 };

@@ -1,14 +1,14 @@
 import axios from 'axios';
+import * as ltiAdv from './lti-adv';
 import qs from 'qs';
-import redisUtil from './redisutil';
-import ltiAdv from "./lti-adv";
+import * as db from '../database/db-utility';
 
-exports.getLTIToken = async (clientId, tokenUrl, scope, nonce) => {
+export const getLTIToken = async (clientId, tokenUrl, scope, nonce) => {
   console.log(`getLTIToken client ${clientId} tokenUrl: ${tokenUrl} scope: ${scope}`);
   const clientAssertion = ltiAdv.oauth2JWT(clientId, tokenUrl);
 
   const options = {
-    method: "POST",
+    method: 'POST',
     url: tokenUrl,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -16,9 +16,9 @@ exports.getLTIToken = async (clientId, tokenUrl, scope, nonce) => {
   };
 
   const body = {
-    grant_type: "client_credentials",
+    grant_type: 'client_credentials',
     client_assertion_type:
-      "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+      'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
     client_assertion: clientAssertion,
     scope: scope
   };
@@ -36,8 +36,8 @@ exports.getLTIToken = async (clientId, tokenUrl, scope, nonce) => {
   }
 };
 
-exports.getCachedLTIToken = async (nonce, clientId, tokenUrl, scope) => {
-  let token = await redisUtil.redisGet(`${nonce}:lti`);
+export const getCachedLTIToken = async (nonce, clientId, tokenUrl, scope) => {
+  let token = await db.getTokenFromNonce(`${nonce}:lti`);
   if (!token) {
     console.log(`Couldn't get cached token for nonce ${nonce}.`);
 
@@ -49,5 +49,5 @@ exports.getCachedLTIToken = async (nonce, clientId, tokenUrl, scope) => {
 
 const cacheToken = (token, nonce) => {
   console.log(`cacheToken token ${token} nonce ${nonce}`);
-  redisUtil.redisSave(`${nonce}:lti`, token);
+  db.insertNewToken(`${nonce}:lti`, token);
 };

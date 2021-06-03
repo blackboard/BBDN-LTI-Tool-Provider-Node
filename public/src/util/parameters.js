@@ -1,4 +1,4 @@
-export class parameters {
+export default class parameters {
   static #instance;
   #nonce = '';
   #courseId = '';

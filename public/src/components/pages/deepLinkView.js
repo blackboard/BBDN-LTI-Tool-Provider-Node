@@ -1,12 +1,15 @@
-import React from "react";
-import JSONTree from "react-json-tree";
-import Typography from "@material-ui/core/Typography";
-import {styles} from "../../common/styles/custom.js";
-import { parameters } from '../../util/parameters';
+import Button from '@material-ui/core/Button';
+import JSONInput from 'react-json-editor-ajrm';
+import React from 'react';
+import Typography from '@material-ui/core/Typography';
+import locale from 'react-json-editor-ajrm/locale/en';
+import { styles } from '../../common/styles/custom.js';
+
+import parameters from '../../util/parameters';
 
 const params = parameters.getInstance();
 
-class DeepLinkPayloadView extends React.Component {
+export default class DeepLinkPayloadView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -42,22 +45,37 @@ class DeepLinkPayloadView extends React.Component {
     return (
       <div>
         <Typography variant="h4" gutterBottom>
-          Deep Linking 2.0 Launch
+          Deep Linking Launch
         </Typography>
 
         <div>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             We have received your Deep Linking launch. You can view the JSON below.
           </Typography>
-          <form action={this.state.returnUrl} method="POST">
+          <form action={this.state.returnUrl} method="POST" style={{"padding": "20px"}}>
             <input type="hidden" name="JWT" defaultValue={this.state.jwt} />
-            <input type="submit" value="Return Deep Linking" />
+            <Button
+              type="submit"
+              value="Return Deep Linking"
+              variant={"contained"}
+              color={"secondary"}>Return Deep Linking
+            </Button>
           </form>
 
-          <Typography variant="body1">
+          <Typography variant="h6" gutterBottom>
             <b>Return JSON</b>
           </Typography>
-          <JSONTree data={this.state.returnJSON} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='jwt_return_json'
+            viewOnly={true}
+            confirmGood={true}
+            placeholder={this.state.returnJSON}
+            theme="dark_vscode_tribute"
+            style={{ body: styles.jsonEditor }}
+            locale={locale}
+            height="100%"
+            width="100%"
+          />
 
           <br />
           <Typography variant="h5">
@@ -65,19 +83,36 @@ class DeepLinkPayloadView extends React.Component {
           </Typography>
           {verified}
 
-          <Typography variant="body1">
+          <Typography variant="h6" gutterBottom>
             <b>JWT Header</b>
           </Typography>
-          <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
-
-          <Typography variant="body1">
+          <JSONInput
+            id='jwt_header'
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.header}
+            theme="dark_vscode_tribute"
+            style={{ body: styles.jsonEditor }}
+            locale={locale}
+            height="100%"
+            width="100%"
+          />
+          <Typography variant="h6" gutterBottom>
             <b>JWT Body</b>
           </Typography>
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='jwt_body'
+            viewOnly={true}
+            confirmGood={true}
+            placeholder={this.state.body}
+            theme="dark_vscode_tribute"
+            style={{ body: styles.jsonEditor }}
+            locale={locale}
+            height="100%"
+            width="100%"
+          />
         </div>
       </div>
     );
   }
 }
-
-export default DeepLinkPayloadView;

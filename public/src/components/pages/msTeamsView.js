@@ -1,16 +1,15 @@
-import Button from "@material-ui/core/Button";
+import Button from '@material-ui/core/Button';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid';
 import JSONInput from 'react-json-editor-ajrm';
-import Paper from '@material-ui/core/Paper';
-import React from "react";
-import Typography from "@material-ui/core/Typography";
+import React from 'react';
+import Typography from '@material-ui/core/Typography';
 import locale from 'react-json-editor-ajrm/locale/en';
-import {styles} from "../../common/styles/custom.js";
-import { parameters } from '../../util/parameters';
+import parameters from '../../util/parameters';
+import { styles } from '../../common/styles/custom.js';
 
 const params = parameters.getInstance();
 
@@ -18,7 +17,7 @@ const claimContext = 'https://purl.imsglobal.org/spec/lti/claim/context';
 const claimToolPlatform = 'https://purl.imsglobal.org/spec/lti/claim/tool_platform';
 const claimRoles = 'https://purl.imsglobal.org/spec/lti/claim/roles';
 
-class MsTeamsView extends React.Component {
+export default class MsTeamsView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -60,24 +59,24 @@ class MsTeamsView extends React.Component {
     );
     const msgReturn =
       this.state.returnUrl +
-      "&lti_msg=" +
-      encodeURI("I have a message for you") +
-      "&lti_log=" +
-      encodeURI("Log this message");
+      '&lti_msg=' +
+      encodeURI('I have a message for you') +
+      '&lti_log=' +
+      encodeURI('Log this message');
     const errorReturn =
       this.state.errorUrl +
-      "&lti_errormsg=" +
-      encodeURI("An error has occurred") +
-      "&lti_errorlog=" +
-      encodeURI("Log this error");
+      '&lti_errormsg=' +
+      encodeURI('An error has occurred') +
+      '&lti_errorlog=' +
+      encodeURI('Log this error');
     // switch this to use whatever we're going to use in the end via microservice
     const namesRoles = this.state.namesRoles ? (
       <Grid item xs>
-        <Typography variant={"h6"} gutterBottom>
+        <Typography variant={'h6'} gutterBottom>
           Click this button to view all users in the course and their roles
         </Typography>
         <form action="/namesAndRoles" method="POST">
-          <Button variant="contained" type={"submit"} color={"secondary"}>Names and Roles</Button>
+          <Button variant="contained" type={'submit'} color={'secondary'}>Names and Roles</Button>
           <input type="hidden" name="body" value={JSON.stringify(this.state.body)}/>
         </form>
       </Grid>
@@ -110,15 +109,15 @@ class MsTeamsView extends React.Component {
           <br/>
           <Grid
             container
-            direction={"column"}
+            direction={'column'}
             spacing={8}>
             {namesRoles}
-            <Typography variant={"h6"} gutterBottom>
+            <Typography variant={'h6'} gutterBottom>
               Click any of these buttons to return to Learn
             </Typography>
             <Grid item xs>
               <Button
-                id={"return_button"}
+                id={'return_button'}
                 variant="contained"
                 color="secondary"
                 href={this.state.returnUrl}>
@@ -127,18 +126,18 @@ class MsTeamsView extends React.Component {
             </Grid>
             <Grid item xs>
               <Button
-                id={"return_with_msg_button"}
-                variant={"contained"}
-                color={"secondary"}
+                id={'return_with_msg_button'}
+                variant={'contained'}
+                color={'secondary'}
                 href={msgReturn}>
                 Return with Message
               </Button>
             </Grid>
             <Grid item xs>
               <Button
-                id={"return_with_error_button"}
-                variant={"contained"}
-                color={"secondary"}
+                id={'return_with_error_button'}
+                variant={'contained'}
+                color={'secondary'}
                 href={errorReturn}>
                 Return with Error
               </Button>
@@ -155,15 +154,15 @@ class MsTeamsView extends React.Component {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <JSONInput
-                  id='jwt_body'
+                  id="jwt_body"
                   viewOnly={true}
                   confirmGood={false}
                   placeholder={this.state.body}
-                  theme={"dark_vscode_tribute"}
-                  style={{body: styles.jsonEditor}}
+                  theme={'dark_vscode_tribute'}
+                  style={{ body: styles.jsonEditor }}
                   locale={locale}
                   height="100%"
-                  width={"100%"}
+                  width={'100%'}
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -176,5 +175,3 @@ class MsTeamsView extends React.Component {
     );
   }
 }
-
-export default MsTeamsView;

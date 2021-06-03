@@ -1,6 +1,6 @@
 import React from "react";
 
-class CIMRequestView extends React.Component {
+export default class CIMRequestView extends React.Component {
   render() {
     return (
       <div>
@@ -67,5 +67,3 @@ class CIMRequestView extends React.Component {
     );
   }
 }
-
-export default CIMRequestView;

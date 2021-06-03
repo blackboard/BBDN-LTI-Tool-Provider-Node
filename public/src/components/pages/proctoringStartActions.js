@@ -1,16 +1,17 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
-import JSONTree from "react-json-tree";
-import {styles} from "../../common/styles/custom.js";
+import JSONInput from 'react-json-editor-ajrm';
+import React from 'react';
+import locale from 'react-json-editor-ajrm/locale/en';
+import { Typography } from '@material-ui/core';
+import { styles } from '../../common/styles/custom.js';
 
-class ProctoringServiceActionsView extends React.Component {
+export default class ProctoringServiceActionsView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   componentDidMount() {
-    fetch("getProctoringPayloadData")
+    fetch('getProctoringPayloadData')
       .then(result => result.json())
       .then(proctoringServicePayload => {
         this.setState({
@@ -28,48 +29,63 @@ class ProctoringServiceActionsView extends React.Component {
         <Typography variant="h4" gutterBottom>
           Proctoring Start: Actions
         </Typography>
-        <br />
+        <br/>
         <div style={{ marginBottom: '20px' }}>
           <Typography variant="h5">
             Actions
           </Typography>
-          <br />
+          <br/>
           <Typography variant="body1" gutterBottom>
             Choose Start Assessment to send a response JWT (shown below) to the request's start_assessment_url.
           </Typography>
           <Typography variant="body1">
-            Choose Return to call the request's launch_presentation URL. Any message options will be included as URL parameters.
+            Choose Return to call the request's launch_presentation URL. Any message options will be included as URL
+            parameters.
           </Typography>
-          <br />
+          <br/>
           <form action={this.state.startAssessmentUrl} method="post">
-            <input type="hidden" name="JWT" defaultValue={this.state.jwt} />
-            <input type="submit" value="Start Assessment" />
+            <input type="hidden" name="JWT" defaultValue={this.state.jwt}/>
+            <input type="submit" value="Start Assessment"/>
           </form>
-          <br />
+          <br/>
           <form action={this.state.returnUrl} method="post">
-            <input type="submit" value="Return" />
+            <input type="submit" value="Return"/>
           </form>
         </div>
-        <br />
+        <br/>
         {this.state.decodedJwt &&
-          <div>
-            <Typography variant="h5">
-              Response JWT
-            </Typography>
-            <br />
-            <Typography variant="body1">
-                <b>JWT Header</b>
-            </Typography>
-            <JSONTree data={this.state.decodedJwt.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
-            <Typography variant="body1">
-              <b>JWT Body</b>
-            </Typography>
-            <JSONTree data={this.state.decodedJwt.payload} hideRoot={true} theme={styles.monokai} invertTheme={true} />
-          </div>
+        <div>
+          <Typography variant="h6">
+            Response JWT
+          </Typography>
+          <JSONInput
+            id="jwt_header"
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.decodedJwt.header}
+            theme={'dark_vscode_tribute'}
+            style={{ body: styles.jsonEditor }}
+            locale={locale}
+            height="100%"
+            width="100%"
+          />
+          <Typography variant="h6">
+            <b>JWT Body</b>
+          </Typography>
+          <JSONInput
+            id="jwt_body"
+            viewOnly={true}
+            confirmGood={true}
+            placeholder={this.state.decodedJwt.payload}
+            theme={'dark_vscode_tribute'}
+            style={{ body: styles.jsonEditor }}
+            locale={locale}
+            height="100%"
+            width={'100%'}
+          />
+        </div>
         }
       </div>
     );
   }
 }
-
-export default ProctoringServiceActionsView;

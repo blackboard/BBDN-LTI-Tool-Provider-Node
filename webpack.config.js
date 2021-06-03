@@ -1,17 +1,14 @@
 const path = require("path");
 const webpack = require("webpack");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
-  optimization: {
-    minimizer: [new UglifyJsPlugin({ parallel: true })]
-  },
   mode: "development",
   entry: "./public/src/app.js",
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "public/dist")
   },
+  stats: 'errors-only',
   devtool: "source-map",
   module: {
     rules: [
