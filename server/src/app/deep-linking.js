@@ -32,15 +32,20 @@ export const deepLink = (req, res, dlPayload) => {
 export const deepLinkContent = (req, res, dlPayload) => {
   const app = ltiAdv.applicationInfo(dlPayload.body.aud);
   let deploy =
-    dlPayload.body['https://purl.imsglobal.org/spec/lti/claim/deployment_id'];
+    jwt.body['https://purl.imsglobal.org/spec/lti/claim/deployment_id'];
   let deepLink =
-    dlPayload.body[
+    jwt.body[
       'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'
       ];
   let data = deepLink.data;
-  let iss = dlPayload.body.iss;
+  let iss = jwt.body.iss;
 
   let items = [];
+  console.log(`Custom option: ${req.body.custom_option}`);
+  console.log(`Custom lti links: ${req.body.custom_ltilinks}`);
+  console.log(`Custom embed lti links: ${req.body.embed_ltilinks}`);
+  console.log(`Custom new window lti links: ${req.body.new_ltilinks}`);
+
   if (req.body.custom_option === 'false') {
     console.log('used build-a-payload');
     let total = 0;
@@ -95,9 +100,11 @@ export const deepLinkContent = (req, res, dlPayload) => {
     }
   }
 
-  dlPayload.jwt = ltiAdv.signJwt(json);
-  dlPayload.return_url = deepLink.deep_link_return_url;
-  dlPayload.return_json = json;
+  let dljwt = jwt;
+  dljwt.jwt = ltiAdv.signJwt(json);
+  dljwt.return_url = deepLink.deep_link_return_url;
+  dljwt.return_json = json;
+  return dljwt;
 };
 
 let deepLinkingFrame = function (iss, aud, deploy, data, items) {
