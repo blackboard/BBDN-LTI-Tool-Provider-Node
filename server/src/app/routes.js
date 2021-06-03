@@ -274,29 +274,42 @@ module.exports = function(app) {
   // Deep Linking
   app.get("/dlPayloadData", async (req, res) => {
     const nonce = req.query.nonce;
-    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
-    res.send(jwtPayload);
+    console.log(`--------------------\ndlPayloadData Nonce: ${nonce}`)
+    const dljwt = await redisUtil.redisGet(nonce + ':dljwt');
+    console.log(`dljwt ${JSON.stringify(dljwt)}`);
+    res.send(dljwt);
   });
 
-  app.post("/deepLinkContent", (req, res) => {
+  app.post("/deepLinkContent", async (req, res) => {
     console.log("--------------------\ndeepLinkContent");
-    deepLinkContent(req, res, jwtPayload, setup);
-    res.redirect("/deep_link");
+    const nonce = req.body.nonce;
+    console.log(`Nonce: ${nonce}`)
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
+    let dljwt = deepLinkContent(req, res, jwtPayload, setup);
+    redisUtil.redisSave(nonce + ':dljwt', dljwt);
+    console.log(`dljwt ${JSON.stringify(dljwt)}`);
+    res.redirect(`/deep_link?nonce=${nonce}`);
   });
 
   //=======================================================
   // Proctoring Service
 
-  app.get("/getProctoringPayloadData", (req, res) => {
+  app.get("/getProctoringPayloadData", async (req, res) => {
+    const nonce = req.body.nonce;
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
     res.send(jwtPayload);
   });
 
-  app.post("/buildProctoringStartReturnPayload", (req, res) => {
+  app.post("/buildProctoringStartReturnPayload", async (req, res) => {
+    const nonce = req.body.nonce;
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
     buildProctoringStartReturnPayload(req, res, jwtPayload, setup);
     res.redirect("/proctoring_start_actions_view");
   });
 
-  app.post("/buildProctoringEndReturnPayload", (req, res) => {
+  app.post("/buildProctoringEndReturnPayload", async (req, res) => {
+    const nonce = req.body.nonce;
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
     buildProctoringEndReturnPayload(req, res, jwtPayload, setup);
     res.redirect("/proctoring_end_actions_view");
   });
