@@ -3,6 +3,9 @@ import JSONTree from "react-json-tree";
 import Typography from "@material-ui/core/Typography";
 import {styles} from "../../common/styles/custom.js";
 import {Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
+import {parameters} from "../../util/parameters";
+
+const params = parameters.getInstance();
 
 const CustomTableCell = withStyles(theme => ({
   head: {
@@ -23,7 +26,7 @@ class ProctoringServiceOptionsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("getProctoringPayloadData")
+    fetch(`getProctoringPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
       .then(proctoringServicePayload => {
         this.setState({
