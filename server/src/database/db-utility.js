@@ -3,9 +3,7 @@ import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
 
 const apps = new JsonDB(new Config('server/src/database/applications-data', true, true, '.'));
 const cim = new JsonDB(new Config('server/src/database/cim-data',true,true,'.'));
-const jwt = new JsonDB(new Config('server/src/database/jwt-data', true, true, '.'));
-const rest = new JsonDB(new Config('server/src/database/rest-data', true, true, '.'));
-const session = new JsonDB(new Config('server/src/database/session-data', true, true, '.'));
+const auth = new JsonDB(new Config('server/src/database/auth-data', true, true, '.'));
 const configData = new JsonDB(new Config('server/src/database/config-data', true, true, '.'));
 
 const jwtApi = '/api/v1/gateway/oauth2/jwttoken';
@@ -21,7 +19,7 @@ export const getAppById = (appId) => {
     const appIndex = apps.getIndex('.applications-data', appId);
     return apps.getData(`.applications-data[${appIndex}]`);
   } catch (error) {
-    console.log(error);
+    return error;
   }
 }
 
@@ -32,6 +30,7 @@ export const insertNewApp = (app) => {
         "id": app.appId,
         "setup": {
           "name": app.name,
+          "secret": app.secret,
           "devPortalUrl": app.devPortalUrl,
           "jwtUrl":`${app.devPortalUrl}${jwtApi}`,
           "oidcUrl": `${app.devPortalUrl}${oidcApi}`,
@@ -61,61 +60,49 @@ export const getConfig = () => {
   try {
     return configData.getData('.config-data[0]');
   } catch (error) {
-    console.log(error);
+    return error;
   }
 }
 
-export const getTokenFromNonce = (nonce) => {
+export const getAuthFromState = (state) => {
   try {
-    const index = session.getIndex('.session-data', nonce);
-    return session.getData(`.session-data[${index}]`);
+    const index = auth.getIndex('.auth-data', state);
+    return auth.getData(`.auth-data[${index}].auth`);
   } catch (error) {
-    console.log(error);
+    return error;
   }
 }
 
-export const insertNewToken = (lnonce, ltoken) => {
-  if (!session.exists(`.session.${nonce.lnonce}`)) {
+export const insertNewState = (state) => {
+  if (!auth.exists(`.auth-data.${state}`)) {
     try {
-      session.push('.session[]', {
-        nonce: lnonce,
-        token: ltoken
-      });
-      return "success";
-    } catch (error) {
-      return error;
-    }
-  } else {
-    console.log(`Session already exists for ${lnonce}`)
-  }
-}
-
-export const insertNewBearerToken = (bnonce, btoken) => {
-  if (!rest.exists(`.rest-data.${nonce.bnonce}`)) {
-    try {
-      rest.push('.rest-data[]', {
-        nonce: bnonce,
-        token: btoken
+      auth.push('.auth-data[]', {
+        state: state
       })
-    } catch (error) {
-      return error;
+      return 'success';
+    } catch (e) {
+      return e;
     }
   } else {
-    console.log(`Token already saved for ${bnonce}`)
+    console.log(`${state} already has a record`)
   }
 }
 
-export const getBearerTokenFromNonce = (bnonce) => {
+export const insertNewAuthToken = async (state, token, type) => {
+  const index = auth.getIndex('.auth-data', state, 'state');
   try {
-    const index = rest.getIndex('.rest-data', bnonce);
-    return rest.getData(`.rest-data[${index}]`);
-  } catch (error) {
-    console.log(error);
+    auth.push(`.auth-data[${index}]`, {
+      "auth": {
+        [type]: token
+      }
+    }, false);
+    return "success";
+  } catch (e) {
+    return e;
   }
 }
 
 export const insertNewCIM = (cimKey, cim) => {
-  if (!cim.exists(`.cim-data.${key.cimKey}`)) {
     try {
       cim.push('.cim-data[]', {
         key: cimKey,
@@ -125,9 +112,6 @@ export const insertNewCIM = (cimKey, cim) => {
     } catch (error) {
       return error;
     }
-  } else {
-    console.log(`Message already exists for ${cimKey}`)
-  }
 }
 
 export const getCIMFromKey = (cimKey) => {
@@ -136,28 +120,5 @@ export const getCIMFromKey = (cimKey) => {
     return cim.getData(`.cim-data[${index}]`);
   } catch (error) {
     console.log(error);
-  }
-}
-
-export const insertNewJWT = (sstate, sjwt) => {
-  if (!jwt.exists(`.jwt-data.${jwt.sjwt}`)) {
-    try {
-      jwt.push('.jwt-data[]', {
-        state: sstate,
-        jwt: sjwt
-      })
-      return 'success';
-    } catch (error) {
-      console.log(`JWT already exists for ${sstate}`);
-    }
-  }
-}
-
-export const getJWTFromState = (sstate) => {
-  try {
-    const index = jwt.getIndex('.jwt-data', sstate);
-    return jwt.getData(`.jwt-data[${index}]`);
-  } catch (error) {
-    console.log(error)
   }
 }

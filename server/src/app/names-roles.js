@@ -1,5 +1,5 @@
 import request from 'request';
-import * as ltiAdv from './lti-adv';
+import { getCachedLTIToken } from './lti-token-service';
 
 export const namesRoles = (req, res, nrPayload) => {
   if (nrPayload.url === '') {
@@ -15,21 +15,15 @@ export const namesRoles = (req, res, nrPayload) => {
         'https://purl.imsglobal.org/spec/lti/claim/launch_presentation'
         ].return_url;
   }
-  const client_id = nrPayload.orig_body.aud;
 
   // Get OAuth2 token and make call to Learn
-  let scope =
-    'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly';
-  ltiAdv.getOauth2Token(scope, client_id).then(
+  getCachedLTIToken(req.body.nonce).then(
     function (token) {
-      let body = JSON.parse(token);
-      nrPayload.token = body.access_token;
-
       let options = {
         method: 'GET',
         uri: nrPayload.url,
         headers: {
-          Authorization: 'Bearer ' + nrPayload.token
+          Authorization: 'Bearer ' + token
         }
       };
 

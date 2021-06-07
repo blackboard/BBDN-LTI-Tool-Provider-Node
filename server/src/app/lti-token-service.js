@@ -1,11 +1,10 @@
 import axios from 'axios';
-import * as ltiAdv from './lti-adv';
 import qs from 'qs';
-import * as db from '../database/db-utility';
+import { oauth2JWT } from './lti-adv';
+import { getAppById, getAuthFromState, insertNewAuthToken } from '../database/db-utility';
 
 export const getLTIToken = async (clientId, tokenUrl, scope, nonce) => {
-  console.log(`getLTIToken client ${clientId} tokenUrl: ${tokenUrl} scope: ${scope}`);
-  const clientAssertion = ltiAdv.oauth2JWT(clientId, tokenUrl);
+  const clientAssertion = oauth2JWT(clientId, tokenUrl);
 
   const options = {
     method: 'POST',
@@ -28,7 +27,7 @@ export const getLTIToken = async (clientId, tokenUrl, scope, nonce) => {
     const token = response.data.access_token;
 
     // Cache the LTI token
-    cacheToken(token, nonce);
+    await cacheToken(token, nonce);
 
     return token;
   } catch (exception) {
@@ -36,18 +35,18 @@ export const getLTIToken = async (clientId, tokenUrl, scope, nonce) => {
   }
 };
 
-export const getCachedLTIToken = async (nonce, clientId, tokenUrl, scope) => {
-  let token = await db.getTokenFromNonce(`${nonce}:lti`);
+export const getCachedLTIToken = async (nonce, clientId, scope) => {
+  let token = await getAuthFromState(`${nonce}`).lti_token;
   if (!token) {
     console.log(`Couldn't get cached token for nonce ${nonce}.`);
-
+    const tokenUrl = getAppById(clientId).setup.jwtUrl;
     token = await getLTIToken(clientId, tokenUrl, scope, nonce);
+    await insertNewAuthToken(nonce, token, 'lti_token')
   }
 
   return token;
 };
 
-const cacheToken = (token, nonce) => {
-  console.log(`cacheToken token ${token} nonce ${nonce}`);
-  db.insertNewToken(`${nonce}:lti`, token);
+const cacheToken = async (token, nonce) => {
+  await insertNewAuthToken(nonce, `${token}`, "lti_token");
 };

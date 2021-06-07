@@ -1,3 +1,28 @@
 {
-    "applications-data": []
+    "applications-data": [
+        {
+            "id": "cfb83b11-394f-47d7-a41c-4ebc2c1cddbc",
+            "setup": {
+                "name": "Local App",
+                "devPortalUrl": "https://devportal-stage.saas.bbpd.io",
+                "jwtUrl": "https://devportal-stage.saas.bbpd.io/api/v1/gateway/oauth2/jwttoken",
+                "oidcUrl": "https://devportal-stage.saas.bbpd.io/api/v1/gateway/oidcauth",
+                "issuer": "Blackboard",
+                "appKey": "9c4c9d6a-a26e-4f01-b7c8-03b642dc753a",
+                "appSecret": "mC0ZWIWBHVWCVnankOtbnDniJpyTGsLf"
+            }
+        },
+        {
+            "id": "10bf3a44-6f2b-406c-b716-4cdd88d7866d",
+            "setup": {
+                "name": "Prod app",
+                "devPortalUrl": "https://developer.blackboard.com",
+                "jwtUrl": "https://developer.blackboard.com/api/v1/gateway/oauth2/jwttoken",
+                "oidcUrl": "https://developer.blackboard.com/api/v1/gateway/oidcauth",
+                "issuer": "Blackboard",
+                "appKey": "9567a7c2-e2f8-43f7-8017-fd36429d1058",
+                "appSecret": "e5U9L8n6kpBYsAqi2KW4eOkBqC6FrRRM"
+            }
+        }
+    ]
 }

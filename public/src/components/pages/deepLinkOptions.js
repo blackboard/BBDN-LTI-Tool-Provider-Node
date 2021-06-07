@@ -31,9 +31,6 @@ export default class DeepLinkOptions extends React.Component {
   handleChange = (event) => {
     this.setState({ ...this.state, [event.target.name]: event.target.value });
   };
-import {parameters} from "../../util/parameters";
-
-const params = parameters.getInstance();
 
   handleSubmit = () => {
     if (this.state.custom_option === "true" && this.state.custom_content === null) {

@@ -19,12 +19,10 @@ import {
 import {
   deleteAppById,
   getAllApplications,
-  getAppById,
+  getAppById, getAuthFromState,
   getCIMFromKey,
-  getJWTFromState,
-  insertNewApp,
-  insertNewCIM,
-  insertNewJWT
+  insertNewApp, insertNewAuthToken,
+  insertNewCIM
 } from '../database/db-utility';
 import { getCachedToken, getLearnRestToken } from './rest-service';
 import { getGroups, groups, groupSets } from './groups';
@@ -103,7 +101,7 @@ module.exports = function (app) {
     }
 
     if (req.body.lti_message_type === 'basic-lti-launch-request') {
-      got_launch(req, res);
+      got_launch(req, res).catch(e => console.log(e.message));
     }
   });
 
@@ -177,7 +175,6 @@ module.exports = function (app) {
   // to route from here
   app.post('/lti13', async (req, res) => {
     console.log('--------------------\nlti13');
-
     // Per the OIDC best practices, ensure the state parameter passed in here matches the one in our cookie
     const state = req.cookies['state'];
     if (state !== req.body.state) {
@@ -186,41 +183,45 @@ module.exports = function (app) {
 
     // Parse, verify and save the id_token JWT
     const jwtPayload = await verifyToken(req.body.id_token);
-    insertNewJWT(state + ':jwt', jwtPayload);
-
+    await insertNewAuthToken(state, jwtPayload, 'jwt');
+    //await insertNewAuthToken(state, appInfo.appId, 'client_id');
+    const app = getAppById(jwtPayload.body.aud);
     // Now we have the JWT but next we need to get an OAuth2 bearer token for REST calls.
     // Before we can do that we need to get an authorization code for the current user.
     // Save off the JWT to our database so we can get it back after we get the auth code.
     const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-    const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${config.appKey}&state=${req.body.state}`;
-    const authcodeUrl = `${lmsServer}/learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
+    const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${app.setup.appKey}&state=${req.body.state}`;
+    const authcodeUrl = `${lmsServer}learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
 
-    console.log(`Redirect to get 3LO code ${authcodeUrl}`);
+    console.log(`6-Redirect to Learn to get 3LO code`);
     res.redirect(authcodeUrl);
   });
 
   // The 3LO redirect route
   app.get('/tlocode', async (req, res) => {
-    console.log(`tlocode called with code: ${req.query.code} and state: ${req.query.state}`);
-    const app = getAppById(req.query.aud);
+    console.log(`7-Learn sent back: code: ${req.query.code}`);
+    await insertNewAuthToken(req.query.state, req.query.code, 'auth_code');
+
     const state = req.cookies['state'];
     if (state !== req.query.state) {
       console.log(`The state field is missing or doesn't match.`);
     }
+    console.log('8-using state ' + state);
+    const auth = await getAuthFromState(state);
 
-    const jwtPayload = await getJWTFromState(state + ':jwt');
-
+    const jwtPayload = auth.jwt;
+    //console.log("jwt payload is " + JSON.stringify(jwtPayload));
+    const app = getAppById(jwtPayload.body.aud);
     // If we have a 3LO auth code, let's get us a bearer token here.
     const redirectUri = `${config.frontend_url}tlocode`;
     const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-    const learnUrl = lmsServer + `/learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
+    const learnUrl = lmsServer + `learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
 
-    const restToken = await getLearnRestToken(learnUrl, state);
-    console.log(`Learn REST token ${restToken}`);
+    const restToken = await getLearnRestToken(learnUrl, state, app);
+    console.log(`12-Learn REST token ${JSON.stringify(restToken)}`);
 
     // Now get the LTI OAuth 2 bearer token (shame they aren't the same)
-    const ltiToken = await getLTIToken(app.id, app.setup.tokenEndPoint, ltiScopes, state);
-    console.log(`LMS LTI token ${ltiToken}`);
+    await getLTIToken(app.id, app.setup.jwtUrl, ltiScopes, state);
 
     // Now finally redirect to the UI
     if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
@@ -250,16 +251,20 @@ module.exports = function (app) {
   });
 
   app.get('/jwtPayloadData', async (req, res) => {
-    const nonce = req.query.nonce;
-    const jwtPayload = await getJWTFromState(nonce + ':jwt');
-    res.send(jwtPayload);
+      try {
+        const jwtPayload = await getAuthFromState(req.query.nonce).jwt;
+        console.log('Nonce matches the state we have so send the jwt')
+        res.send(jwtPayload);
+      } catch (e) {
+        return e
+      }
   });
 
   app.get('/courseData', async (req, res) => {
     const nonce = req.query.nonce;
     const restToken = await getCachedToken(nonce);
     console.log(`courseData nonce: ${nonce}, restToken: ${restToken}`);
-    const jwt = await getJWTFromState(nonce + ':jwt');
+    const jwt = await getAuthFromState(nonce).auth.jwt;
     const lmsServer = jwt.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
     const courseUUID = jwt.body['https://purl.imsglobal.org/spec/lti/claim/context']['id'];
     const xhrConfig = {
@@ -279,7 +284,7 @@ module.exports = function (app) {
   // Deep Linking
   app.get('/dlPayloadData', async (req, res) => {
     const nonce = req.query.nonce;
-    const dljwt = await getJWTFromState(nonce + ':dljwt');
+    const dljwt = await getAuthFromState(nonce).auth['dljwt'];
     console.log(`dljwt ${JSON.stringify(dljwt)}`);
     res.send(dljwt);
   });
@@ -288,9 +293,9 @@ module.exports = function (app) {
     console.log('--------------------\ndeepLinkContent');
     const nonce = req.body.nonce;
     console.log(`Nonce: ${nonce}`)
-    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
-    let dljwt = deepLinkContent(req, res, jwtPayload, setup);
-    redisUtil.redisSave(nonce + ':dljwt', dljwt);
+    const jwtPayload = await getAuthFromState(nonce).auth['dljwt'];
+    let dljwt = deepLinkContent(req, res, jwtPayload);
+    await insertNewAuthToken(nonce, `${nonce}:dljwt`, 'dljwt');
     console.log(`dljwt ${JSON.stringify(dljwt)}`);
     res.redirect(`/deep_link?nonce=${nonce}`);
   });
@@ -300,20 +305,20 @@ module.exports = function (app) {
 
   app.get('/getProctoringPayloadData', async (req, res) => {
     const nonce = req.body.nonce;
-    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
+    const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
     res.send(jwtPayload);
   });
 
   app.post('/buildProctoringStartReturnPayload', async (req, res) => {
     const nonce = req.body.nonce;
-    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
+    const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
     buildProctoringStartReturnPayload(req, res, jwtPayload);
     res.redirect('/proctoring_start_actions_view');
   });
 
   app.post('/buildProctoringEndReturnPayload', async (req, res) => {
     const nonce = req.body.nonce;
-    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
+    const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
     buildProctoringEndReturnPayload(req, res, jwtPayload);
     res.redirect('/proctoring_end_actions_view');
   });
@@ -325,12 +330,12 @@ module.exports = function (app) {
   app.post('/namesAndRoles', (req, res) => {
     console.log('--------------------\nnamesAndRoles');
     nrPayload = new NRPayload();
-    namesRoles.namesRoles(req, res, nrPayload);
+    namesRoles(req, res, nrPayload);
   });
 
   app.post('/namesAndRoles2', (req, res) => {
     nrPayload.url = req.body.url;
-    namesRoles.namesRoles(req, res, nrPayload);
+    namesRoles(req, res, nrPayload);
   });
 
   app.get('/nrPayloadData', (req, res) => {
@@ -344,7 +349,7 @@ module.exports = function (app) {
   app.post('/groups', (req, res) => {
     console.log('--------------------\ngroups');
     groupsPayload = new GroupsPayload();
-    groups.groups(req, res, groupsPayload);
+    groups(req, res, groupsPayload);
     res.redirect('/groups_view');
   });
 
@@ -451,10 +456,10 @@ module.exports = function (app) {
   });
 
   app.post('/saveSetup', (req, res) => {
-    console.log(req.body)
     const app = {
       'name': req.body.appName,
       'appId': req.body.appId,
+      'secret': req.body.secret,
       'devPortalUrl': req.body.devPortalUrl,
     };
     const result = insertNewApp(app);

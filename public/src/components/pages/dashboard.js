@@ -1,7 +1,6 @@
 import AppBar from "@material-ui/core/AppBar/index";
 import ApplicationsView from "./applicationsView";
 import AssignGradesView from "./assignGradesView";
-import Badge from "@material-ui/core/Badge/index";
 import CIMRequestView from "./cimRequestView";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ContentItemView from "./contentItemView";
@@ -22,7 +21,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import MicrosoftTeamsView from './msTeamsView';
 import ModeButton from "@material-ui/icons/Brightness4Outlined";
 import NamesRolesView from "./namesRolesView";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import ProctoringEndActionsView from "./proctoringEndActions";
 import ProctoringEndOptionsView from "./proctoringEndOptions";
 import ProctoringStartActionsView from "./proctoringStartActions";

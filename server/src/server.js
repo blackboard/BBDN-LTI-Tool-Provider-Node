@@ -48,7 +48,7 @@ app.use(
 );
 
 httpProxy.use(function (err, req, res) {
-  console.error(err.stack);
+  console.log(err.stack);
   res.status(500).send('Something broke!');
 });
 
@@ -95,7 +95,7 @@ httpProxy.all('/*', function (req, res) {
       res.send();
     }
   } catch (err) {
-    console.error(err.toString());
+    console.log(err.toString());
   }
 });
 

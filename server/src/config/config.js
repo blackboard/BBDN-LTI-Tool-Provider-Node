@@ -41,4 +41,4 @@ if (process.env.LTI_TEST_USE_SSL) {
 }
 export default _.defaultsDeep(configResult, configJson);
 
-console.log(JSON.stringify(configResult, null, 2));
+// console.log(JSON.stringify(configResult, null, 2));

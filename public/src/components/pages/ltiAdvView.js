@@ -5,6 +5,9 @@ import Typography from '@material-ui/core/Typography';
 import locale from 'react-json-editor-ajrm/locale/en';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Grid } from '@material-ui/core';
 import { styles } from '../../common/styles/custom.js';
+import parameters from '../../util/parameters';
+
+const params = parameters.getInstance();
 
 export default class LtiAdvView extends React.Component {
   constructor(props) {

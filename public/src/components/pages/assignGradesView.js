@@ -20,19 +20,24 @@ class AssignGradesView extends React.Component {
           claim: agPayload.claim,
           lineItems: agPayload.lineItems,
           lineItem: agPayload.lineItem,
-          body: agPayload.body
+          body: agPayload.body,
+          lineItemScope: agPayload.scopeLineItem,
+          readScope: agPayload.scopeLineItemReadonly,
+          scoreScope: agPayload.scopeScore,
+          resultsScope: agPayload.scopeResult
         });
       });
   }
 
   render() {
     const body = JSON.stringify(this.state.origBody);
-    const readcol =
-      this.state.lineItem !== '' && this.state.lineItem !== undefined ? (
+
+    const readAllCols =
+      this.state.lineItemScope ? (
         <form action="/agsReadCols" method="post">
-          <Button type={'submit'} variant={'contained'} color={'secondary'}>Read Column</Button>
+          <Button type={'submit'} variant={'contained'} color={'secondary'}>Read Columns</Button>
           <input type="hidden" name="body" defaultValue={body}/>
-          <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
+          <input type="hidden" name="url" defaultValue={this.state.lineItems}/>
         </form>
       ) : (
         <Typography variant="subtitle1" style={styles.notAvailable}>
@@ -40,8 +45,61 @@ class AssignGradesView extends React.Component {
         </Typography>
       );
 
+    const addNewCol =
+      this.state.lineItemScope ? (
+        <form action="/agsAddCol" method="post">
+          <table>
+            <tbody>
+            <tr>
+              <td>
+                <Button type={'submit'} variant={'contained'} color={'secondary'}>Add/Update Column</Button>
+                <input type="hidden" name="body" defaultValue={body}/>
+                <input
+                  type="hidden"
+                  name="url"
+                  defaultValue={this.state.lineItems}
+                />
+              </td>
+              <td>
+                <TextField
+                  variant={'outlined'}
+                  name={'score'}
+                  label={'Score'}
+                  size={'small'}/>
+              </td>
+              <td>
+                <TextField
+                  variant={'outlined'}
+                  name={'label'}
+                  label={'Column Name'}
+                  size={'small'}/>
+              </td>
+              <td>
+                <TextField
+                  variant={'outlined'}
+                  name={'columnId'}
+                  label={'Column ID'}
+                  size={'small'}/>
+              </td>
+              <td>
+                <TextField
+                  variant={'outlined'}
+                  name={'dueDate'}
+                  label={'Due Date'}
+                  size={'small'}/>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      ) : (
+        <Typography variant="subtitle1" style={styles.notAvailable}>
+          <b>Add New Column not available</b>
+        </Typography>
+      );
+
     const delcol =
-      this.state.lineItem !== '' && this.state.lineItem !== undefined ? (
+      !this.state.readScope ? (
         <form action="/agsDeleteCol" method="post">
           <table>
             <tbody>
@@ -66,7 +124,7 @@ class AssignGradesView extends React.Component {
       );
 
     const results =
-      this.state.lineItem !== '' && this.state.lineItem !== undefined ? (
+      this.state.resultsScope ? (
         <form action="/agsResults" method="post">
           <Button type={'submit'} variant={'contained'} color={'secondary'}>Read Results</Button>
           <input type="hidden" name="body" defaultValue={body}/>
@@ -79,7 +137,7 @@ class AssignGradesView extends React.Component {
       );
 
     const scores =
-      this.state.lineItem !== '' && this.state.lineItem !== undefined ? (
+      this.state.scoreScope ? (
         <form action="/agsScores" method="post">
           <table>
             <tbody>
@@ -110,7 +168,7 @@ class AssignGradesView extends React.Component {
       );
 
     const submitAttempt =
-      this.state.lineItem !== '' && this.state.lineItem !== undefined ? (
+      this.state.lineItemScope ? (
         <form action="/agsSubmitAttempt" method="post">
           <table>
             <tbody>
@@ -148,61 +206,10 @@ class AssignGradesView extends React.Component {
             direction={'column'}
             spacing={2}>
             <Grid item xs>
-              <form action="/agsReadCols" method="post">
-                <Button type={'submit'} variant={'contained'} color={'secondary'}>Read Columns</Button>
-                <input type="hidden" name="body" defaultValue={body}/>
-                <input type="hidden" name="url" defaultValue={this.state.lineItems}/>
-              </form>
+              {readAllCols}
             </Grid>
             <Grid item xs>
-              <form action="/agsAddCol" method="post">
-                <table>
-                  <tbody>
-                  <tr>
-                    <td>
-                      <Button type={'submit'} variant={'contained'} color={'secondary'}>Add/Update Column</Button>
-                      <input type="hidden" name="body" defaultValue={body}/>
-                      <input
-                        type="hidden"
-                        name="url"
-                        defaultValue={this.state.lineItems}
-                      />
-                    </td>
-                    <td>
-                      <TextField
-                        variant={'outlined'}
-                        name={'score'}
-                        label={'Score'}
-                        size={'small'}/>
-                    </td>
-                    <td>
-                      <TextField
-                        variant={'outlined'}
-                        name={'label'}
-                        label={'Column Name'}
-                        size={'small'}/>
-                    </td>
-                    <td>
-                      <TextField
-                        variant={'outlined'}
-                        name={'columnId'}
-                        label={'Column ID'}
-                        size={'small'}/>
-                    </td>
-                    <td>
-                      <TextField
-                        variant={'outlined'}
-                        name={'dueDate'}
-                        label={'Due Date'}
-                        size={'small'}/>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </form>
-            </Grid>
-            <Grid item xs>
-              {readcol}
+              {addNewCol}
             </Grid>
             <Grid item xs>
               {delcol}

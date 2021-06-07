@@ -1,5 +1,5 @@
-import * as ltiAdv from './lti-adv';
 import request from 'request';
+import { getCachedLTIToken } from './lti-token-service';
 
 const lineItemScope = 'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem';
 const lineItemReadonlyScope =
@@ -41,16 +41,13 @@ export const readCols = (req, res, agPayload) => {
   const agPayload_orig = JSON.parse(req.body.body);
   const client_id = agPayload_orig.aud;
   let scope = agPayload.scopeLineItem ? lineItemScope : lineItemReadonlyScope;
-  ltiAdv.getOauth2Token(scope, client_id).then(
+  getCachedLTIToken(req.nonce, client_id, scope).then(
     function (token) {
-      let body = JSON.parse(token);
-      agPayload.token = body.access_token;
-
       let options = {
         method: 'GET',
         uri: agPayload.url,
         headers: {
-          Authorization: 'Bearer ' + agPayload.token
+          Authorization: 'Bearer ' + token
         }
       };
 
@@ -84,10 +81,8 @@ export const readCols = (req, res, agPayload) => {
 export const addCol = (req, res, agPayload) => {
   const agPayload_orig = JSON.parse(req.body.body);
   const client_id = agPayload_orig.aud;
-  ltiAdv.getOauth2Token(lineItemScope, client_id).then(
+  getCachedLTIToken(req.nonce, client_id, lineItemScope).then(
     function (token) {
-      let body = JSON.parse(token);
-      agPayload.token = body.access_token;
       let label = agPayload.form.label;
       let columnId = agPayload.form.columnId;
       let dueDate = agPayload.form.dueDate;
@@ -109,7 +104,7 @@ export const addCol = (req, res, agPayload) => {
           uri: agPayload.form.url + '/' + columnId,
           headers: {
             'content-type': 'application/vnd.ims.lis.v2.lineitem+json',
-            Authorization: 'Bearer ' + agPayload.token
+            Authorization: 'Bearer ' + token
           },
           body: JSON.stringify(newBody)
         };
@@ -120,7 +115,7 @@ export const addCol = (req, res, agPayload) => {
           uri: agPayload.form.url,
           headers: {
             'content-type': 'application/vnd.ims.lis.v2.lineitem+json',
-            Authorization: 'Bearer ' + agPayload.token
+            Authorization: 'Bearer ' + token
           },
           body: JSON.stringify(newBody)
         };
@@ -154,10 +149,8 @@ export const addCol = (req, res, agPayload) => {
 export const delCol = (req, res, agPayload) => {
   const agPayload_orig = JSON.parse(agPayload.body.body);
   const client_id = agPayload_orig.aud;
-  ltiAdv.getOauth2Token(lineItemScope, client_id).then(
+  getCachedLTIToken(req.nonce, client_id, lineItemScope).then(
     function (token) {
-      let body = JSON.parse(token);
-      agPayload.token = body.access_token;
       let columnId = agPayload.form.columnId;
 
       let url = agPayload.form.url;
@@ -170,7 +163,7 @@ export const delCol = (req, res, agPayload) => {
         method: 'DELETE',
         uri: url,
         headers: {
-          Authorization: 'Bearer ' + agPayload.token
+          Authorization: 'Bearer ' + token
         }
       };
       request(options, function (err, response, body) {
@@ -208,18 +201,15 @@ export const delCol = (req, res, agPayload) => {
 };
 
 export const results = (req, res, agPayload) => {
-  const agPayload_orig = JSON.parse(agPayload.body.body);
-  const client_id = agPayload_orig.aud;
-  ltiAdv.getOauth2Token(resultsScope, client_id).then(
+  const client_id = req.body.orig_body.aud;
+  getCachedLTIToken(req.body.nonce, client_id, resultsScope).then(
     function (token) {
-      let body = JSON.parse(token);
-      agPayload.token = body.access_token;
-
+      console.log(agPayload.form.url)
       let options = {
         method: 'GET',
         uri: agPayload.form.url + '/results',
         headers: {
-          Authorization: 'Bearer ' + agPayload.token
+          Authorization: 'Bearer ' + token
         }
       };
       request(options, function (err, response, body) {
@@ -252,10 +242,8 @@ export const results = (req, res, agPayload) => {
 export const scores = (req, res, agPayload, task) => {
   const agPayload_orig = JSON.parse(agPayload.body.body);
   const client_id = agPayload_orig.aud;
-  ltiAdv.getOauth2Token(scoreScope, client_id).then(
+  getCachedLTIToken(req.nonce, client_id, scoreScope).then(
     function (token) {
-      let body = JSON.parse(token);
-      agPayload.token = body.access_token;
       let userId = agPayload.form.userid;
       let newScore = agPayload.form.score;
       let columnId = agPayload.form.column;
@@ -305,7 +293,7 @@ export const scores = (req, res, agPayload, task) => {
         uri: url,
         headers: {
           'content-type': 'application/vnd.ims.lis.v1.score+json',
-          Authorization: 'Bearer ' + agPayload.token
+          Authorization: 'Bearer ' + token
         },
         body: JSON.stringify(score)
       };
