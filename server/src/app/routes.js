@@ -201,6 +201,7 @@ module.exports = function(app) {
     }
 
     const jwtPayload = await redisUtil.redisGet(state + ':jwt');
+    console.log(`tlocode jwt ${JSON.stringify(jwtPayload)}`);
 
     // If we have a 3LO auth code, let's get us a bearer token here.
     const redirectUri = `${config.frontend_url}tlocode`;
@@ -210,10 +211,12 @@ module.exports = function(app) {
     // Cache the nonce which is our state value
     redisUtil.redisSave(state, 'nonce');
 
+    console.log(`Getting REST token at ${learnUrl}`);
     const restToken = await restService.getLearnRestToken(learnUrl, state);
     console.log(`Learn REST token ${restToken}`);
 
     // Now get the LTI OAuth 2 bearer token (shame they aren't the same)
+    console.log(`Getting LTI token at ${setup.tokenEndPoint}`);
     const ltiToken = await ltiTokenService.getLTIToken(setup.applicationId, setup.tokenEndPoint, ltiScopes, state);
     console.log(`LMS LTI token ${ltiToken}`);
 
