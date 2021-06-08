@@ -298,7 +298,7 @@ module.exports = function(app) {
   // Proctoring Service
 
   app.get("/getProctoringPayloadData", async (req, res) => {
-    const nonce = req.body.nonce;
+    const nonce = req.query.nonce;
     const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
     res.send(jwtPayload);
   });
