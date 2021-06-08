@@ -308,14 +308,16 @@ module.exports = function(app) {
   app.post("/buildProctoringStartReturnPayload", async (req, res) => {
     const nonce = req.body.nonce;
     const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
-    buildProctoringStartReturnPayload(req, res, jwtPayload);
+    const newJwt = buildProctoringStartReturnPayload(req, res, jwtPayload);
+    redisUtil.redisSave(nonce + ':jwt', newJwt);
     res.redirect(`/proctoring_start_actions_view?nonce=${nonce}`);
   });
 
   app.post("/buildProctoringEndReturnPayload", async (req, res) => {
     const nonce = req.body.nonce;
     const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
-    buildProctoringEndReturnPayload(req, res, jwtPayload, setup);
+    const newJwt = buildProctoringEndReturnPayload(req, res, jwtPayload);
+    redisUtil.redisSave(nonce + ':jwt', newJwt);
     res.redirect(`/proctoring_end_actions_view?nonce=${nonce}`);
   });
 
