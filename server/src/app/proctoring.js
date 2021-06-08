@@ -3,7 +3,7 @@
 import jwt from "jsonwebtoken";
 import ltiAdv from "./lti-adv";
 
-exports.buildProctoringStartReturnPayload = function(req, res, proctoringPayload, setup) {
+exports.buildProctoringStartReturnPayload = function(req, res, proctoringPayload) {
   let now = Math.trunc(new Date().getTime() / 1000);
   let json = {
     locale: "en_US",

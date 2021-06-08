@@ -51,7 +51,7 @@ class ProctoringServiceOptionsView extends React.Component {
           </Typography>
           <br />
           <form action="buildProctoringStartReturnPayload" method="POST">
-            <input type="hidden" name="state" value={params.getNonce()}/>
+            <input type="hidden" name="nonce" value={params.getNonce()}/>
             <Typography variant="h5">Messages</Typography>
             <Table style={{ width: "45%", marginBottom: '20px' }}>
               <TableHead>

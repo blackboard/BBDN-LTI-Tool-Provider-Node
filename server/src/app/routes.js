@@ -308,7 +308,7 @@ module.exports = function(app) {
   app.post("/buildProctoringStartReturnPayload", async (req, res) => {
     const nonce = req.body.nonce;
     const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
-    buildProctoringStartReturnPayload(req, res, jwtPayload, setup);
+    buildProctoringStartReturnPayload(req, res, jwtPayload);
     res.redirect(`/proctoring_start_actions_view?nonce=${nonce}`);
   });
 
