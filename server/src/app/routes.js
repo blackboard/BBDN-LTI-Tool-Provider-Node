@@ -230,9 +230,9 @@ module.exports = function(app) {
     } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
       const messageType = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/message_type"];
       if (messageType === "LtiStartProctoring") {
-        res.redirect("/proctoring_start_options_view");
+        res.redirect(`/proctoring_start_options_view?nonce=${state}`);
       } else if (messageType === "LtiEndAssessment") {
-        res.redirect("/proctoring_end_options_view");
+        res.redirect(`/proctoring_end_options_view?nonce=${state}`);
       } else {
         res.send(`Unrecognized proctoring message type: ${messageType}`);
       }
@@ -299,7 +299,9 @@ module.exports = function(app) {
 
   app.get("/getProctoringPayloadData", async (req, res) => {
     const nonce = req.query.nonce;
+    console.log(`--------------------\ngetProctoringPayloadData nonce: ${nonce}`);
     const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
+    console.log(`getProctoringPayloadData jwt: ${JSON.stringify(jwtPayload)}`);
     res.send(jwtPayload);
   });
 
