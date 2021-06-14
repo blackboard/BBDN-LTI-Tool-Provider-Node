@@ -1,7 +1,7 @@
 "use strict";
 
-let ltiAdv = require("./lti-adv");
-let request = require("request");
+import request from "request";
+import ltiAdv from "./lti-adv";
 
 exports.namesRoles = (req, res, nrPayload, setup) => {
   if (nrPayload.url === "") {

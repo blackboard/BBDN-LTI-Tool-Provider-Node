@@ -1,5 +1,8 @@
 import React from "react";
 import {Table, TableBody, TableCell, TableHead, TableRow, Typography, withStyles} from "@material-ui/core";
+import {parameters} from "../../util/parameters";
+
+const params = parameters.getInstance();
 
 const CustomTableCell = withStyles(theme => ({
   head: {
@@ -23,6 +26,7 @@ class DeepLinkOptions extends React.Component {
 
         <div>
           <form action="deepLinkContent" method="POST">
+            <input type="hidden" name="nonce" value={params.getNonce()}/>
 
             <Table style={{width: "45%"}}>
               <TableBody>

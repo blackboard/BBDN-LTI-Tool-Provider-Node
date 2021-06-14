@@ -1,5 +1,4 @@
-
-let redis = require("redis");
+import redis from "redis";
 
 module.exports = (function() {
   let redisClient = {};

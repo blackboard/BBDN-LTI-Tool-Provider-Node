@@ -10,6 +10,9 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import locale from 'react-json-editor-ajrm/locale/en';
 import {styles} from "../../common/styles/custom.js";
+import { parameters } from '../../util/parameters';
+
+const params = parameters.getInstance();
 
 const claimContext = 'https://purl.imsglobal.org/spec/lti/claim/context';
 const claimToolPlatform = 'https://purl.imsglobal.org/spec/lti/claim/tool_platform';
@@ -22,7 +25,7 @@ class MsTeamsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("jwtPayloadData")
+    fetch(`jwtPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
       .then(jwtPayload => {
         this.setState({

@@ -2,6 +2,7 @@
 *.cer
 *.crt
 *.key
+.nvmrc
 /npm-debug.log
 /server/config/config_override*.json
 /node_modules

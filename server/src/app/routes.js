@@ -1,7 +1,8 @@
 import path from "path";
 import fs from "fs";
+import axios from "axios";
 import cookieParser from "cookie-parser";
-import {AGPayload, ContentItem, JWTPayload, NRPayload, GroupsPayload, SetupParameters} from "../common/restTypes";
+import {AGPayload, ContentItem, NRPayload, GroupsPayload, SetupParameters} from "../common/restTypes";
 import config from "../config/config";
 import assignGrades from "./assign-grades";
 import * as content_item from "./content-item";
@@ -9,58 +10,36 @@ import eventstore from './eventstore';
 import {deepLink, deepLinkContent} from "./deep-linking";
 import {buildProctoringStartReturnPayload, buildProctoringEndReturnPayload} from "./proctoring";
 import * as lti from "./lti";
-import ltiAdv from "./lti-adv";
 import namesRoles from "./names-roles";
 import groups from "./groups";
+import ltiAdv from "./lti-adv";
+import ltiTokenService from './lti-token-service';
+import restService from './rest-service';
 import redisUtil from "./redisutil";
-
-let jwk2pem = require('pem-jwk').jwk2pem
 
 const contentitem_key = "contentItemData";
 
-const FULL_KEYS = "{\n" +
-  "  \"kty\": \"RSA\",\n" +
-  "  \"d\": \"o_OPanHKvMvkM1D0_u52AHhZDRCMyxsDTHW-6rCmi7DhXNcfLGJMpL05pLiGSz3OGZN7uI83IP748f-WgRxc5H5nyXYe-7fEMue1T6ZF1p5-e1rBZ_ukXULHaiLff834YOMuMa0t8X7sKLMI4eInKH2SK_uSqxCT12hh3IukhxS1wbB9kSvE1v7PNXAU1enXC3M1wFRmmKPMuK_AKbtqKv-y2UG1GeisWg7HLuOYHINga8gY60KJDBp-wDsJOpIrMCRDP99OnkJWMbC-k8gWzDGCtdQHTGQnfgGxJVmKVUG-7JOCnlu-S21yofvj1K_aTAtAS8ByJHBLBzIjUBotuQ\",\n" +
-  "  \"e\": \"AQAB\",\n" +
-  "  \"use\": \"sig\",\n" +
-  "  \"kid\": \"12345\",\n" +
-  "  \"alg\": \"RS256\",\n" +
-  "  \"n\": \"sB3jz6IZBOuerqkZ-RUpCoZuNeaL2A2ODOC4W9dJcL649-dYGzJMR6R8chuOL5EQAEZyzbxGU49rkLCa0d0yt4PIJE_k86Ib9PBZhhyj1WuIPHYuJqzPlwdHXJDSA6pEdSsOS5fWCLs75IETnbmPtV0wM8C32QHd6U8M2iZSmy5XFut5H-DisplW7rTaeCzVIqZXEnvBp0ZsxVyXkYJj1emnhX0TqgsdQy8H7evVvM2--dIBIENbKmxNQQH8pwTdRgMWJqAFjo8Tkj2PKLb075aEE-wEtlF0Ms7Y2ASo22Jya57E-CPfeCPE5vIJ_SyC0B8GeIE41qdra-lfzVi_zQ\"\n" +
-  "}";
-
-const PUBLIC_KEY_SET = "{\n" +
-  "  \"keys\": [\n" +
-  "    {\n" +
-  "      \"kty\": \"RSA\",\n" +
-  "      \"e\": \"AQAB\",\n" +
-  "      \"use\": \"sig\",\n" +
-  "      \"kid\": \"12345\",\n" +
-  "      \"alg\": \"RS256\",\n" +
-  "      \"n\": \"sB3jz6IZBOuerqkZ-RUpCoZuNeaL2A2ODOC4W9dJcL649-dYGzJMR6R8chuOL5EQAEZyzbxGU49rkLCa0d0yt4PIJE_k86Ib9PBZhhyj1WuIPHYuJqzPlwdHXJDSA6pEdSsOS5fWCLs75IETnbmPtV0wM8C32QHd6U8M2iZSmy5XFut5H-DisplW7rTaeCzVIqZXEnvBp0ZsxVyXkYJj1emnhX0TqgsdQy8H7evVvM2--dIBIENbKmxNQQH8pwTdRgMWJqAFjo8Tkj2PKLb075aEE-wEtlF0Ms7Y2ASo22Jya57E-CPfeCPE5vIJ_SyC0B8GeIE41qdra-lfzVi_zQ\"\n" +
-  "    }\n" +
-  "  ]\n" +
-  "}";
+const ltiScopes = 'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly ' +
+  'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem ' +
+  'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly ' +
+  'https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly ' +
+  'https://purl.imsglobal.org/spec/lti-ags/scope/score';
 
 module.exports = function(app) {
   app.use(cookieParser());
 
-  const frontendUrl = config.frontend_url;
-
   let contentItemData = new ContentItem();
   let ciLoaded = false;
-  let privateKey = jwk2pem(JSON.parse(FULL_KEYS));
 
   //=======================================================
   let setupLoaded = false;
   let setup = new SetupParameters();
   let setup_key = "setupParameters";
-  setup.privateKey = privateKey;
 
   if (!setupLoaded) {
     redisUtil.redisGet(setup_key).then(setupData => {
       if (setupData !== null) {
         setup = setupData;
-        setup.privateKey = privateKey;
         setupLoaded = true;
       }
     });
@@ -108,7 +87,7 @@ module.exports = function(app) {
         redisUtil.redisSave(contentitem_key, contentItemData);
         ciLoaded = true;
 
-        const redirectUrl = `${frontendUrl}content_item`;
+        const redirectUrl = `${config.frontend_url}content_item`;
         console.log("Redirecting to : " + redirectUrl);
         res.redirect(redirectUrl);
       });
@@ -116,13 +95,6 @@ module.exports = function(app) {
 
     if (req.body.lti_message_type === "basic-lti-launch-request") {
       lti.got_launch(req, res);
-    }
-
-    if (req.body.id_token) {
-      console.log("Redirecting to LTI 1.3");
-      jwtPayload = new JWTPayload();
-      ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
-      res.redirect("/lti_adv_view");
     }
   });
 
@@ -133,7 +105,7 @@ module.exports = function(app) {
   let passthru = false;
 
   app.post("/CIMRequest", (req, res) => {
-    console.log("--------------------\nCIMRequest frontend URL in routes: " + frontendUrl);
+    console.log("--------------------\nCIMRequest frontend URL in routes: " + config.frontend_url);
 
     if (req.body.custom_option === undefined) {
       // no custom_option set so go to CIM request menu and save req and res to pass through
@@ -159,7 +131,7 @@ module.exports = function(app) {
           redisUtil.redisSave(contentitem_key, contentItemData);
           ciLoaded = true;
 
-          const redirectUrl = `${frontendUrl}content_item`;
+          const redirectUrl = `${config.frontend_url}content_item`;
           console.log("Redirecting to : " + redirectUrl);
           res.redirect(redirectUrl);
         });
@@ -179,83 +151,174 @@ module.exports = function(app) {
 
   //=======================================================
   // LTI Advantage Message processing
-  let jwtPayload;
   let users = {
     name : "Fyodor",
     age : "77"
   };
 
-  // This is our single redirect_uri entry point; we can use customer parameters or target_link_uri to determine how
-  // to route from here
-  app.post("/lti13", (req, res) => {
-    console.log("--------------------\nlti13");
-    jwtPayload = new JWTPayload();
-    ltiAdv.verifyToken(req.body.id_token, jwtPayload, setup);
+  // The OIDC login entry point
+  app.get("/login", (req, res) => {
+    console.log("--------------------\nlogin");
+    // Set some cookies for giggles
     res.cookie("userData-legacy", users);
     res.cookie("userData", users,  { sameSite: 'none', secure: true });
+    ltiAdv.oidcLogin(req, res, setup);
+  });
 
+  // This is our single redirect_uri entry point; we can use customer parameters or target_link_uri to determine how
+  // to route from here
+  app.post("/lti13", async (req, res) => {
+    console.log("--------------------\nlti13");
+
+    // Per the OIDC best practices, ensure the state parameter passed in here matches the one in our cookie
+    const state = req.cookies['state'];
+    if (state !== req.body.state) {
+      console.log(`The state field is missing or doesn't match. Maybe cookies are blocked?`);
+    }
+
+    // Parse, verify and save the id_token JWT
+    const jwtPayload = await ltiAdv.verifyToken(req.body.id_token, setup);
+    redisUtil.redisSave(state + ':jwt', jwtPayload);
+
+    // Now we have the JWT but next we need to get an OAuth2 bearer token for REST calls.
+    // Before we can do that we need to get an authorization code for the current user.
+    // Save off the JWT to our database so we can get it back after we get the auth code.
+    const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+    const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${config.appKey}&state=${req.body.state}`;
+    const authcodeUrl = `${lmsServer}/learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
+
+    console.log(`Redirect to get 3LO code ${authcodeUrl}`);
+    res.redirect(authcodeUrl);
+  });
+
+  // The 3LO redirect route
+  app.get('/tlocode', async (req, res) => {
+    console.log(`tlocode called with code: ${req.query.code} and state: ${req.query.state}`);
+
+    const state = req.cookies['state'];
+    if (state !== req.query.state) {
+      console.log(`The state field is missing or doesn't match.`);
+    }
+
+    const jwtPayload = await redisUtil.redisGet(state + ':jwt');
+    console.log(`tlocode jwt ${JSON.stringify(jwtPayload)}`);
+
+    // If we have a 3LO auth code, let's get us a bearer token here.
+    const redirectUri = `${config.frontend_url}tlocode`;
+    const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+    const learnUrl = lmsServer + `/learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
+
+    // Cache the nonce which is our state value
+    redisUtil.redisSave(state, 'nonce');
+
+    console.log(`Getting REST token at ${learnUrl}`);
+    const restToken = await restService.getLearnRestToken(learnUrl, state);
+    console.log(`Learn REST token ${restToken}`);
+
+    // Now get the LTI OAuth 2 bearer token (shame they aren't the same)
+    console.log(`Getting LTI token at ${setup.tokenEndPoint}`);
+    const ltiToken = await ltiTokenService.getLTIToken(setup.applicationId, setup.tokenEndPoint, ltiScopes, state);
+    console.log(`LMS LTI token ${ltiToken}`);
+
+    // Now finally redirect to the UI
     if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
-      res.redirect('/deep_link_options');
+      res.redirect(`/deep_link_options?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('CIMRequest')) {
-      res.redirect("/deep_link_options");
+      res.redirect(`/deep_link_options?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
-      res.redirect("/lti_bobcat_view");
+      res.redirect(`/lti_bobcat_view?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
       const messageType = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/message_type"];
       if (messageType === "LtiStartProctoring") {
-        res.redirect("/proctoring_start_options_view");
+        res.redirect(`/proctoring_start_options_view?nonce=${state}`);
       } else if (messageType === "LtiEndAssessment") {
-        res.redirect("/proctoring_end_options_view");
+        res.redirect(`/proctoring_end_options_view?nonce=${state}`);
       } else {
         res.send(`Unrecognized proctoring message type: ${messageType}`);
       }
     } else if ( jwtPayload.target_link_uri.endsWith('lti')) {
-      res.redirect("/lti_adv_view");
+      res.redirect(`/lti_adv_view?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('lti13')) {
-      res.redirect("/lti_adv_view");
+      res.redirect(`/lti_adv_view?nonce=${state}`);
     } else if ( jwtPayload.target_link_uri.endsWith('msteams')) {
-      res.redirect("/ms_teams_view");
+      res.redirect(`/ms_teams_view?nonce=${state}`);
     } else {
       res.send(`Sorry Dave, I can't use that target_link_uri ${jwtPayload.target_link_uri}` );
     }
   });
 
-  app.get("/jwtPayloadData", (req, res) => {
+  app.get("/jwtPayloadData", async (req, res) => {
+    const nonce = req.query.nonce;
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
     res.send(jwtPayload);
   });
 
-  app.get("/login", (req, res) => {
-    console.log("--------------------\nlogin");
-    ltiAdv.security1(req, res, jwtPayload, setup);
+  app.get("/courseData", async (req, res) => {
+    const nonce = req.query.nonce;
+    const restToken = await restService.getCachedToken(nonce);
+    console.log(`courseData nonce: ${nonce}, restToken: ${restToken}`)
+    const jwt = await redisUtil.redisGet(nonce + ':jwt');
+    const lmsServer = jwt.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+    const courseUUID = jwt.body["https://purl.imsglobal.org/spec/lti/claim/context"]["id"];
+    const xhrConfig = {
+      headers: {Authorization: `Bearer ${restToken}`}
+    };
+
+    try {
+      const courseResponse = await axios.get(`${lmsServer}/learn/api/public/v2/courses/uuid:${courseUUID}`, xhrConfig);
+      console.log(`Got course; Ultra status is ${courseResponse.data.ultraStatus}, and PK1 is: ${courseResponse.data.id}`);
+      res.send(courseResponse.data);
+    } catch (exception) {
+      console.log(`Error getting courseData for ${courseUUID}: ${JSON.stringify(exception)}, from: ${lmsServer}`);
+    }
   });
 
   //=======================================================
   // Deep Linking
-  app.get("/dlPayloadData", (req, res) => {
-    res.send(jwtPayload);
+  app.get("/dlPayloadData", async (req, res) => {
+    const nonce = req.query.nonce;
+    console.log(`--------------------\ndlPayloadData Nonce: ${nonce}`)
+    const dljwt = await redisUtil.redisGet(nonce + ':dljwt');
+    console.log(`dljwt ${JSON.stringify(dljwt)}`);
+    res.send(dljwt);
   });
 
-  app.post("/deepLinkContent", (req, res) => {
+  app.post("/deepLinkContent", async (req, res) => {
     console.log("--------------------\ndeepLinkContent");
-    deepLinkContent(req, res, jwtPayload, setup);
-    res.redirect("/deep_link");
+    const nonce = req.body.nonce;
+    console.log(`Nonce: ${nonce}`)
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
+    let dljwt = deepLinkContent(req, res, jwtPayload, setup);
+    redisUtil.redisSave(nonce + ':dljwt', dljwt);
+    console.log(`dljwt ${JSON.stringify(dljwt)}`);
+    res.redirect(`/deep_link?nonce=${nonce}`);
   });
 
   //=======================================================
   // Proctoring Service
 
-  app.get("/getProctoringPayloadData", (req, res) => {
+  app.get("/getProctoringPayloadData", async (req, res) => {
+    const nonce = req.query.nonce;
+    console.log(`--------------------\ngetProctoringPayloadData nonce: ${nonce}`);
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
+    console.log(`getProctoringPayloadData jwt: ${JSON.stringify(jwtPayload)}`);
     res.send(jwtPayload);
   });
 
-  app.post("/buildProctoringStartReturnPayload", (req, res) => {
-    buildProctoringStartReturnPayload(req, res, jwtPayload, setup);
-    res.redirect("/proctoring_start_actions_view");
+  app.post("/buildProctoringStartReturnPayload", async (req, res) => {
+    const nonce = req.body.nonce;
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
+    const newJwt = buildProctoringStartReturnPayload(req, res, jwtPayload);
+    redisUtil.redisSave(nonce + ':jwt', newJwt);
+    res.redirect(`/proctoring_start_actions_view?nonce=${nonce}`);
   });
 
-  app.post("/buildProctoringEndReturnPayload", (req, res) => {
-    buildProctoringEndReturnPayload(req, res, jwtPayload, setup);
-    res.redirect("/proctoring_end_actions_view");
+  app.post("/buildProctoringEndReturnPayload", async (req, res) => {
+    const nonce = req.body.nonce;
+    const jwtPayload = await redisUtil.redisGet(nonce + ':jwt');
+    const newJwt = buildProctoringEndReturnPayload(req, res, jwtPayload);
+    redisUtil.redisSave(nonce + ':jwt', newJwt);
+    res.redirect(`/proctoring_end_actions_view?nonce=${nonce}`);
   });
 
   //=======================================================
@@ -372,15 +435,7 @@ module.exports = function(app) {
   });
 
   app.get("/.well-known/jwks.json", (req, res) => {
-    res.send(PUBLIC_KEY_SET);
-  });
-
-  //=======================================================
-  // Grab a token and display it
-
-  app.get("/tokenGrab", (req, res) => {
-    console.log("--------------------\ntokenGrab");
-    ltiAdv.tokenGrab(req, res, jwtPayload, setup);
+    res.send(config.publicKeys);
   });
 
   //=======================================================
