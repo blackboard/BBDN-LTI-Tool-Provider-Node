@@ -1,6 +1,9 @@
 import React from 'react';
 import { Button, Grid, Switch, Typography } from '@material-ui/core';
 import { DeepLinkBuilder, Messages, sampleJSON } from './deepLinkBuilder';
+import parameters from '../../util/parameters';
+
+const params = parameters.getInstance();
 
 export default class DeepLinkOptions extends React.Component {
   constructor(props) {
@@ -37,7 +40,7 @@ export default class DeepLinkOptions extends React.Component {
       this.setState({...this.state, custom_json: sampleJSON });
     }
     const data = new URLSearchParams(this.state);
-    fetch('/deepLinkContent', {
+    fetch(`/deepLinkContent?nonce=${params.getNonce()}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'

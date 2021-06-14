@@ -56,6 +56,18 @@ export const deleteAppById = (appId) => {
   }
 }
 
+export const insertConfig = (config) => {
+  try {
+    apps.push('.config-data[]', {
+      "privateKey": config.privateKey,
+      "publicKey": config.publicKey
+    });
+    return "success";
+  } catch (error) {
+    return error;
+  }
+}
+
 export const getConfig = () => {
   try {
     return configData.getData('.config-data[0]');

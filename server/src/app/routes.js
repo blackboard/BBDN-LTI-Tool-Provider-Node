@@ -284,16 +284,16 @@ module.exports = function (app) {
   // Deep Linking
   app.get('/dlPayloadData', async (req, res) => {
     const nonce = req.query.nonce;
-    const dljwt = await getAuthFromState(nonce).auth['dljwt'];
+    const dljwt = await getAuthFromState(nonce);
     console.log(`dljwt ${JSON.stringify(dljwt)}`);
     res.send(dljwt);
   });
 
   app.post('/deepLinkContent', async (req, res) => {
     console.log('--------------------\ndeepLinkContent');
-    const nonce = req.body.nonce;
+    const nonce = req.query.nonce;
     console.log(`Nonce: ${nonce}`)
-    const jwtPayload = await getAuthFromState(nonce).auth['dljwt'];
+    const jwtPayload = await getAuthFromState(nonce).jwt;
     let dljwt = deepLinkContent(req, res, jwtPayload);
     await insertNewAuthToken(nonce, `${nonce}:dljwt`, 'dljwt');
     console.log(`dljwt ${JSON.stringify(dljwt)}`);
@@ -480,6 +480,12 @@ module.exports = function (app) {
     console.log('-------------------\nversion');
     const data = fs.readFileSync('version.json', 'utf8');
     res.send(data);
+  });
+
+  app.get('/adminConfig', async (req, res) => {
+    const dljwt = await getAuthFromState(nonce);
+    console.log(`dljwt ${JSON.stringify(dljwt)}`);
+    res.send(dljwt);
   });
 
   //=======================================================

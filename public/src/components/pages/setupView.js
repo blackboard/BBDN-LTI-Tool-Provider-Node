@@ -8,13 +8,10 @@ class SetupView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      applicationId: "",
-      devPortalHost: "",
-      issuer: "",
-      tokenEndPoint: "",
-      oidcAuthUrl: "",
-      cookies: "",
-      host: ""
+      defaultAppKey: '',
+      defaultAppSecret: '',
+      defaultPrivateKey: '',
+      defaultPublicKey: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
