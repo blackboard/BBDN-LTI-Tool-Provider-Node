@@ -1,5 +1,8 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import {parameters} from "../../util/parameters";
+
+const params = parameters.getInstance();
 
 export default class ProctoringEndActionsView extends React.Component {
   constructor(props) {
@@ -8,7 +11,7 @@ export default class ProctoringEndActionsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch('getProctoringPayloadData')
+    fetch(`getProctoringPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
       .then(proctoringServicePayload => {
         this.setState({

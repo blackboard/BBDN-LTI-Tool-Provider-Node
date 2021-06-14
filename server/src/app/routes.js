@@ -230,12 +230,12 @@ module.exports = function (app) {
       res.redirect(`/deep_link_options?nonce=${state}`);
     } else if (jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
       res.redirect(`/lti_bobcat_view?nonce=${state}`);
-    } else if (jwtPayload.target_link_uri.endsWith('proctoring')) {
-      const messageType = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/message_type'];
-      if (messageType === 'LtiStartProctoring') {
-        res.redirect('/proctoring_start_options_view');
-      } else if (messageType === 'LtiEndAssessment') {
-        res.redirect('/proctoring_end_options_view');
+    } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
+      const messageType = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/message_type"];
+      if (messageType === "LtiStartProctoring") {
+        res.redirect(`/proctoring_start_options_view?nonce=${state}`);
+      } else if (messageType === "LtiEndAssessment") {
+        res.redirect(`/proctoring_end_options_view?nonce=${state}`);
       } else {
         res.send(`Unrecognized proctoring message type: ${messageType}`);
       }
@@ -304,8 +304,10 @@ module.exports = function (app) {
   // Proctoring Service
 
   app.get('/getProctoringPayloadData', async (req, res) => {
-    const nonce = req.body.nonce;
+    const nonce = req.query.nonce;
+    console.log(`--------------------\ngetProctoringPayloadData nonce: ${nonce}`);
     const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
+    console.log(`getProctoringPayloadData jwt: ${JSON.stringify(jwtPayload)}`);
     res.send(jwtPayload);
   });
 
@@ -313,14 +315,14 @@ module.exports = function (app) {
     const nonce = req.body.nonce;
     const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
     buildProctoringStartReturnPayload(req, res, jwtPayload);
-    res.redirect('/proctoring_start_actions_view');
+    res.redirect('/proctoring_start_actions_view?nonce=${nonce}');
   });
 
   app.post('/buildProctoringEndReturnPayload', async (req, res) => {
     const nonce = req.body.nonce;
     const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
     buildProctoringEndReturnPayload(req, res, jwtPayload);
-    res.redirect('/proctoring_end_actions_view');
+    res.redirect('/proctoring_end_actions_view?nonce=${nonce}');
   });
 
   //=======================================================

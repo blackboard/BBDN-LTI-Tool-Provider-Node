@@ -3,6 +3,9 @@ import React from 'react';
 import locale from 'react-json-editor-ajrm/locale/en';
 import { Typography } from '@material-ui/core';
 import { styles } from '../../common/styles/custom.js';
+import {parameters} from "../../util/parameters";
+
+const params = parameters.getInstance();
 
 export default class ProctoringServiceActionsView extends React.Component {
   constructor(props) {
@@ -11,7 +14,7 @@ export default class ProctoringServiceActionsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch('getProctoringPayloadData')
+    fetch(`getProctoringPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
       .then(proctoringServicePayload => {
         this.setState({

@@ -5,6 +5,9 @@ import locale from 'react-json-editor-ajrm/locale/en';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { styles } from '../../common/styles/custom.js';
 import { withStyles } from '@material-ui/core/styles';
+import {parameters} from "../../util/parameters";
+
+const params = parameters.getInstance();
 
 const CustomTableCell = withStyles(theme => ( {
   head: {
@@ -30,7 +33,7 @@ export default class ProctoringEndOptionsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch('getProctoringPayloadData')
+    fetch(`getProctoringPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
       .then(proctoringServicePayload => {
         this.setState({

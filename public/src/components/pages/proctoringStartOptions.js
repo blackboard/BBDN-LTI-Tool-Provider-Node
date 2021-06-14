@@ -4,6 +4,9 @@ import locale from 'react-json-editor-ajrm/locale/en';
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
 import { styles } from '../../common/styles/custom';
 import { withStyles } from '@material-ui/core/styles';
+import {parameters} from "../../util/parameters";
+
+const params = parameters.getInstance();
 
 const CustomTableCell = withStyles(theme => ( {
   head: {
@@ -24,7 +27,7 @@ export default class ProctoringServiceOptionsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch('getProctoringPayloadData')
+    fetch(`getProctoringPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
       .then(proctoringServicePayload => {
         this.setState({
@@ -49,6 +52,7 @@ export default class ProctoringServiceOptionsView extends React.Component {
           </Typography>
           <br/>
           <form action="buildProctoringStartReturnPayload" method="POST">
+            <input type="hidden" name="nonce" value={params.getNonce()}/>
             <Typography variant="h5">Messages</Typography>
             <Table style={{ width: '45%', marginBottom: '20px' }}>
               <TableHead>
