@@ -103,7 +103,7 @@ export const deepLinkContent = (req, res, dlPayload) => {
   dljwt.jwt = ltiAdv.signJwt(json);
   dljwt.return_url = deepLink.deep_link_return_url;
   dljwt.return_json = json;
-  return dljwt;
+  return JSON.stringify(dljwt);
 };
 
 let deepLinkingFrame = function (iss, aud, deploy, data, items) {

@@ -20,13 +20,13 @@ export default class DeepLinkPayloadView extends React.Component {
       .then(result => result.json())
       .then(dlPayload => {
         this.setState({
-          header: dlPayload.header,
-          body: dlPayload.body,
-          returnUrl: dlPayload.return_url,
-          errorUrl: dlPayload.error_url,
-          verified: dlPayload.verified,
-          jwt: dlPayload.jwt,
-          returnJSON: dlPayload.return_json
+          header: dlPayload.jwt.header,
+          body: dlPayload.jwt.body,
+          returnUrl: dlPayload.jwt.return_url,
+          errorUrl: dlPayload.jwt.error_url,
+          verified: dlPayload.jwt.verified,
+          jwt: dlPayload.jwt.jwt,
+          returnJSON: dlPayload.jwt.return_json
         });
       });
   }
@@ -38,7 +38,7 @@ export default class DeepLinkPayloadView extends React.Component {
       </Typography>
     ) : (
       <Typography variant="body1" style={styles.failed}>
-]        Verify failed
+        Verify failed
       </Typography>
     );
 

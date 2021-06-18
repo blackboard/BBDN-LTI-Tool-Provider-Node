@@ -3,7 +3,7 @@ import React from 'react';
 import locale from 'react-json-editor-ajrm/locale/en';
 import { Typography } from '@material-ui/core';
 import { styles } from '../../common/styles/custom.js';
-import {parameters} from "../../util/parameters";
+import parameters from "../../util/parameters";
 
 const params = parameters.getInstance();
 

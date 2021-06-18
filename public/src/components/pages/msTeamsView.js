@@ -63,12 +63,14 @@ export default class MsTeamsView extends React.Component {
       encodeURI('I have a message for you') +
       '&lti_log=' +
       encodeURI('Log this message');
+
     const errorReturn =
       this.state.errorUrl +
       '&lti_errormsg=' +
       encodeURI('An error has occurred') +
       '&lti_errorlog=' +
       encodeURI('Log this error');
+
     // switch this to use whatever we're going to use in the end via microservice
     const namesRoles = this.state.namesRoles ? (
       <Grid item xs>
@@ -88,6 +90,43 @@ export default class MsTeamsView extends React.Component {
       </Grid>
     );
 
+    const learnOptions = (
+      <Grid item xs>
+        <Grid item xs>
+          <Typography variant={'h6'} gutterBottom>
+            Click any of these buttons to return to Learn
+          </Typography>
+        </Grid>
+        <Grid item xs>
+          <Button
+            id={'return_button'}
+            variant="contained"
+            color="secondary"
+            href={this.state.returnUrl}>
+            Return to Learn
+          </Button>
+        </Grid><br/>
+        <Grid item xs>
+      <Button
+        id={'return_with_msg_button'}
+        variant={'contained'}
+        color={'secondary'}
+        href={msgReturn}>
+        Return with Message
+      </Button>
+    </Grid><br/>
+        <Grid item xs>
+      <Button
+        id={'return_with_error_button'}
+        variant={'contained'}
+        color={'secondary'}
+        href={errorReturn}>
+        Return with Error
+      </Button>
+    </Grid><br/>
+      </Grid>
+    );
+
     return (
       <div>
         <div>
@@ -96,55 +135,23 @@ export default class MsTeamsView extends React.Component {
           </Typography>
         </div>
         <div>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5">
             Welcome, {this.state.user} ({this.state.userEmail})!<br/>
             To work properly, Microsoft will need the following:<br/>
             Course Name: {this.state.course} <br/>
             Course Role: {this.state.userRole} <br/>
             Course UUID: {this.state.courseUuid}<br/>
-            Course ID: {this.state.learnCourseId}<br/><br/>
+            Course ID: {this.state.learnCourseId}<br/>
             For testing purposes, the version of Learn being used is {this.state.learnVersion}<br/>
           </Typography>
-          <br/>
           <br/>
           <Grid
             container
             direction={'column'}
-            spacing={8}>
+            spacing={3}>
             {namesRoles}
-            <Typography variant={'h6'} gutterBottom>
-              Click any of these buttons to return to Learn
-            </Typography>
-            <Grid item xs>
-              <Button
-                id={'return_button'}
-                variant="contained"
-                color="secondary"
-                href={this.state.returnUrl}>
-                Return to Learn
-              </Button>
-            </Grid>
-            <Grid item xs>
-              <Button
-                id={'return_with_msg_button'}
-                variant={'contained'}
-                color={'secondary'}
-                href={msgReturn}>
-                Return with Message
-              </Button>
-            </Grid>
-            <Grid item xs>
-              <Button
-                id={'return_with_error_button'}
-                variant={'contained'}
-                color={'secondary'}
-                href={errorReturn}>
-                Return with Error
-              </Button>
-            </Grid>
+            {learnOptions}
           </Grid>
-          <br/>
-          <br/>
           {verified ?
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>

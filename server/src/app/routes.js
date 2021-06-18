@@ -199,7 +199,7 @@ module.exports = function (app) {
 
   // The 3LO redirect route
   app.get('/tlocode', async (req, res) => {
-    console.log(`7-Learn sent back: code: ${req.query.code}`);
+    console.log(`7-Learn sent back: code: ${JSON.stringify(req.query)}`);
     await insertNewAuthToken(req.query.state, req.query.code, 'auth_code');
 
     const state = req.cookies['state'];
@@ -285,18 +285,15 @@ module.exports = function (app) {
   app.get('/dlPayloadData', async (req, res) => {
     const nonce = req.query.nonce;
     const dljwt = await getAuthFromState(nonce);
-    console.log(`dljwt ${JSON.stringify(dljwt)}`);
     res.send(dljwt);
   });
 
   app.post('/deepLinkContent', async (req, res) => {
     console.log('--------------------\ndeepLinkContent');
     const nonce = req.query.nonce;
-    console.log(`Nonce: ${nonce}`)
     const jwtPayload = await getAuthFromState(nonce).jwt;
     let dljwt = deepLinkContent(req, res, jwtPayload);
-    await insertNewAuthToken(nonce, `${nonce}:dljwt`, 'dljwt');
-    console.log(`dljwt ${JSON.stringify(dljwt)}`);
+    await insertNewAuthToken(nonce, `${dljwt}`, 'dljwt');
     res.redirect(`/deep_link?nonce=${nonce}`);
   });
 
@@ -307,7 +304,6 @@ module.exports = function (app) {
     const nonce = req.query.nonce;
     console.log(`--------------------\ngetProctoringPayloadData nonce: ${nonce}`);
     const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
-    console.log(`getProctoringPayloadData jwt: ${JSON.stringify(jwtPayload)}`);
     res.send(jwtPayload);
   });
 

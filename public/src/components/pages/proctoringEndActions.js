@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import {parameters} from "../../util/parameters";
+import parameters from "../../util/parameters";
 
 const params = parameters.getInstance();
 
