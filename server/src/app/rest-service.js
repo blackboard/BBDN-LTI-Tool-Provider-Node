@@ -2,8 +2,8 @@ import config from "../config/config";
 import axios from "axios";
 import redisUtil from "./redisutil";
 
-exports.getLearnRestToken = async (learnUrl, nonce) => {
-  const auth_hash = new Buffer.from(`${config.appKey}:${config.appSecret}`).toString('base64');
+exports.getLearnRestToken = async (learnUrl, nonce, appKey, appSecret) => {
+  const auth_hash = new Buffer.from(`${appKey}:${appSecret}`).toString('base64');
   const auth_string = `Basic ${auth_hash}`;
   console.log(`Auth string: ${auth_string}`);
   const options = {

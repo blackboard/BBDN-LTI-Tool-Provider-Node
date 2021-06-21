@@ -60,7 +60,7 @@ module.exports = function(app) {
     eventstore.show_events(req, res);
   });
   app.post("/rest/auth", (req, res) => {
-    lti.rest_auth(req, res);
+    lti.rest_auth(req, res, setup.appKey, setup.appSecret);
   });
   app.post("/rest/user", (req, res) => {
     lti.rest_getuser(req, res);
@@ -184,7 +184,7 @@ module.exports = function(app) {
     // Before we can do that we need to get an authorization code for the current user.
     // Save off the JWT to our database so we can get it back after we get the auth code.
     const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-    const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${config.appKey}&state=${req.body.state}`;
+    const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${setup.appKey}&state=${req.body.state}`;
     const authcodeUrl = `${lmsServer}/learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
 
     console.log(`Redirect to get 3LO code ${authcodeUrl}`);
@@ -212,7 +212,7 @@ module.exports = function(app) {
     redisUtil.redisSave(state, 'nonce');
 
     console.log(`Getting REST token at ${learnUrl}`);
-    const restToken = await restService.getLearnRestToken(learnUrl, state);
+    const restToken = await restService.getLearnRestToken(learnUrl, state, setup.appKey, setup.appSecret);
     console.log(`Learn REST token ${restToken}`);
 
     // Now get the LTI OAuth 2 bearer token (shame they aren't the same)
@@ -458,6 +458,10 @@ module.exports = function(app) {
     setup.issuer = req.body.issuer;
     setup.applicationId = req.body.applicationId;
     setup.devPortalHost = req.body.devPortalHost;
+    setup.appKey = req.body.appKey;
+    setup.appSecret = req.body.appSecret;
+
+    // TODO don't save in redis, but rather a json file on a volume
     redisUtil.redisSave(setup_key, setup);
     res.redirect("/setup");
   });

@@ -114,7 +114,8 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
    - *OAuth2 Token End Point*: The *Auth token endpoint* from the developer portal
    - *OIDC Auth URL*: The *Auth token endpoint* from the developer portal
    - *Issuer*: The *Issuer* from the developer portal
-   - *Private Key*: The *Tool private key* from the developer portal
+   - *Application Key*: The application key provided by the dev portal
+   - *Application Secret*: The application secreted provided by the dev portal 
 
    Click *SAVE*
 
@@ -124,6 +125,8 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
   - Navigate to *Administrator Tools* > *Integrations* > *LTI Tool Providers* > *Register LTI 1.3 Tool*
   - In the *Client ID* field enter the *Application ID* copied from the developer portal
   - Click *Submit*
+  - Navigate to *Administrator Tools* > *Integrations* > *REST API Integrastions* > *Create Integration*
+  - Enter the Application ID, a Learn user, leave End User Access to *Yes*
 
 6. Create a placement for the tool
 
@@ -138,7 +141,11 @@ A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo a
 
 7. Launch the tool
 
-   Navigate to a course. Under *Course Management* > *Course Tools* you should see your LTI 1.3 Example App
+   ### Original
+   Navigate to a course. Click on *Tools*. You should see your LTI 1.3 Example App
+
+   ### Ultra
+   Navigate to a course. Under Details & Actions click *Books & Tools*. You should see your tool
 
 ## Basic LTI 1.3 tool launch
 The normal LTI Resource link should launch to http://localhost:3000/lti13.
