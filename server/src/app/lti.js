@@ -27,15 +27,11 @@ let sha_method = "";
 //Caliper Variables
 let caliper_profile_url = "";
 let custom_caliper_federated_session_id = "";
-let caliper_host = "";
-let caliper_path = "";
 let caliper_id = "";
 let eventStoreUrl = "";
 let apiKey = "";
 
 //REST
-let app_key = `${config.appKey}`;
-let app_secret = `${config.appSecret}`;
 let access_token = "";
 let token_type = "";
 let expires_in = "";
@@ -362,12 +358,12 @@ exports.get_outcomes = function(req, res) {
   });
 };
 
-exports.rest_auth = function(req, res) {
+exports.rest_auth = function(req, res, key, secret) {
   //build url from caliper profile url
   let parts = url.parse(caliper_profile_url, true);
   let oauth_host = parts.protocol + "//" + parts.host;
 
-  let auth_hash = new Buffer(app_key + ":" + app_secret).toString("base64");
+  let auth_hash = new Buffer(key + ":" + secret).toString("base64");
 
   let auth_string = "Basic " + auth_hash;
 
