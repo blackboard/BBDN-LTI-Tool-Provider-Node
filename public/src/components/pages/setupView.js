@@ -8,10 +8,15 @@ class SetupView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      defaultAppKey: '',
-      defaultAppSecret: '',
-      defaultPrivateKey: '',
-      defaultPublicKey: ''
+      applicationId: "",
+      devPortalHost: "",
+      issuer: "",
+      tokenEndPoint: "",
+      oidcAuthUrl: "",
+      cookies: "",
+      host: "",
+      appKey: "",
+      appSecret: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -118,6 +123,34 @@ class SetupView extends Component {
             }}
             name={"issuer"}
             value={this.state.issuer || ""}
+            onInput={this.handleChange}
+          />
+          <br />
+          <br />
+          <TextField
+            required
+            label="Application Key"
+            variant="outlined"
+            fullWidth={true}
+            InputLabelProps={{
+              shrink: true
+            }}
+            name={"appKey"}
+            value={this.state.appKey || ""}
+            onInput={this.handleChange}
+          />
+          <br />
+          <br />
+          <TextField
+            required
+            label="Application Secret"
+            variant="outlined"
+            fullWidth={true}
+            InputLabelProps={{
+              shrink: true
+            }}
+            name={"appSecret"}
+            value={this.state.appSecret || ""}
             onInput={this.handleChange}
           />
           <br />

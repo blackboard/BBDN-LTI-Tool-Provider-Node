@@ -33,5 +33,7 @@ class SetupParameters {
     this.applicationId = '';
     this.devPortalHost = '';
     this.oidcAuthUrl = '';
+    this.appKey = "";
+    this.appSecret = "";
   }
 }

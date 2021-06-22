@@ -68,7 +68,7 @@ module.exports = function (app) {
     eventstore.show_events(req, res);
   });
   app.post('/rest/auth', (req, res) => {
-    rest_auth(req, res);
+    rest_auth(req, res, setup.appKey, setup.appSecret);
   });
   app.post('/rest/user', (req, res) => {
     rest_getuser(req, res);

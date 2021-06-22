@@ -63,13 +63,14 @@ export class AGPayload {
 
 export class SetupParameters {
   constructor() {
-    this.privateKey = '';
-    this.tokenEndPoint = '';
-    this.oidcAuthUrl = '';
-    this.issuer = '';
-    this.applicationId = '';
-    this.devPortalHost = '';
-    this.cookies = '';
-    this.host = '';
+    this.tokenEndPoint = "";
+    this.oidcAuthUrl = "";
+    this.issuer = "";
+    this.applicationId = "";
+    this.devPortalHost = "";
+    this.cookies = "";
+    this.host = "";
+    this.appKey = "";
+    this.appSecret = "";
   }
 }
