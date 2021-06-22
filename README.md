@@ -1,5 +1,5 @@
 # BBDN-LTI-Tool-Provider-Node
-This project is a multi-purpose application designed to demonstrate several integration methods available with Blackboard Learn. The application is an LTI 1.1, LTI 1.3, and Advantage Tool Provider. It also has code to emit Caliper events, as well as act as a very basic caliper eventstore. 
+This project is a multi-purpose application designed to demonstrate several integration methods available with Blackboard Learn. The application is an LTI 1.1, LTI 1.3, and Advantage Tool Provider. It also has code to emit Caliper events, as well as act as a very basic caliper eventstore.
 
 Upon launch of the LTI Tool, the user is given a few options:
 
@@ -13,8 +13,6 @@ Upon launch of the LTI Tool, the user is given a few options:
 
 ## Requirements
 - [Node and npm](http://nodejs.org) - Installing node on Windows requires installing a number of additional packages. It will warn you and if you don't want the script to do it automatically, the installer will give you a link to instructions to run the installs manually.
-- [Redis](http:redis.io) - On Mac it's easiest to `brew install redis`. The code assumes the default
-host and port (localhost:6379). On Windows, its easiest to use docker. Running `docker pull redis` will download the latest redis release in a docker image that you can run as required. If you need to run redis on a different host or port, update your config_override.json
 
 ## Configuration
 You can override a number of configuration properties by creating a config_override.json file in server/config. Below is an example:
@@ -23,8 +21,6 @@ You can override a number of configuration properties by creating a config_overr
 {
   "frontend_url": "https://example.com/"
   "provider_port": "9008",
-  "redis_host": "localhost",
-  "redis_port": 6379
 }
 ```
 
@@ -61,13 +57,7 @@ Implementation of IMS Global LTI v1.3 and LTI Advantage.
 
 A screencast of the rough LTI Advantage setup is shown in [Eric Preston's demo at 23:00](https://us.bbcollab.com/recording/e193c6cb59cb4ed1a776c271665d4154).
 
-1. Install and start redis
-
-   On Mac it's easiest to `brew install redis`. The code assumes the default host and port (localhost:6379).
-   
-   On Windows, it's easiest to use the redis docker image. With Docker Desktop installed, at a command prompt, run `docker pull redis` and then `docker run -p 6379:6379 --name lti-redis -d redis`.
-
-2. Start the server with `npm start`.
+1. Start the server with `npm start`.
 
    Check that you can access https://example.com/setup
 
@@ -158,7 +148,7 @@ The Deep Linking Request should launch to http://localhost/deepLinkOptions to be
 
 Docker specific files are included (Dockerfile, docker-compose.yml, launch.sh).
 
-Use config_override.json (same entries as config.json) to override `redis_host` from localhost to redis so it can access the redis docker container. 
-If running the docker image on the same machine as the learn instance then the `docker-compose.yml` needs to contain the ip address of the machine being used. 
+Use config_override.json (same entries as config.json) to override the default configuration.
+If running the docker image on the same machine as the learn instance then the `docker-compose.yml` needs to contain the ip address of the machine being used.
 
 Build the LTI tool container with `docker build -t lti-tool .`. Then start containers using `docker-compose up`.

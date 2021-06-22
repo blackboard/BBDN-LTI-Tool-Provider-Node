@@ -7,7 +7,6 @@ import routes from './app/routes.js';
 
 const app = express();
 const httpProxy = express();
-//let redisUtil = require("./app/redisutil");
 
 const options = config.use_ssl
   ? {
@@ -19,8 +18,6 @@ const options = config.use_ssl
 let listenPort =
   process.env.PORT ||
   ( config.provider_port !== 'NA' ? config.provider_port : 5000 );
-
-//redisUtil.redisInit(config.redis_host, config.redis_port);
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // don't validate ssl cert for posts to ssl sites
 

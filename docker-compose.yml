@@ -1,7 +1,5 @@
 lti-tool:
   image: lti-tool
-  links:
-    - redis
   ports:
     - "3000:3000"
 # Entry for /etc/hosts in container so the tool can make calls
@@ -10,8 +8,3 @@ lti-tool:
 # one currently assigned to the development machine.
   environment:
     HOST_ENTRY: 10.103.124.51  mylearn.int.bbpd.io
-
-redis:
-  image: redis
-  ports:
-    - "6379:6379"

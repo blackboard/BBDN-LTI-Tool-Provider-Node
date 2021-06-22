@@ -1,8 +1,6 @@
 {
-  "frontend_url": "http://localhost/",
+  "frontend_url": "https://f9f578791ce0.ngrok.io/",
   "provider_port": "3000",
-  "redis_host": "localhost",
-  "redis_port": 6379,
   "publicKeys": {
     "keys": [
       {

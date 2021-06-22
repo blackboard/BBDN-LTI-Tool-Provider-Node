@@ -1,5 +1,4 @@
 import _ from "lodash";
-import process from "process";
 import configJson from "../../config/config.json";
 
 /**
@@ -19,17 +18,6 @@ if (configJsonOverride) {
   configResult = _.defaultsDeep(configJsonOverride, configJson);
 }
 
-// Load redis connection information from environment variables if present
-// These are used in Marathon for application configuration
-if (process.env.REDIS_PORT_6379_TCP_ADDR) {
-  configResult["redis_host"] = process.env.REDIS_PORT_6379_TCP_ADDR;
-}
-if (process.env.REDIS_PORT_6379_TCP_PORT) {
-  configResult["redis_port"] = process.env.REDIS_PORT_6379_TCP_PORT;
-}
-if (process.env.REDIS_URL) {
-  configResult["redis_url"] = process.env.REDIS_URL;
-}
 if (process.env.LTI_TEST_PROVIDER_DOMAIN) {
   configResult["frontend_url"] = process.env.LTI_TEST_PROVIDER_DOMAIN;
 }
