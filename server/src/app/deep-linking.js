@@ -3,7 +3,7 @@ import config from '../config/config.js';
 
 export const deepLink = (req, res, dlPayload) => {
   const app = ltiAdv.applicationInfo(dlPayload.body.aud);
-  console.log(app);
+  //console.log(app);
   let deploy =
     dlPayload.body['https://purl.imsglobal.org/spec/lti/claim/deployment_id'];
   let deepLink =
@@ -40,13 +40,13 @@ export const deepLinkContent = (req, res, dlPayload) => {
   let iss = dlPayload.body.iss;
 
   let items = [];
-  console.log(`Custom option: ${req.body.custom_option}`);
-  console.log(`Custom lti links: ${req.body.custom_ltilinks}`);
-  console.log(`Custom embed lti links: ${req.body.embed_ltilinks}`);
-  console.log(`Custom new window lti links: ${req.body.new_ltilinks}`);
+  //console.log(`Custom option: ${req.body.custom_option}`);
+  //console.log(`Custom lti links: ${req.body.custom_ltilinks}`);
+  //console.log(`Custom embed lti links: ${req.body.embed_ltilinks}`);
+  //console.log(`Custom new window lti links: ${req.body.new_ltilinks}`);
 
   if (req.body.custom_option === 'false') {
-    console.log('used build-a-payload');
+    //console.log('used build-a-payload');
     let total = 0;
     for (let i = 0; i < req.body.custom_ltiLinks; i++, total++) {
       items[total] = deepLinkingLTILink();
@@ -70,7 +70,7 @@ export const deepLinkContent = (req, res, dlPayload) => {
       items[total] = deepLinkingImage();
     }
   } else {
-    console.log('used custom json');
+    //console.log('used custom json');
     if (req.body.custom_content !== '') {
       items[0] = JSON.parse(req.body.custom_content);
     }

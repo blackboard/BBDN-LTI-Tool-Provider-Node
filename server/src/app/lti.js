@@ -13,8 +13,7 @@ import utils from './utils';
 let rejectUnauthorized = true;
 
 //LTI Variables
-let consumer_key = '12345';
-let consumer_secret = 'secret';
+
 let lis_result_sourcedid = '';
 let lis_outcome_service_url = '';
 let return_url = 'https://community.blackboard.com/community/developers';
@@ -70,7 +69,7 @@ export const got_launch = (req, res) => {
   user_id = req.body.user_id;
   return_url = req.body.launch_presentation_return_url;
   sha_method = req.body.oauth_signature_method;
-  console.log('Signature Method: ' + sha_method);
+  //console.log('Signature Method: ' + sha_method);
 
   if (req.body.custom_context_memberships_url !== undefined) {
     membership_url = req.body.custom_context_memberships_url;
@@ -116,7 +115,7 @@ export const caliper = (req, res) => {
     headers: _build_headers(options, parts)
   };
 
-  console.log(req_options);
+  // console.log(req_options);
 
   let http_req = https.request(req_options, function (http_res) {
     http_res.setEncoding('utf-8');
@@ -125,13 +124,13 @@ export const caliper = (req, res) => {
       responseString += data;
     });
     http_res.on('end', function () {
-      console.log(responseString);
+      // console.log(responseString);
       let json = JSON.parse(responseString);
       caliper_id = json['id'];
       eventStoreUrl = json['eventStoreUrl'];
       apiKey = json['apiKey'];
 
-      console.log('ID: ' + caliper_id + ' eventStoreUrl: ' + eventStoreUrl + ' apiKey: ' + apiKey);
+      //console.log('ID: ' + caliper_id + ' eventStoreUrl: ' + eventStoreUrl + ' apiKey: ' + apiKey);
 
       res.render('lti', {
         title: 'Caliper Response Received!',
@@ -268,9 +267,9 @@ export const caliper_send = (req, res) =>  {
       session: custom_caliper_federated_session_id
     });
 
-    console.log('created navigation event %O', event);
+    //console.log('created navigation event %O', event);
 
-    console.log('results %O', results);
+    //console.log('results %O', results);
 
     var envelope = sensor.createEnvelope({ data: event });
 
@@ -278,12 +277,12 @@ export const caliper_send = (req, res) =>  {
     // This callback is invoked after all asynchronous calls finish
     // or as soon as an error occurs
     // results is an array that contains result of each asynchronous call
-    console.log('Sensor: %O Actor: %O Action: %O Object: %O Target: %O NavigatedFrom: %O EdApp: %O Group: %O Membership: %O', results['sensor'], results['actor'], results['action'], results['eventObj'], results['target'], results['navigatedFrom'], results['edApp'], results['group'], results['membership']);
-    console.log('eventObj from target: %O', results['target'].isPartOf);
+    //console.log('Sensor: %O Actor: %O Action: %O Object: %O Target: %O NavigatedFrom: %O EdApp: %O Group: %O Membership: %O', results['sensor'], results['actor'], results['action'], results['eventObj'], results['target'], results['navigatedFrom'], results['edApp'], results['group'], results['membership']);
+    //console.log('eventObj from target: %O', results['target'].isPartOf);
 
     var content = JSON.stringify(event, null, '\t');
 
-    console.log('JSON: ' + content);
+    //console.log('JSON: ' + content);
 
     res.render('lti', { title: 'Caliper event successfully sent!', content: content, return_url: return_url });
   });
@@ -312,7 +311,7 @@ export const send_outcomes = (req, res) =>  {
   let outcomes_service = new lti.OutcomeService(options);
 
   outcomes_service.send_replace_result(grade, function (err, result) {
-    console.log(`Replace result ${result}`); //True or false
+    //console.log(`Replace result ${result}`); //True or false
 
     if (result) {
       res.render('lti', {
@@ -343,7 +342,7 @@ export const get_outcomes = (req, res) =>  {
   let outcomes_service = new lti.OutcomeService(options);
 
   outcomes_service.send_read_result(function (err, result) {
-    console.log(`Outcomes read result ${result}`);
+    //console.log(`Outcomes read result ${result}`);
 
     if (result || result === 0) {
       res.render('lti', {
@@ -372,14 +371,14 @@ export const rest_auth = (req, res) =>  {
 
   let auth_string = 'Basic ' + auth_hash;
 
-  console.log(
+  /*console.log(
     'oauth_host: ' +
     oauth_host +
     ' auth_hash: ' +
     auth_hash +
     ' auth_string: ' +
     auth_string
-  );
+  );*/
 
   let options = {
     hostname: parts.hostname,
@@ -391,7 +390,7 @@ export const rest_auth = (req, res) =>  {
     }
   };
 
-  console.log(options);
+  // console.log(options);
 
   let http_req = https.request(options, function (http_res) {
     http_res.setEncoding('utf-8');
@@ -400,20 +399,20 @@ export const rest_auth = (req, res) =>  {
       responseString += data;
     });
     http_res.on('end', function () {
-      console.log(responseString);
+      //console.log(responseString);
       let json = JSON.parse(responseString);
       access_token = json.access_token;
       token_type = json.token_type;
       expires_in = json.expires_in;
 
-      console.log(
+      /*console.log(
         'Access Token: ' +
         access_token +
         ' Token Type: ' +
         token_type +
         ' Expires In: ' +
         expires_in
-      );
+      );*/
 
       res.render('lti', {
         title: 'REST Token Response Received!',
@@ -427,7 +426,7 @@ export const rest_auth = (req, res) =>  {
   let grant = 'grant_type=client_credentials';
 
   http_req.write(grant);
-  console.log(http_req);
+  //console.log(http_req);
   http_req.end();
 };
 
@@ -446,7 +445,7 @@ export const rest_getuser = (req, res) =>  {
     headers: { Authorization: auth_string }
   };
 
-  console.log(options);
+  //console.log(options);
 
   let http_req = https.request(options, function (http_res) {
     http_res.setEncoding('utf-8');
@@ -455,10 +454,10 @@ export const rest_getuser = (req, res) =>  {
       responseString += data;
     });
     http_res.on('end', function () {
-      console.log(responseString);
+      //console.log(responseString);
       let json = JSON.parse(responseString);
 
-      console.log('User Info: ' + JSON.stringify(json, null, '  '));
+      //console.log('User Info: ' + JSON.stringify(json, null, '  '));
 
       res.render('lti', {
         title: 'REST User Info Received!',
@@ -470,7 +469,7 @@ export const rest_getuser = (req, res) =>  {
   });
 
   http_req.write('');
-  console.log(http_req);
+  //console.log(http_req);
   http_req.end();
 };
 

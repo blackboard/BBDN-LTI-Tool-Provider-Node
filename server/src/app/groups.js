@@ -59,7 +59,7 @@ export const getGroups = (req, res, groupsPayload) => {
         } else {
           groupsPayload.body = json;
           console.log('Groups call returned:');
-          console.log(body);
+          // console.log(body);
           if (response.headers.link) {
             let links = response.headers.link.split(',');
             links.forEach(link => {

@@ -27,37 +27,37 @@ var processData = function (data) {
 
 exports.got_caliper = function (req, res) {
 
-  console.log(req.headers);
-  console.log(JSON.stringify(req.body, null, '\t'));
+  // console.log(req.headers);
+  //console.log(JSON.stringify(req.body, null, '\t'));
 
   //Use connect method to connect to the Server
   MongoClient.connect(url, function (err, db) {
-    console.log('Connected correctly to server');
+    //console.log('Connected correctly to server');
 
     var event = processData(req.body);
 
-    console.log(JSON.stringify(event, null, '\t'));
+    //console.log(JSON.stringify(event, null, '\t'));
 
     // Insert a single document
     db.collection('caliper').insert(event, function (err, r) {
-      if (err) console.log('Error encountered during caliper event save: ' + err.message);
+      //if (err) console.log('Error encountered during caliper event save: ' + err.message);
 
-      console.log('Caliper event saved successfully!');
+      //console.log('Caliper event saved successfully!');
 
       db.collection('caliper').count(function (err, count) {
-        if (err) console.log('Error counting records: ' + err.message);
+        //if (err) console.log('Error counting records: ' + err.message);
 
-        console.log('The caliper database contains ' + count + ' records.');
+        //console.log('The caliper database contains ' + count + ' records.');
 
         if (count > MAX_RECORDS) {
 
           var num_prune_recs = count - MAX_RECORDS;
 
-          console.log('Record count exceeds the maximum number of records to store. Pruning the oldest ' + num_prune_recs + ' records.');
+          //console.log('Record count exceeds the maximum number of records to store. Pruning the oldest ' + num_prune_recs + ' records.');
 
           db.collection('caliper').find().sort({ '_id': 1 }).limit(num_prune_recs).each(function (err, doc) {
             if (err) {
-              console.log('Error reading caliper events from database: ' + err.message);
+              //console.log('Error reading caliper events from database: ' + err.message);
               db.close();
               return false;
             }
@@ -83,7 +83,7 @@ exports.show_events = function (req, res) {
 
   //Use connect method to connect to the Server
   MongoClient.connect(url, function (err, db) {
-    console.log('Connected correctly to server');
+    //console.log('Connected correctly to server');
 
     var events = '<table style="border: 1px solid\;"><thead><tr style="border: 1px solid\;color: white\;background-color:blue\;"><th style="border: 1px solid\;"><b>SENSOR</b</th><th style="border: 1px solid\;"><b>SENDTIME</b></th><th style="border: 1px solid\;"><b>TYPE</b></th><th style="border: 1px solid\;"><b>ACTOR</b></th><th style="border: 1px solid\;"><b>SESSION</b></th></tr></thead><tbody>';
 
@@ -91,7 +91,7 @@ exports.show_events = function (req, res) {
       // Insert a single document
       db.collection('caliper').find().sort({ '_id': -1 }).limit(25).each(function (err, doc) {
         if (err) {
-          console.log('Error reading caliper events from database: ' + err.message);
+          //console.log('Error reading caliper events from database: ' + err.message);
           res.render('lti', {
             title: 'View Caliper Event Store!',
             content: 'Error reading caliper events from database: ' + err.message,
@@ -114,7 +114,7 @@ exports.show_events = function (req, res) {
           return false;
         }
 
-        console.log(JSON.stringify(doc, null, '\t'));
+        //console.log(JSON.stringify(doc, null, '\t'));
 
         var date = new Date(doc['sendTime']);
 
@@ -124,7 +124,7 @@ exports.show_events = function (req, res) {
           '</td><td style="border: 1px solid\;">' + doc['data'][0]['actor']['@id'] +
           '</td><td style="border: 1px solid\;">' + doc['data'][0]['federatedSession'] + '</tr>';
 
-        console.log(events);
+        //console.log(events);
       });
     } else {
       res.render('lti', {

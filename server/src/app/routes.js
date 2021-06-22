@@ -20,7 +20,7 @@ import {
   deleteAppById,
   getAllApplications,
   getAppById, getAuthFromState,
-  getCIMFromKey,
+  getCIMFromKey, getSecretFromKey,
   insertNewApp, insertNewAuthToken,
   insertNewCIM
 } from '../database/db-utility';
@@ -28,6 +28,7 @@ import { getCachedToken, getLearnRestToken } from './rest-service';
 import { getGroups, groups, groupSets } from './groups';
 import { getLTIToken } from './lti-token-service';
 import { got_launch } from './content-item';
+import { got_launch as lti_got_launch } from './lti';
 import { namesRoles } from './names-roles';
 import { oidcLogin, verifyToken } from './lti-adv';
 import { AGPayload, ContentItem, GroupsPayload, NRPayload } from '../common/restTypes';
@@ -90,18 +91,19 @@ module.exports = function (app) {
   app.post('/lti', (req, res) => {
     console.log('--------------------\nlti');
     if (req.body.lti_message_type === 'ContentItemSelectionRequest') {
+      console.log(req.body);
       got_launch(req, res, contentItemData).then(() => {
         insertNewCIM(contentitem_key, contentItemData);
         ciLoaded = true;
 
         const redirectUrl = `${frontendUrl}content_item`;
-        console.log('Redirecting to : ' + redirectUrl);
+        //console.log('Redirecting to : ' + redirectUrl);
         res.redirect(redirectUrl);
       });
     }
 
     if (req.body.lti_message_type === 'basic-lti-launch-request') {
-      got_launch(req, res).catch(e => console.log(e.message));
+      lti_got_launch(req, res);
     }
   });
 
@@ -112,36 +114,40 @@ module.exports = function (app) {
   let passthru = false;
 
   app.post('/CIMRequest', (req, res) => {
-    console.log('--------------------\nCIMRequest frontend URL in routes: ' + frontendUrl);
-
-    if (req.body.custom_option === undefined) {
-      // no custom_option set so go to CIM request menu and save req and res to pass through
-      // after custom_option has been selected
-      passthru_req = req;
-      passthru_res = res;
-      passthru = true;
-      res.redirect('/cim_request');
-    } else {
-      if (!passthru) {
-        // custom_option was set in call from TC so use current req and res
+    console.log('--------------------\nCIMRequest');
+    if (req.body.oauth_consumer_key === getSecretFromKey(req.body.oauth_consumer_key)) {
+      if (req.body.custom_option === undefined) {
+        // no custom_option set so go to CIM request menu and save req and res to pass through
+        // after custom_option has been selected
         passthru_req = req;
         passthru_res = res;
-        passthru = false;
+        passthru = true;
+        res.redirect('/cim_request');
       } else {
-        // custom_option was set from menu so add option and content (if available) to passthru_req
-        passthru_req.body.custom_option = req.body.custom_option;
-        passthru_req.body.custom_content = req.body.custom_content;
-      }
-      got_launch(passthru_req, passthru_res, contentItemData)
-        .then(() => {
-          insertNewCIM(contentitem_key, contentItemData);
-          ciLoaded = true;
+        if (!passthru) {
+          // custom_option was set in call from TC so use current req and res
+          passthru_req = req;
+          passthru_res = res;
+          passthru = false;
+        } else {
+          // custom_option was set from menu so add option and content (if available) to passthru_req
+          passthru_req.body.custom_option = req.body.custom_option;
+          passthru_req.body.custom_content = req.body.custom_content;
+        }
+        got_launch(passthru_req, passthru_res, contentItemData)
+          .then(() => {
+            insertNewCIM(contentitem_key, contentItemData);
+            ciLoaded = true;
 
-          const redirectUrl = `${frontendUrl}content_item`;
-          console.log('Redirecting to : ' + redirectUrl);
-          res.redirect(redirectUrl);
-        });
+            const redirectUrl = `${frontendUrl}content_item`;
+            //console.log('Redirecting to : ' + redirectUrl);
+            res.redirect(redirectUrl);
+          });
+      }
+    } else {
+      console.log('application not registered with this tool')
     }
+
   });
 
   app.get('/contentitemdata', (req, res) => {
@@ -457,8 +463,9 @@ module.exports = function (app) {
     const app = {
       'name': req.body.appName,
       'appId': req.body.appId,
-      'secret': req.body.secret,
+      'appSecret': req.body.appSecret,
       'devPortalUrl': req.body.devPortalUrl,
+      'appKey': req.body.appKey
     };
     const result = insertNewApp(app);
     res.send(result);

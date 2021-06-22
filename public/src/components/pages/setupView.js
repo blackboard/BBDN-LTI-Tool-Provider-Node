@@ -28,7 +28,7 @@ class SetupView extends Component {
   handleSubmit() {
     const data = new URLSearchParams(this.state);
     let setupData = JSON.stringify(this.state);
-    console.log("body", setupData);
+    //console.log("body", setupData);
     fetch("/saveSetup", {
       method: "POST",
       headers: {

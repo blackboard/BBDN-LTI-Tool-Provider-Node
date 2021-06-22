@@ -131,17 +131,17 @@ export const getOauth2Token = (scope, client_id) => {
 
     request(options, function (err, response, body) {
       if (err) {
-        console.log('Get Token Error - request failed: ' + err.message);
+        //console.log('Get Token Error - request failed: ' + err.message);
         reject(body);
       } else if (response.statusCode !== 200) {
-        console.log(
+        /*console.log(
           'Get Token Error - Service call failed:  ' +
           response.statusCode +
           '\n' +
           response.statusMessage +
           '\n' +
           options.uri
-        );
+        );*/
         reject(body);
       } else {
         resolve(body);

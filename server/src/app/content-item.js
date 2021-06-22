@@ -1,19 +1,17 @@
-import lti_content_items from './lti-content-item.js';
+import * as lti_content_items from './lti-content-item.js';
 
 let HMAC_SHA = require('./hmac-sha1');
 let url = require('url');
 let uuid = require('uuid');
 
 //LTI Variables
-let consumerKey = '12345';
-let consumerSecret = 'secret';
 let returnUrl = '';
 let sha_method = '';
 
 export function got_launch(req, res, contentItemData) {
   returnUrl = req.body.content_item_return_url;
   sha_method = req.body.oauth_signature_method;
-  console.log('Signature Method: ' + sha_method);
+  //console.log('Signature Method: ' + sha_method);
 
   // Populate contentItemData
   contentItemData.data = req.body;
@@ -71,7 +69,7 @@ export function got_launch(req, res, contentItemData) {
   let parts = url.parse(options.return_url, true);
   let headers = _build_headers(options, parts);
 
-  console.log(headers);
+  // console.log(headers);
 
   contentItemData.oauth_nonce = get_value('oauth_nonce', headers.Authorization);
   contentItemData.oauth_timestamp = get_value(
@@ -84,7 +82,7 @@ export function got_launch(req, res, contentItemData) {
   );
 
   console.log('--- Content Item ---');
-  console.log(contentItemData);
+  // console.log(contentItemData);
 
   return new Promise(function (resolve) {
     resolve();

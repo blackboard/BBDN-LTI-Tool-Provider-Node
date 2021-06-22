@@ -55,16 +55,16 @@ export const readCols = (req, res, agPayload) => {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log(
+          /*console.log(
             'Assignment and Grade Error - request failed: ' + err.message
-          );
+          );*/
         } else if (response.statusCode !== 200) {
-          console.log(
+          /*console.log(
             'Assignment and Grade Error - Service call failed: ' +
             response.statusCode +
             '\n' +
             options.uri
-          );
+          );*/
           agPayload.body = json;
         } else {
           agPayload.body = json;
@@ -73,7 +73,7 @@ export const readCols = (req, res, agPayload) => {
       });
     },
     function (error) {
-      console.log(error);
+      //console.log(error);
     }
   );
 };
@@ -86,7 +86,7 @@ export const addCol = (req, res, agPayload) => {
       let label = agPayload.form.label;
       let columnId = agPayload.form.columnId;
       let dueDate = agPayload.form.dueDate;
-      console.log(`Add/update column ID: ${columnId}, label: ${label}, dueDate: ${dueDate}`);
+      //console.log(`Add/update column ID: ${columnId}, label: ${label}, dueDate: ${dueDate}`);
 
       let newBody = {
         scoreMaximum: agPayload.form.score,
@@ -125,14 +125,14 @@ export const addCol = (req, res, agPayload) => {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log('AGS Add/Update Column Error - request failed: ' + err.message);
+          //console.log('AGS Add/Update Column Error - request failed: ' + err.message);
         } else if (response.statusCode !== 200 && response.statusCode !== 201) {
-          console.log(
+          /*console.log(
             'AGS Add Column Error - Service call failed: ' +
             response.statusCode +
             '\n' +
             options.uri
-          );
+          );*/
           agPayload.body = json;
         } else {
           agPayload.body = json;
@@ -141,7 +141,7 @@ export const addCol = (req, res, agPayload) => {
       });
     },
     function (error) {
-      console.log(error);
+      //console.log(error);
     }
   );
 };
@@ -168,7 +168,7 @@ export const delCol = (req, res, agPayload) => {
       };
       request(options, function (err, response, body) {
         if (response.statusCode === 204) {
-          console.log(`Column deleted successfully`);
+          //console.log(`Column deleted successfully`);
         } else {
           let json = {};
           if (body) {
@@ -176,16 +176,16 @@ export const delCol = (req, res, agPayload) => {
           }
 
           if (err) {
-            console.log(
+            /*console.log(
               'AGS Delete Column Error - request failed: ' + err.message
-            );
+            );*/
           } else if (response.statusCode !== 204) {
-            console.log(
+            /*console.log(
               'AGS Delete Column Error - Service call failed: ' +
               response.statusCode +
               '\n' +
               options.uri
-            );
+            );*/
             agPayload.body = json;
           } else {
             agPayload.body = json;
@@ -195,7 +195,7 @@ export const delCol = (req, res, agPayload) => {
       });
     },
     function (error) {
-      console.log(error);
+      //console.log(error);
     }
   );
 };
@@ -204,7 +204,7 @@ export const results = (req, res, agPayload) => {
   const client_id = req.body.orig_body.aud;
   getCachedLTIToken(req.body.nonce, client_id, resultsScope).then(
     function (token) {
-      console.log(agPayload.form.url)
+      //console.log(agPayload.form.url)
       let options = {
         method: 'GET',
         uri: agPayload.form.url + '/results',
@@ -216,16 +216,16 @@ export const results = (req, res, agPayload) => {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log(
+          /*console.log(
             'AGS Read Results Error - request failed: ' + err.message
-          );
+          );*/
         } else if (response.statusCode !== 200) {
-          console.log(
+          /*console.log(
             'AGS Read Results Error - Service call failed: ' +
             response.statusCode +
             '\n' +
             options.uri
-          );
+          );*/
           agPayload.body = json;
         } else {
           agPayload.body = json;
@@ -234,7 +234,7 @@ export const results = (req, res, agPayload) => {
       });
     },
     function (error) {
-      console.log(error);
+      //console.log(error);
     }
   );
 };
@@ -284,7 +284,7 @@ export const scores = (req, res, agPayload, task) => {
         };
         break;
       default:
-        console.log('Unknown task sent to scores: ' + task);
+        //console.log('Unknown task sent to scores: ' + task);
         return;
       }
 
@@ -302,14 +302,14 @@ export const scores = (req, res, agPayload, task) => {
         let json = JSON.parse(body);
 
         if (err) {
-          console.log('AGS Send Score Error - request failed: ' + err.message);
+          //console.log('AGS Send Score Error - request failed: ' + err.message);
         } else if (response.statusCode !== 200) {
-          console.log(
+          /*console.log(
             'AGS Send Score Error - Service call failed: ' +
             response.statusCode +
             '\n' +
             options.uri
-          );
+          );*/
           agPayload.body = json;
         } else {
           agPayload.body = json;
@@ -318,7 +318,7 @@ export const scores = (req, res, agPayload, task) => {
       });
     },
     function (error) {
-      console.log(error);
+      //console.log(error);
     }
   );
 };

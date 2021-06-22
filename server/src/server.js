@@ -48,7 +48,7 @@ app.use(
 );
 
 httpProxy.use(function (err, req, res) {
-  console.log(err.stack);
+  //console.log(err.stack);
   res.status(500).send('Something broke!');
 });
 
@@ -78,7 +78,7 @@ httpProxy.all('/*', function (req, res) {
 
   try {
     if (req.method !== 'OPTIONS') {
-      console.log('body:' + req.body);
+      //console.log('body:' + req.body);
       request({
         url: learnUrl,
         method: req.method,
@@ -95,7 +95,7 @@ httpProxy.all('/*', function (req, res) {
       res.send();
     }
   } catch (err) {
-    console.log(err.toString());
+    //console.log(err.toString());
   }
 });
 

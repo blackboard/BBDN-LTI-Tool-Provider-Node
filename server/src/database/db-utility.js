@@ -14,7 +14,7 @@ export const getAllApplications = () => {
 }
 
 export const getAppById = (appId) => {
-  console.log("Asking the database for this application: " + appId)
+  //console.log("Asking the database for this application: " + appId)
   try {
     const appIndex = apps.getIndex('.applications-data', appId);
     return apps.getData(`.applications-data[${appIndex}]`);
@@ -30,11 +30,12 @@ export const insertNewApp = (app) => {
         "id": app.appId,
         "setup": {
           "name": app.name,
-          "secret": app.secret,
+          "key": app.appKey,
+          "secret": app.appSecret,
           "devPortalUrl": app.devPortalUrl,
           "jwtUrl":`${app.devPortalUrl}${jwtApi}`,
           "oidcUrl": `${app.devPortalUrl}${oidcApi}`,
-          "issuer": "Blackboard"
+          "issuer": "www.blackboard.com"
         }
       });
       return "success";
@@ -96,7 +97,7 @@ export const insertNewState = (state) => {
       return e;
     }
   } else {
-    console.log(`${state} already has a record`)
+    //console.log(`${state} already has a record`)
   }
 }
 
@@ -130,6 +131,16 @@ export const getCIMFromKey = (cimKey) => {
   try {
     const index = cim.getIndex('.cim-data', cimKey);
     return cim.getData(`.cim-data[${index}]`);
+  } catch (error) {
+    //console.log(error);
+  }
+}
+
+export const getSecretFromKey = (appKey) => {
+  try {
+    const index = apps.getIndex('.applications-data', appKey);
+    console.log(`[${index}]${appKey}`);
+    return apps.getData(`.applications-data[${index}]`);
   } catch (error) {
     console.log(error);
   }

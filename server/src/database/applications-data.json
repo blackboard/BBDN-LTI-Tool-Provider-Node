@@ -23,6 +23,30 @@
                 "appKey": "9567a7c2-e2f8-43f7-8017-fd36429d1058",
                 "appSecret": "e5U9L8n6kpBYsAqi2KW4eOkBqC6FrRRM"
             }
+        },
+        {
+            "id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+            "setup": {
+                "name": "New Local App",
+                "devPortalUrl": "https://devportal-stage.saas.bbpd.io",
+                "jwtUrl": "https://devportal-stage.saas.bbpd.io/api/v1/gateway/oauth2/jwttoken",
+                "oidcUrl": "https://devportal-stage.saas.bbpd.io/api/v1/gateway/oidcauth",
+                "issuer": "Blackboard",
+                "appKey": "2585be1a-548f-4b75-bd88-29a552e3cc99",
+                "appSecret": "wFiCuL894koU4cgpQwaD6oXjUuv78nSn"
+            }
+        },
+        {
+            "id": "ed21d7c9-9788-4f23-8baf-ef9413b637a6",
+            "setup": {
+                "name": "Testing Paste",
+                "key": "c1705624-3e9a-41b5-a1c6-7ebc5020b2ac",
+                "secret": "KFzuC0V6Ws4JNbwfkGdrdXMiNPkRQAVi",
+                "devPortalUrl": "https://devportal-stage.saas.bbpd.io",
+                "jwtUrl": "https://devportal-stage.saas.bbpd.io/api/v1/gateway/oauth2/jwttoken",
+                "oidcUrl": "https://devportal-stage.saas.bbpd.io/api/v1/gateway/oidcauth",
+                "issuer": "www.blackboard.com"
+            }
         }
     ]
 }

@@ -11,7 +11,7 @@ let params = parameters.getInstance();
 if (queryParams) {
   const nonce = queryParams.nonce;
   params.setNonce(nonce);
-  console.log(`app.js nonce ${nonce}`);
+  //console.log(`app.js nonce ${nonce}`);
 }
 
 ReactDOM.render(
