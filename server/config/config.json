@@ -1,5 +1,5 @@
 {
-  "frontend_url": "http://localhost/",
+  "frontend_url": "https://5dc40c625355.ngrok.io/",
   "provider_port": "3000",
   "publicKeys": {
     "keys": [

@@ -4,6 +4,8 @@ import express from 'express';
 import fs from 'fs';
 import request from 'request';
 import routes from './app/routes.js';
+import { Task, SimpleIntervalJob, ToadScheduler } from 'toad-scheduler';
+import { deleteExpiredSessions } from './database/db-utility';
 
 const app = express();
 const httpProxy = express();
@@ -14,6 +16,21 @@ const options = config.use_ssl
     cert: fs.readFileSync(config.ssl_crt)
   }
   : { key: null, cert: null };
+
+const scheduler = new ToadScheduler()
+
+const task = new Task(
+  'clear expired sessions',
+  () => {
+    deleteExpiredSessions();
+  },
+  (e) => {
+    console.log(e)
+  }
+)
+const job = new SimpleIntervalJob({ seconds: 60, }, task)
+
+scheduler.addSimpleIntervalJob(job)
 
 let listenPort =
   process.env.PORT ||

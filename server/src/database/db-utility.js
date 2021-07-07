@@ -86,6 +86,10 @@ export const getAuthFromState = (state) => {
   }
 }
 
+export const getAllAuth = () => {
+  return auth.getData('.auth-data');
+}
+
 export const insertNewState = (state) => {
   if (!auth.exists(`.auth-data.${state}`)) {
     try {
@@ -144,4 +148,36 @@ export const getSecretFromKey = (appKey) => {
   } catch (error) {
     console.log(error);
   }
+}
+
+export const getExpiredSessions = () => {
+  const now = new Date().getTime() / 1000;
+  try {
+    let expiredSessions = [];
+    const sessions = getAllAuth();
+    sessions.forEach(session => {
+      const exp = session.auth.jwt.body.exp;
+      if (now > exp) {
+        expiredSessions.push(session);
+      } else {
+        console.log(`${session.state} jwt not expired`);
+      }
+  })
+    return expiredSessions;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const deleteExpiredSessions = () => {
+  const sessions = getExpiredSessions();
+  sessions.forEach(session => {
+    try {
+      const index = auth.getIndex('.auth-data', session.state);
+      auth.delete(`.auth-data[${index}]`);
+      console.log(`${session.state} has been deleted`);
+    } catch (e) {
+      return e;
+    }
+  });
 }
