@@ -185,7 +185,7 @@ module.exports = function(app) {
     // Save off the JWT to our database so we can get it back after we get the auth code.
     const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
     const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${setup.appKey}&state=${req.body.state}`;
-    const authcodeUrl = `${lmsServer}/learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
+    const authcodeUrl = `${lmsServer}learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
 
     console.log(`Redirect to get 3LO code ${authcodeUrl}`);
     res.redirect(authcodeUrl);
@@ -201,24 +201,29 @@ module.exports = function(app) {
     }
 
     const jwtPayload = await redisUtil.redisGet(state + ':jwt');
-    console.log(`tlocode jwt ${JSON.stringify(jwtPayload)}`);
 
-    // If we have a 3LO auth code, let's get us a bearer token here.
-    const redirectUri = `${config.frontend_url}tlocode`;
-    const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-    const learnUrl = lmsServer + `/learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
+    if (jwtPayload) {
+      console.log(`tlocode jwt ${JSON.stringify(jwtPayload)}`);
 
-    // Cache the nonce which is our state value
-    redisUtil.redisSave(state, 'nonce');
+      // If we have a 3LO auth code, let's get us a bearer token here.
+      const redirectUri = `${config.frontend_url}tlocode`;
+      const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+      const learnUrl = `${lmsServer}learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
 
-    console.log(`Getting REST token at ${learnUrl}`);
-    const restToken = await restService.getLearnRestToken(learnUrl, state, setup.appKey, setup.appSecret);
-    console.log(`Learn REST token ${restToken}`);
+      // Cache the nonce which is our state value
+      redisUtil.redisSave(state, 'nonce');
 
-    // Now get the LTI OAuth 2 bearer token (shame they aren't the same)
-    console.log(`Getting LTI token at ${setup.tokenEndPoint}`);
-    const ltiToken = await ltiTokenService.getLTIToken(setup.applicationId, setup.tokenEndPoint, ltiScopes, state);
-    console.log(`LMS LTI token ${ltiToken}`);
+      console.log(`Getting REST token at ${learnUrl}`);
+      const restToken = await restService.getLearnRestToken(learnUrl, state, setup.appKey, setup.appSecret);
+      console.log(`Learn REST token ${restToken}`);
+
+      // Now get the LTI OAuth 2 bearer token (shame they aren't the same)
+      console.log(`Getting LTI token at ${setup.tokenEndPoint}`);
+      const ltiToken = await ltiTokenService.getLTIToken(setup.applicationId, setup.tokenEndPoint, ltiScopes, state);
+      console.log(`LMS LTI token ${ltiToken}`);
+    } else {
+      console.log(`tlocode jwt is null; our cache for the jwt isn't working`)
+    }
 
     // Now finally redirect to the UI
     if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
@@ -265,7 +270,7 @@ module.exports = function(app) {
     };
 
     try {
-      const courseResponse = await axios.get(`${lmsServer}/learn/api/public/v2/courses/uuid:${courseUUID}`, xhrConfig);
+      const courseResponse = await axios.get(`${lmsServer}learn/api/public/v2/courses/uuid:${courseUUID}`, xhrConfig);
       console.log(`Got course; Ultra status is ${courseResponse.data.ultraStatus}, and PK1 is: ${courseResponse.data.id}`);
       res.send(courseResponse.data);
     } catch (exception) {
