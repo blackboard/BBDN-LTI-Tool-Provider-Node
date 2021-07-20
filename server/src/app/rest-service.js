@@ -1,4 +1,3 @@
-import config from "../config/config";
 import axios from "axios";
 import redisUtil from "./redisutil";
 
