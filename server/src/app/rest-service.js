@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getAuthFromState, insertNewAuthToken } from '../database/db-utility';
 
 export const getLearnRestToken = async (learnUrl, state, app) => {
-  const auth_hash = new Buffer.from(`${app.setup.appKey}:${app.setup.appSecret}`).toString('base64');
+  const auth_hash = new Buffer.from(`${app.setup.key}:${app.setup.secret}`).toString('base64');
   const auth_string = `Basic ${auth_hash}`;
   console.log(`9-Auth string: ${auth_string}`);
   const options = {

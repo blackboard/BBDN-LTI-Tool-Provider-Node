@@ -51,16 +51,21 @@ export const verifyToken = async (id_token) => {
     clientId +
     '/jwks.json';
 
-  try {
-    const response = await axios.get(url);
-    const key = response.data.keys.find(k => k.kid === jwtPayload.header.kid);
-    jwt.verify(id_token, jwk2pem(key));
-    jwtPayload.verified = true;
-    console.log('5-JWT verified ' + jwtPayload.verified);
-  } catch (err) {
-    console.log('5-Verify Error - verify failed: ' + err);
-    jwtPayload.verified = false;
-  }
+
+    await axios.get(url)
+      .then(res => {
+        return res.data.keys.find(k => k.kid === jwtPayload.header.kid);
+      })
+      .then(key => {
+        return jwt.verify(id_token, jwk2pem(key));
+      })
+      .finally(() => {
+        console.log('5-JWT verified ' + jwtPayload.verified);
+        return jwtPayload.verified = true;
+      }).catch(err => {
+        console.log('5-Verify Error - verify failed: ' + err);
+        return jwtPayload.verified = false;
+      })
 
   if (
     jwtPayload.body[

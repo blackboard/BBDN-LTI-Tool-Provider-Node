@@ -68,7 +68,7 @@ module.exports = function (app) {
     eventstore.show_events(req, res);
   });
   app.post('/rest/auth', (req, res) => {
-    rest_auth(req, res, setup.appKey, setup.appSecret);
+    rest_auth(req, res);
   });
   app.post('/rest/user', (req, res) => {
     rest_getuser(req, res);
@@ -188,15 +188,15 @@ module.exports = function (app) {
     }
 
     // Parse, verify and save the id_token JWT
-    const jwtPayload = await verifyToken(req.body.id_token);
-    await insertNewAuthToken(state, jwtPayload, 'jwt');
+    const jwtPayload = await verifyToken(req.body.id_token).catch(e => console.log(e));
+    await insertNewAuthToken(state, jwtPayload, 'jwt').catch(e => console.log(e));
     //await insertNewAuthToken(state, appInfo.appId, 'client_id');
     const app = getAppById(jwtPayload.body.aud);
     // Now we have the JWT but next we need to get an OAuth2 bearer token for REST calls.
     // Before we can do that we need to get an authorization code for the current user.
     // Save off the JWT to our database so we can get it back after we get the auth code.
     const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-    const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${app.setup.appKey}&state=${req.body.state}`;
+    const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${app.setup.key}&state=${req.body.state}`;
     const authcodeUrl = `${lmsServer}learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
 
     console.log(`6-Redirect to Learn to get 3LO code`);
@@ -442,14 +442,6 @@ module.exports = function (app) {
 
   app.get('/.well-known/jwks.json', (req, res) => {
     res.send(config.publicKeys);
-  });
-
-  //=======================================================
-  // Setup processing
-
-  app.get('/setup_page', (req, res) => {
-    console.log('--------------------\nsetup');
-    res.redirect('/setup');
   });
 
   //=======================================================

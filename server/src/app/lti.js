@@ -2,13 +2,13 @@ import * as uuid from 'uuid';
 import HMAC_SHA from './hmac-sha1';
 import _ from 'lodash';
 import * as ims_caliper from 'ims-caliper';
-import config from '../config/config';
 import finish from 'finish';
 import https from 'https';
 import lti from 'ims-lti';
 import moment from 'moment';
 import url from 'url';
 import utils from './utils';
+import { getAppById } from '../database/db-utility';
 
 let rejectUnauthorized = true;
 
@@ -358,12 +358,13 @@ export const get_outcomes = (req, res) =>  {
   });
 };
 
-export const rest_auth = (req, res, key, secret) =>  {
+export const rest_auth = (req, res) =>  {
+  const app = getAppById(req.aud);
   //build url from caliper profile url
   let parts = url.parse(caliper_profile_url, true);
   let oauth_host = parts.protocol + '//' + parts.host;
 
-  let auth_hash = new Buffer(key + ":" + secret).toString("base64");
+  let auth_hash = new Buffer.from(app.setup.key + ":" + app.setup.secret).toString('base64');
 
   let auth_string = 'Basic ' + auth_hash;
 

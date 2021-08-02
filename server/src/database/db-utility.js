@@ -159,8 +159,6 @@ export const getExpiredSessions = () => {
       const exp = session.auth.jwt.body.exp;
       if (now > exp) {
         expiredSessions.push(session);
-      } else {
-        console.log(`${session.state} jwt not expired`);
       }
   })
     return expiredSessions;
@@ -175,7 +173,6 @@ export const deleteExpiredSessions = () => {
     try {
       const index = auth.getIndex('.auth-data', session.state);
       auth.delete(`.auth-data[${index}]`);
-      console.log(`${session.state} has been deleted`);
     } catch (e) {
       return e;
     }
