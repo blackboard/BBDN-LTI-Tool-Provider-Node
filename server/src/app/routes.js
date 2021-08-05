@@ -276,7 +276,7 @@ module.exports = function (app) {
     };
 
     try {
-      const courseResponse = await axios.get(`${lmsServer}/learn/api/public/v2/courses/uuid:${courseUUID}`, xhrConfig);
+      const courseResponse = await axios.get(`${lmsServer}learn/api/public/v2/courses/uuid:${courseUUID}`, xhrConfig);
       console.log(`Got course; Ultra status is ${courseResponse.data.ultraStatus}, and PK1 is: ${courseResponse.data.id}`);
       res.send(courseResponse.data);
     } catch (exception) {

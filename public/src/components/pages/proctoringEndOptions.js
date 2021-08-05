@@ -59,6 +59,7 @@ export default class ProctoringEndOptionsView extends React.Component {
           </Typography>
           <br/>
           <form action="buildProctoringEndReturnPayload" method="POST">
+            <input type="hidden" name="nonce" value={params.getNonce()}/>
             <Typography variant="h5">Messages</Typography>
             <Table style={{ width: '45%' }}>
               <TableHead>

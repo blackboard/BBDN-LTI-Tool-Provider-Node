@@ -14,7 +14,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        include: /public\/src/,
+        include: path.resolve(__dirname, "public/src"),
         exclude: /node_modules/,
         use: [
           {
