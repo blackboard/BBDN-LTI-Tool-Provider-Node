@@ -45,6 +45,7 @@ let caliper_profile_url_parts = '';
  */
 
 export const got_launch = (req, res) => {
+  console.log('shannon ' + req)
   req.body = _.omit(req.body, '__proto__');
 
   let content = '';
@@ -53,6 +54,7 @@ export const got_launch = (req, res) => {
   for (let i = 0, length = keys.length; i < length; i++) {
     content += keys[i] + ' = ' + req.body[keys[i]] + '<br />';
   }
+
 
   lis_result_sourcedid = req.body.lis_result_sourcedid;
   lis_outcome_service_url = req.body.lis_outcome_service_url;
@@ -358,13 +360,12 @@ export const get_outcomes = (req, res) =>  {
   });
 };
 
-export const rest_auth = (req, res) =>  {
-  const app = getAppById(req.aud);
+export const rest_auth = (req, res, key, secret) =>  {
   //build url from caliper profile url
   let parts = url.parse(caliper_profile_url, true);
   let oauth_host = parts.protocol + '//' + parts.host;
 
-  let auth_hash = new Buffer.from(app.setup.key + ":" + app.setup.secret).toString('base64');
+  let auth_hash = new Buffer(key + ":" + secret).toString("base64");
 
   let auth_string = 'Basic ' + auth_hash;
 
@@ -514,12 +515,13 @@ export const rest_getcourse = (req, res) =>  {
 };
 
 export const get_membership = (req, res) =>  {
+  const appInfo = getAppById('local11');
   if (membership_url !== '') {
     let parts = url.parse(membership_url, true);
 
     let options = {
-      consumer_key: consumer_key,
-      consumer_secret: consumer_secret,
+      consumer_key: appInfo.setup.key,
+      consumer_secret: appInfo.setup.secret,
       url: parts.protocol + '//' + parts.host + parts.pathname, // Rebuild url without parameters
       oauth_version: '1.0',
       oauth_signature_method: sha_method

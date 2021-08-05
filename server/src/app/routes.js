@@ -47,7 +47,7 @@ module.exports = function (app) {
   app.use(cookieParser());
 
   const frontendUrl = config.frontend_url;
-
+  const lti11Setup = config.lti11Setup;
   let contentItemData = new ContentItem();
   let ciLoaded = false;
 
@@ -68,7 +68,7 @@ module.exports = function (app) {
     eventstore.show_events(req, res);
   });
   app.post('/rest/auth', (req, res) => {
-    rest_auth(req, res);
+    rest_auth(req, res, lti11Setup.key, lti11Setup.secret);
   });
   app.post('/rest/user', (req, res) => {
     rest_getuser(req, res);
@@ -97,7 +97,7 @@ module.exports = function (app) {
         ciLoaded = true;
 
         const redirectUrl = `${frontendUrl}content_item`;
-        //console.log('Redirecting to : ' + redirectUrl);
+        console.log('Redirecting to : ' + redirectUrl);
         res.redirect(redirectUrl);
       });
     }
@@ -115,7 +115,6 @@ module.exports = function (app) {
 
   app.post('/CIMRequest', (req, res) => {
     console.log('--------------------\nCIMRequest');
-    if (req.body.oauth_consumer_key === getSecretFromKey(req.body.oauth_consumer_key)) {
       if (req.body.custom_option === undefined) {
         // no custom_option set so go to CIM request menu and save req and res to pass through
         // after custom_option has been selected
@@ -144,10 +143,6 @@ module.exports = function (app) {
             res.redirect(redirectUrl);
           });
       }
-    } else {
-      console.log('application not registered with this tool')
-    }
-
   });
 
   app.get('/contentitemdata', (req, res) => {
@@ -186,74 +181,77 @@ module.exports = function (app) {
     if (state !== req.body.state) {
       console.log(`The state field is missing or doesn't match. Maybe cookies are blocked?`);
     }
-
+    let lmsServer;
     // Parse, verify and save the id_token JWT
-    const jwtPayload = await verifyToken(req.body.id_token).catch(e => console.log(e));
-    await insertNewAuthToken(state, jwtPayload, 'jwt').catch(e => console.log(e));
-    //await insertNewAuthToken(state, appInfo.appId, 'client_id');
-    const app = getAppById(jwtPayload.body.aud);
-    // Now we have the JWT but next we need to get an OAuth2 bearer token for REST calls.
-    // Before we can do that we need to get an authorization code for the current user.
-    // Save off the JWT to our database so we can get it back after we get the auth code.
-    const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-    const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${app.setup.key}&state=${req.body.state}`;
-    const authcodeUrl = `${lmsServer}learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
-
-    console.log(`6-Redirect to Learn to get 3LO code`);
-    res.redirect(authcodeUrl);
+    await verifyToken(req.body.id_token)
+      .then(async jwt => {
+        await insertNewAuthToken(state, jwt, 'jwt');
+        lmsServer = jwt.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+        return getAppById(jwt.body.aud);
+      })
+      .then(app => {
+        const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${app.setup.key}&state=${req.body.state}`;
+        const authcodeUrl = `${lmsServer}learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
+        console.log(`6-Redirect to Learn to get 3LO code`);
+        return res.redirect(authcodeUrl);
+      })
+      .catch(e => console.log(e));
   });
 
   // The 3LO redirect route
   app.get('/tlocode', async (req, res) => {
     console.log(`7-Learn sent back: code: ${JSON.stringify(req.query)}`);
-    await insertNewAuthToken(req.query.state, req.query.code, 'auth_code');
-
-    const state = req.cookies['state'];
-    if (state !== req.query.state) {
-      console.log(`The state field is missing or doesn't match.`);
-    }
-    console.log('8-using state ' + state);
-    const auth = await getAuthFromState(state);
-
-    const jwtPayload = auth.jwt;
-    //console.log("jwt payload is " + JSON.stringify(jwtPayload));
-    const app = getAppById(jwtPayload.body.aud);
-    // If we have a 3LO auth code, let's get us a bearer token here.
-    const redirectUri = `${config.frontend_url}tlocode`;
-    const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-    const learnUrl = lmsServer + `learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
-
-    const restToken = await getLearnRestToken(learnUrl, state, app);
-    console.log(`12-Learn REST token ${JSON.stringify(restToken)}`);
-
-    // Now get the LTI OAuth 2 bearer token (shame they aren't the same)
-    await getLTIToken(app.id, app.setup.jwtUrl, ltiScopes, state);
-
-    // Now finally redirect to the UI
-    if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
-      res.redirect(`/deep_link_options?nonce=${state}`);
-    } else if (jwtPayload.target_link_uri.endsWith('CIMRequest')) {
-      res.redirect(`/deep_link_options?nonce=${state}`);
-    } else if (jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
-      res.redirect(`/lti_bobcat_view?nonce=${state}`);
-    } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
-      const messageType = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/message_type"];
-      if (messageType === "LtiStartProctoring") {
-        res.redirect(`/proctoring_start_options_view?nonce=${state}`);
-      } else if (messageType === "LtiEndAssessment") {
-        res.redirect(`/proctoring_end_options_view?nonce=${state}`);
-      } else {
-        res.send(`Unrecognized proctoring message type: ${messageType}`);
-      }
-    } else if (jwtPayload.target_link_uri.endsWith('lti')) {
-      res.redirect(`/lti_adv_view?nonce=${state}`);
-    } else if (jwtPayload.target_link_uri.endsWith('lti13')) {
-      res.redirect(`/lti_adv_view?nonce=${state}`);
-    } else if (jwtPayload.target_link_uri.endsWith('msteams')) {
-      res.redirect(`/ms_teams_view?nonce=${state}`);
-    } else {
-      res.send(`Sorry Dave, I can't use that target_link_uri ${jwtPayload.target_link_uri}`);
-    }
+    let jwtPayload;
+    let state;
+    let app;
+    await insertNewAuthToken(req.query.state, req.query.code, 'auth_code')
+      .then(() => {
+        state = req.cookies['state'];
+        if (state !== req.query.state) {
+          console.log(`The state field is missing or doesn't match.`);
+        }
+        console.log('8-using state ' + state);
+        return getAuthFromState(state);
+      })
+      .then(auth => {
+        jwtPayload = auth.jwt;
+        return getAppById(jwtPayload.body.aud);
+      })
+      .then(devApp => {
+        app = devApp
+        const redirectUri = `${config.frontend_url}tlocode`;
+        const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+        const learnUrl = lmsServer + `learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
+        return getLearnRestToken(learnUrl, state, app)
+      })
+      .then(token => {
+        console.log(`12-Learn REST token ${JSON.stringify(token)}`);
+        return getLTIToken(app.id, app.setup.jwtUrl, ltiScopes, state);
+      })
+      .then(() => {
+        if (jwtPayload.target_link_uri.endsWith('deepLinkOptions') || jwtPayload.target_link_uri.endsWith('CIMRequest')) {
+          res.redirect(`/deep_link_options?nonce=${state}`);
+        } else if (jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
+          res.redirect(`/lti_bobcat_view?nonce=${state}`);
+        } else if (jwtPayload.target_link_uri.endsWith('proctoring')) {
+          const messageType = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/message_type'];
+          if (messageType === 'LtiStartProctoring') {
+            res.redirect(`/proctoring_start_options_view?nonce=${state}`);
+          } else if (messageType === 'LtiEndAssessment') {
+            res.redirect(`/proctoring_end_options_view?nonce=${state}`);
+          } else {
+            res.send(`Unrecognized proctoring message type: ${messageType}`);
+          }
+        } else if (jwtPayload.target_link_uri.endsWith('lti')) {
+          res.redirect(`/lti_adv_view?nonce=${state}`);
+        } else if (jwtPayload.target_link_uri.endsWith('lti13')) {
+          res.redirect(`/lti_adv_view?nonce=${state}`);
+        } else if (jwtPayload.target_link_uri.endsWith('msteams')) {
+          res.redirect(`/ms_teams_view?nonce=${state}`);
+        } else {
+          res.send(`Sorry Dave, I can't use that target_link_uri ${jwtPayload.target_link_uri}`);
+        }
+      });
   });
 
   app.get('/jwtPayloadData', async (req, res) => {
@@ -475,12 +473,6 @@ module.exports = function (app) {
     console.log('-------------------\nversion');
     const data = fs.readFileSync('version.json', 'utf8');
     res.send(data);
-  });
-
-  app.get('/adminConfig', async (req, res) => {
-    const dljwt = await getAuthFromState(nonce);
-    console.log(`dljwt ${JSON.stringify(dljwt)}`);
-    res.send(dljwt);
   });
 
   //=======================================================

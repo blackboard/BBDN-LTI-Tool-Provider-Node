@@ -2,7 +2,7 @@ import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
 
 const apps = new JsonDB(new Config('server/src/database/applications-data', true, true, '.'));
-const cim = new JsonDB(new Config('server/src/database/cim-data',true,true,'.'));
+const contentItemMessage = new JsonDB(new Config('server/src/database/cim-data',true,true,'.'));
 const auth = new JsonDB(new Config('server/src/database/auth-data', true, true, '.'));
 const configData = new JsonDB(new Config('server/src/database/config-data', true, true, '.'));
 
@@ -57,26 +57,6 @@ export const deleteAppById = (appId) => {
   }
 }
 
-export const insertConfig = (config) => {
-  try {
-    apps.push('.config-data[]', {
-      "privateKey": config.privateKey,
-      "publicKey": config.publicKey
-    });
-    return "success";
-  } catch (error) {
-    return error;
-  }
-}
-
-export const getConfig = () => {
-  try {
-    return configData.getData('.config-data[0]');
-  } catch (error) {
-    return error;
-  }
-}
-
 export const getAuthFromState = (state) => {
   try {
     const index = auth.getIndex('.auth-data', state);
@@ -120,8 +100,10 @@ export const insertNewAuthToken = async (state, token, type) => {
 }
 
 export const insertNewCIM = (cimKey, cim) => {
+  console.log(cimKey)
+  console.log(cim)
     try {
-      cim.push('.cim-data[]', {
+      contentItemMessage.push('.cim-data[]', {
         key: cimKey,
         message: cim
       });

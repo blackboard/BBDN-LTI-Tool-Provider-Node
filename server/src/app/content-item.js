@@ -1,4 +1,5 @@
 import * as lti_content_items from './lti-content-item.js';
+import * as config from '../../config/config.json';
 
 let HMAC_SHA = require('./hmac-sha1');
 let url = require('url');
@@ -15,8 +16,8 @@ export function got_launch(req, res, contentItemData) {
 
   // Populate contentItemData
   contentItemData.data = req.body;
-  contentItemData.consumer_key = consumerKey;
-  contentItemData.consumer_secret = consumerSecret;
+  contentItemData.consumer_key = config.lti11Setup.key;
+  contentItemData.consumer_secret = config.lti11Setup.secret;
   switch (req.body.custom_option) {
   case '1':
     contentItemData.content_items = lti_content_items.constructLTIContentItem1();
@@ -50,8 +51,8 @@ export function got_launch(req, res, contentItemData) {
 
   // Setup and create oauth components
   let options = {
-    consumer_key: consumerKey,
-    consumer_secret: consumerSecret,
+    consumer_key: config.lti11Setup.key,
+    consumer_secret: config.lti11Setup.secret,
     return_url: returnUrl,
     params: req.body,
     content_items: contentItemData.content_items,
