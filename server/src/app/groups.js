@@ -7,13 +7,13 @@ export const groups = (req, res, groupsPayload) => {
     let groups =
       groupsPayload.orig_body[
         'https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice'
-        ];
+      ];
     groupsPayload.url = groups.context_groups_url;
     groupsPayload.version = groups.service_version;
     groupsPayload.return_url =
       groupsPayload.orig_body[
         'https://purl.imsglobal.org/spec/lti/claim/launch_presentation'
-        ].return_url;
+      ].return_url;
   }
 };
 
@@ -84,13 +84,13 @@ export const groupSets = (req, res, groupSetsPayload) => {
     let groups =
       groupSetsPayload.orig_body[
         'https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice'
-        ];
+      ];
     groupSetsPayload.url = groups.context_group_sets_url;
     groupSetsPayload.version = groups.service_version;
     groupSetsPayload.return_url =
       groupSetsPayload.orig_body[
         'https://purl.imsglobal.org/spec/lti/claim/launch_presentation'
-        ].return_url;
+      ].return_url;
   }
 
   // Get OAuth2 token and make call to Learn

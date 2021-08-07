@@ -29,37 +29,37 @@ export default class NamesRolesView extends React.Component {
     const body = JSON.stringify(this.state.origBody);
     const diff =
       this.state.differenceUrl !== '' ? (
-        <form action="/namesAndRoles2" method="POST">
+        <form action='/namesAndRoles2' method='POST'>
           <Button type={'submit'} variant={'contained'} color={'secondary'}>NRPS Difference</Button>
-          <input type="hidden" name="body" defaultValue={body}/>
-          <input type="hidden" name="url" defaultValue={this.state.differenceUrl}/>
+          <input type='hidden' name='body' defaultValue={body}/>
+          <input type='hidden' name='url' defaultValue={this.state.differenceUrl}/>
         </form>
       ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='body1' style={styles.notAvailable}>
           <b>No difference link</b>
         </Typography>
       );
     const next =
       this.state.nextUrl !== '' ? (
-        <form action="/namesAndRoles2" method="POST">
+        <form action='/namesAndRoles2' method='POST'>
           <Button type={'submit'} variant={'contained'} color={'secondary'}>NRPS Next</Button>
-          <input type="hidden" name="body" defaultValue={body}/>
-          <input type="hidden" name="url" defaultValue={this.state.nextUrl}/>
+          <input type='hidden' name='body' defaultValue={body}/>
+          <input type='hidden' name='url' defaultValue={this.state.nextUrl}/>
         </form>
       ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='body1' style={styles.notAvailable}>
           No next link
         </Typography>
       );
 
     return (
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Names and Roles Service
         </Typography>
 
         <div>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             What would you like to do?
           </Typography>
           <Grid
@@ -67,14 +67,14 @@ export default class NamesRolesView extends React.Component {
             direction={'column'}
             spacing={2}>
             <Grid item xs>
-              <form action={this.state.returnUrl} method="post">
+              <form action={this.state.returnUrl} method='post'>
                 <Button type={'submit'} variant={'contained'} color={'secondary'}>Return to Learn</Button>
               </form>
             </Grid>
             <Grid item xs>
-              <form action="/namesAndRoles" method="post">
+              <form action='/namesAndRoles' method='post'>
                 <Button type={'submit'} variant={'contained'} color={'secondary'}>Names and Roles</Button>
-                <input type="hidden" name="body" defaultValue={body}/>
+                <input type='hidden' name='body' defaultValue={body}/>
               </form>
             </Grid>
             <Grid item xs>
@@ -86,11 +86,11 @@ export default class NamesRolesView extends React.Component {
           </Grid>
 
           <br/>
-          <Typography variant="h5">
+          <Typography variant='h5'>
             Names and Roles Response
           </Typography>
           <JSONInput
-            id="jwt_body"
+            id='jwt_body'
             viewOnly={true}
             confirmGood={true}
             placeholder={this.state.body}

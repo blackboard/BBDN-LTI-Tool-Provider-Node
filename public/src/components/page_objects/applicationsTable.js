@@ -1,5 +1,6 @@
 import DeleteIcon from '@material-ui/icons/Delete';
 import FormDialog from './formDialog';
+import PropTypes from 'prop-types';
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
@@ -38,7 +39,7 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
+  const stabilizedThis = array.map((el, index) => [ el, index ]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -62,7 +63,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        <TableCell padding='checkbox'>
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -132,12 +133,12 @@ const EnhancedTableToolbar = (props) => {
           }
           return results;
         }).then(res => {
-        if (res.length > 1) {
-          openSnackbar({ message: `${selectedApps.join(' & ')} have been deleted` });
-        } else {
-          openSnackbar({ message: `${selectedApps} has been deleted` });
-        }
-      });
+          if (res.length > 1) {
+            openSnackbar({ message: `${selectedApps.join(' & ')} have been deleted` });
+          } else {
+            openSnackbar({ message: `${selectedApps} has been deleted` });
+          }
+        });
     });
     onDelete(selectedApps);
     resetSelected(true);
@@ -150,17 +151,17 @@ const EnhancedTableToolbar = (props) => {
       })}
     >
       {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
+        <Typography className={classes.title} color='inherit' variant='subtitle1' component='div'>
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h4" id="tableTitle" component="div">
+        <Typography className={classes.title} variant='h4' id='tableTitle' component='div'>
           Registered Applications
         </Typography>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete" onClick={handleDeleteApplication}>
+        <Tooltip title='Delete'>
+          <IconButton aria-label='delete' onClick={handleDeleteApplication}>
             <DeleteIcon/>
           </IconButton>
         </Tooltip>
@@ -197,11 +198,11 @@ const useStyles = makeStyles((theme) => ( {
 export default function ApplicationsTable(props) {
   const { rows, onDelete, onAdd } = props;
   const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('appName');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [ order, setOrder ] = React.useState('asc');
+  const [ orderBy, setOrderBy ] = React.useState('appName');
+  const [ selected, setSelected ] = React.useState([]);
+  const [ page, setPage ] = React.useState(0);
+  const [ rowsPerPage, setRowsPerPage ] = React.useState(10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -267,8 +268,8 @@ export default function ApplicationsTable(props) {
         <TableContainer>
           <Table
             className={classes.table}
-            aria-labelledby="tableTitle"
-            aria-label="applications table"
+            aria-labelledby='tableTitle'
+            aria-label='applications table'
           >
             <EnhancedTableHead
               classes={classes}
@@ -290,19 +291,19 @@ export default function ApplicationsTable(props) {
                     <TableRow
                       hover
                       onClick={(event) => handleClick(event, row.appId)}
-                      role="checkbox"
+                      role='checkbox'
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.appId}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      <TableCell padding='checkbox'>
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell component='th' id={labelId} scope='row' padding='none'>
                         {row.appName}
                       </TableCell>
                       <TableCell>{row.appId}</TableCell>
@@ -319,8 +320,8 @@ export default function ApplicationsTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
+          rowsPerPageOptions={[ 5, 10, 25 ]}
+          component='div'
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
@@ -331,3 +332,27 @@ export default function ApplicationsTable(props) {
     </div>
   );
 }
+
+ApplicationsTable.propTypes = {
+  rows: PropTypes.number,
+  onDelete: PropTypes.func,
+  onAdd: PropTypes.func
+};
+
+EnhancedTableHead.propTypes = {
+  classes: PropTypes.any,
+  onSelectAllClick: PropTypes.func,
+  order: PropTypes.any,
+  orderBy: PropTypes.string,
+  numSelected: PropTypes.number,
+  rowCount: PropTypes.number,
+  onRequestSort: PropTypes.func
+};
+
+EnhancedTableToolbar.propTypes = {
+  numSelected: PropTypes.number,
+  selectedApps: PropTypes.any,
+  onDelete: PropTypes.func,
+  resetSelected: PropTypes.any,
+  onAdd: PropTypes.any
+};

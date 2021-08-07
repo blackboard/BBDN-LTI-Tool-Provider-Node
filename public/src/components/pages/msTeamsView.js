@@ -49,11 +49,11 @@ export default class MsTeamsView extends React.Component {
 
   render() {
     const verified = this.state.verified ? (
-      <Typography variant="h6" style={styles.passed}>
+      <Typography variant='h6' style={styles.passed}>
         Verified
       </Typography>
     ) : (
-      <Typography variant="h6" style={styles.failed}>
+      <Typography variant='h6' style={styles.failed}>
         Verify failed
       </Typography>
     );
@@ -77,14 +77,14 @@ export default class MsTeamsView extends React.Component {
         <Typography variant={'h6'} gutterBottom>
           Click this button to view all users in the course and their roles
         </Typography>
-        <form action="/namesAndRoles" method="POST">
-          <Button variant="contained" type={'submit'} color={'secondary'}>Names and Roles</Button>
-          <input type="hidden" name="body" value={JSON.stringify(this.state.body)}/>
+        <form action='/namesAndRoles' method='POST'>
+          <Button variant='contained' type={'submit'} color={'secondary'}>Names and Roles</Button>
+          <input type='hidden' name='body' value={JSON.stringify(this.state.body)}/>
         </form>
       </Grid>
     ) : (
       <Grid item xs>
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='body1' style={styles.notAvailable}>
           <b>Names and Roles not available</b>
         </Typography>
       </Grid>
@@ -100,42 +100,42 @@ export default class MsTeamsView extends React.Component {
         <Grid item xs>
           <Button
             id={'return_button'}
-            variant="contained"
-            color="secondary"
+            variant='contained'
+            color='secondary'
             href={this.state.returnUrl}>
             Return to Learn
           </Button>
         </Grid><br/>
         <Grid item xs>
-      <Button
-        id={'return_with_msg_button'}
-        variant={'contained'}
-        color={'secondary'}
-        href={msgReturn}>
+          <Button
+            id={'return_with_msg_button'}
+            variant={'contained'}
+            color={'secondary'}
+            href={msgReturn}>
         Return with Message
-      </Button>
-    </Grid><br/>
+          </Button>
+        </Grid><br/>
         <Grid item xs>
-      <Button
-        id={'return_with_error_button'}
-        variant={'contained'}
-        color={'secondary'}
-        href={errorReturn}>
+          <Button
+            id={'return_with_error_button'}
+            variant={'contained'}
+            color={'secondary'}
+            href={errorReturn}>
         Return with Error
-      </Button>
-    </Grid><br/>
+          </Button>
+        </Grid><br/>
       </Grid>
     );
 
     return (
       <div>
         <div>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant='h4' gutterBottom>
             Microsoft Teams Simulator
           </Typography>
         </div>
         <div>
-          <Typography variant="h5">
+          <Typography variant='h5'>
             Welcome, {this.state.user} ({this.state.userEmail})!<br/>
             To work properly, Microsoft will need the following:<br/>
             Course Name: {this.state.course} <br/>
@@ -155,20 +155,20 @@ export default class MsTeamsView extends React.Component {
           {verified ?
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                <Typography variant="body1">
+                <Typography variant='body1'>
                   <b>JWT Body</b>
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <JSONInput
-                  id="jwt_body"
+                  id='jwt_body'
                   viewOnly={true}
                   confirmGood={false}
                   placeholder={this.state.body}
                   theme={'dark_vscode_tribute'}
                   style={{ body: styles.jsonEditor }}
                   locale={locale}
-                  height="100%"
+                  height='100%'
                   width={'100%'}
                 />
               </ExpansionPanelDetails>

@@ -25,7 +25,7 @@ const FloatingAddButton = props => {
   const { classes } = props;
   return (
     <div>
-      <Fab color="secondary" aria-label="Add" className={classes.fab}>
+      <Fab color='secondary' aria-label='Add' className={classes.fab}>
         <AddIcon/>
       </Fab>
     </div>
@@ -35,7 +35,7 @@ const FloatingAddButton = props => {
 const FloatingEditButton = () => {
   return (
     <div>
-      <Fab color="secondary" aria-label="Edit">
+      <Fab color='secondary' aria-label='Edit'>
         <Icon>edit_icon</Icon>
       </Fab>
     </div>
@@ -45,7 +45,7 @@ const FloatingEditButton = () => {
 const FloatingDeleteButton = () => {
   return (
     <div>
-      <Fab disabled aria-label="Delete">
+      <Fab disabled aria-label='Delete'>
         <DeleteIcon/>
       </Fab>
     </div>
@@ -55,7 +55,7 @@ const FloatingDeleteButton = () => {
 const WideFloatingButton = ({ message }) => {
   return (
     <div>
-      <Fab variant="extended" id={'wide-fab-id'}>
+      <Fab variant='extended' id={'wide-fab-id'}>
         <NavigationIcon/>
         {message}
       </Fab>
@@ -76,7 +76,8 @@ FloatingDeleteButton.propTypes = {
 };
 
 WideFloatingButton.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  message: PropTypes.any
 };
 
 const AddFab = withStyles(styles)(FloatingAddButton);

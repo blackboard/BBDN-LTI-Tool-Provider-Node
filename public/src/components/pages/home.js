@@ -18,10 +18,10 @@ export default class LaunchEndpoint extends React.Component {
   render() {
     return (
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Welcome to the LTI Testing Tool
         </Typography>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant='h5' gutterBottom>
           Click Applications in the menu to view a list of all registered apps.
         </Typography>
       </div>

@@ -10,6 +10,7 @@ import { deleteExpiredSessions } from './database/db-utility';
 const app = express();
 const httpProxy = express();
 
+// eslint-disable-next-line no-unused-vars
 const options = config.use_ssl
   ? {
     key: fs.readFileSync(config.ssl_key),
@@ -17,7 +18,7 @@ const options = config.use_ssl
   }
   : { key: null, cert: null };
 
-const scheduler = new ToadScheduler()
+const scheduler = new ToadScheduler();
 
 const task = new Task(
   'clear expired sessions',
@@ -25,12 +26,12 @@ const task = new Task(
     deleteExpiredSessions();
   },
   (e) => {
-    console.log(e)
+    console.log(e);
   }
-)
-const job = new SimpleIntervalJob({ seconds: 60, }, task)
+);
+const job = new SimpleIntervalJob({ seconds: 60, }, task);
 
-scheduler.addSimpleIntervalJob(job)
+scheduler.addSimpleIntervalJob(job);
 
 let listenPort =
   process.env.PORT ||

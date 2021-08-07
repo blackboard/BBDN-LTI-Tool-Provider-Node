@@ -5,6 +5,7 @@ body {
 }
 
 
+/*noinspection ALL*/
 .phone-images {
     background-color: white;
     width: 450px;
@@ -14,10 +15,12 @@ body {
     float: left;
 }
 
+/*noinspection ALL*/
 .phones {
     list-style: none;
 }
 
+/*noinspection ALL*/
 .thumb {
     float: left;
     margin: -0.5em 1em 1.5em 0;
@@ -33,6 +36,7 @@ body {
 }
 
 /** Detail View **/
+/*noinspection ALL*/
 img.phone {
     float: left;
     margin-right: 3em;
@@ -44,11 +48,13 @@ img.phone {
     display: none;
 }
 
+/*noinspection ALL*/
 img.phone:first-child {
     display: block;
 }
 
 
+/*noinspection ALL*/
 ul.phone-thumbs {
     margin: 0;
     list-style: none;
@@ -72,6 +78,7 @@ ul.phone-thumbs img:hover {
 }
 
 
+/*noinspection ALL*/
 ul.specs {
     clear: both;
     margin: 0;
@@ -107,17 +114,20 @@ input.ci, textarea.ci {
     padding: 1px;
 }
 
+/*noinspection ALL*/
 li.reqd {
     color: red;
     font-weight: bold;
 }
 
+/*noinspection ALL*/
 .verified {
     color: green;
     font-weight: bold;
     font-size: large;
 }
 
+/*noinspection ALL*/
 .notverified {
     color: red;
     font-weight: bold;

@@ -1,29 +1,29 @@
-import Button from "@material-ui/core/Button/index";
-import TextField from "@material-ui/core/TextField/index";
-import Typography from "@material-ui/core/Typography/index";
-import React, { Component } from "react";
-import { openSnackbar } from "../page_objects/snackbar";
+import Button from '@material-ui/core/Button/index';
+import TextField from '@material-ui/core/TextField/index';
+import Typography from '@material-ui/core/Typography/index';
+import React, { Component } from 'react';
+import { openSnackbar } from '../page_objects/snackbar';
 
 class SetupView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      applicationId: "",
-      devPortalHost: "",
-      issuer: "",
-      tokenEndPoint: "",
-      oidcAuthUrl: "",
-      cookies: "",
-      host: "",
-      appKey: "",
-      appSecret: ""
+      applicationId: '',
+      devPortalHost: '',
+      issuer: '',
+      tokenEndPoint: '',
+      oidcAuthUrl: '',
+      cookies: '',
+      host: '',
+      appKey: '',
+      appSecret: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
-    fetch("setupData")
+    fetch('setupData')
       .then(result => result.json())
       .then(setupData => {
         this.setState(setupData);
@@ -34,14 +34,14 @@ class SetupView extends Component {
     const data = new URLSearchParams(this.state);
     let setupData = JSON.stringify(this.state);
     //console.log("body", setupData);
-    fetch("/saveSetup", {
-      method: "POST",
+    fetch('/saveSetup', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
       body: data
     }).then(result => {
-      if (result.status === 200) openSnackbar({ message: "Settings saved!" });
+      if (result.status === 200) openSnackbar({ message: 'Settings saved!' });
     });
   }
 
@@ -52,113 +52,113 @@ class SetupView extends Component {
   render() {
     return (
       <div>
-        <Typography variant="h4" gutterBottom component="h2">
+        <Typography variant='h4' gutterBottom component='h2'>
           LTI Advantage Settings
         </Typography>
         <br />
-        <form id={"setupForm"}>
+        <form id={'setupForm'}>
           <TextField
             required
-            label="Developer Portal URL"
-            variant="outlined"
+            label='Developer Portal URL'
+            variant='outlined'
             fullWidth={true}
             InputLabelProps={{
               shrink: true
             }}
-            name={"devPortalHost"}
-            value={this.state.devPortalHost || ""}
+            name={'devPortalHost'}
+            value={this.state.devPortalHost || ''}
             onInput={this.handleChange}
           />
           <br />
           <br />
           <TextField
             required
-            label="Application ID"
-            variant="outlined"
+            label='Application ID'
+            variant='outlined'
             fullWidth={true}
             InputLabelProps={{
               shrink: true
             }}
-            name={"applicationId"}
-            value={this.state.applicationId || ""}
+            name={'applicationId'}
+            value={this.state.applicationId || ''}
             onInput={this.handleChange}
           />
           <br />
           <br />
           <TextField
             required
-            label="OAuth2 Token End Point"
-            variant="outlined"
+            label='OAuth2 Token End Point'
+            variant='outlined'
             fullWidth={true}
             InputLabelProps={{
               shrink: true
             }}
-            name={"tokenEndPoint"}
-            value={this.state.tokenEndPoint || ""}
+            name={'tokenEndPoint'}
+            value={this.state.tokenEndPoint || ''}
             onInput={this.handleChange}
           />
           <br />
           <br />
           <TextField
             required
-            label="OIDC Auth URL"
-            variant="outlined"
+            label='OIDC Auth URL'
+            variant='outlined'
             fullWidth={true}
             InputLabelProps={{
               shrink: true
             }}
-            name={"oidcAuthUrl"}
-            value={this.state.oidcAuthUrl || ""}
+            name={'oidcAuthUrl'}
+            value={this.state.oidcAuthUrl || ''}
             onInput={this.handleChange}
           />
           <br />
           <br />
           <TextField
             required
-            label="Issuer"
-            variant="outlined"
+            label='Issuer'
+            variant='outlined'
             fullWidth={true}
             InputLabelProps={{
               shrink: true
             }}
-            name={"issuer"}
-            value={this.state.issuer || ""}
+            name={'issuer'}
+            value={this.state.issuer || ''}
             onInput={this.handleChange}
           />
           <br />
           <br />
           <TextField
             required
-            label="Application Key"
-            variant="outlined"
+            label='Application Key'
+            variant='outlined'
             fullWidth={true}
             InputLabelProps={{
               shrink: true
             }}
-            name={"appKey"}
-            value={this.state.appKey || ""}
+            name={'appKey'}
+            value={this.state.appKey || ''}
             onInput={this.handleChange}
           />
           <br />
           <br />
           <TextField
             required
-            label="Application Secret"
-            variant="outlined"
+            label='Application Secret'
+            variant='outlined'
             fullWidth={true}
             InputLabelProps={{
               shrink: true
             }}
-            name={"appSecret"}
-            value={this.state.appSecret || ""}
+            name={'appSecret'}
+            value={this.state.appSecret || ''}
             onInput={this.handleChange}
           />
           <br />
           <br />
           <Button
-            id={"save_button"}
-            variant="contained"
-            color="secondary"
+            id={'save_button'}
+            variant='contained'
+            color='secondary'
             onClick={this.handleSubmit}>
             Save
           </Button>

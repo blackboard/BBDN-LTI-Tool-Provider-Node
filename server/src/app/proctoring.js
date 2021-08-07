@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 import * as ltiAdv from './lti-adv';
 
 export const buildProctoringStartReturnPayload = (req, res, proctoringPayload) => {

@@ -7,9 +7,7 @@ export const deepLink = (req, res, dlPayload) => {
   let deploy =
     dlPayload.body['https://purl.imsglobal.org/spec/lti/claim/deployment_id'];
   let deepLink =
-    dlPayload.body[
-      'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'
-      ];
+    dlPayload.body['https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'];
   let data = deepLink.data;
   let iss = dlPayload.body.iss;
   let json = deepLinkingFrame(
@@ -23,9 +21,7 @@ export const deepLink = (req, res, dlPayload) => {
   dlPayload.jwt = ltiAdv.signJwt(json);
   dlPayload.return_url = deepLink.deep_link_return_url;
   dlPayload.error_url =
-    dlPayload.body[
-      'https://purl.imsglobal.org/spec/lti/claim/launch_presentation'
-      ].return_url;
+    dlPayload.body['https://purl.imsglobal.org/spec/lti/claim/launch_presentation'].return_url;
   dlPayload.return_json = json;
 };
 
@@ -33,9 +29,7 @@ export const deepLinkContent = (req, res, dlPayload) => {
   let deploy =
     dlPayload.body['https://purl.imsglobal.org/spec/lti/claim/deployment_id'];
   let deepLink =
-    dlPayload.body[
-      'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'
-      ];
+    dlPayload.body['https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'];
   let data = deepLink.data;
   let iss = dlPayload.body.iss;
 

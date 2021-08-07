@@ -49,11 +49,11 @@ export default class LtiBobcatView extends React.Component {
     };
 
     const verified = this.state.verified ? (
-      <Typography variant="body1" style={styles.passed}>
+      <Typography variant='body1' style={styles.passed}>
         Verified
       </Typography>
     ) : (
-      <Typography variant="body1" style={styles.failed}>
+      <Typography variant='body1' style={styles.failed}>
         Verify failed
       </Typography>
     );
@@ -63,44 +63,44 @@ export default class LtiBobcatView extends React.Component {
         <p>We have received your LTI 1.3 launch. Thanks for playing.</p>
         <table style={tableStyle}>
           <thead>
-          <tr>
-            <th scope="col">Key</th>
-            <th scope="col">Value</th>
-          </tr>
+            <tr>
+              <th scope='col'>Key</th>
+              <th scope='col'>Value</th>
+            </tr>
           </thead>
           <tbody>
-          <tr>
-            <th scope="row">Username</th>
-            <td>{this.state.userName}</td>
-          </tr>
-          <tr>
-            <th scope="row">User UUID</th>
-            <td>{this.state.sub}</td>
-          </tr>
-          <tr>
-            <th scope="row">User BatchUID</th>
-            <td>{this.state.userBatchUid}</td>
-          </tr>
-          <tr>
-            <th scope="row">Course ID</th>
-            <td>{this.state.courseId}</td>
-          </tr>
-          <tr>
-            <th scope="row">Course Title</th>
-            <td>{this.state.courseTitle}</td>
-          </tr>
-          <tr>
-            <th scope="row">Course UUID</th>
-            <td>{this.state.courseUUID}</td>
-          </tr>
-          <tr>
-            <th scope="row">Course BatchUID</th>
-            <td>{this.state.courseBatchUid}</td>
-          </tr>
-          <tr>
-            <th scope="row">Course Created</th>
-            <td>{this.state.courseCreated}</td>
-          </tr>
+            <tr>
+              <th scope='row'>Username</th>
+              <td>{this.state.userName}</td>
+            </tr>
+            <tr>
+              <th scope='row'>User UUID</th>
+              <td>{this.state.sub}</td>
+            </tr>
+            <tr>
+              <th scope='row'>User BatchUID</th>
+              <td>{this.state.userBatchUid}</td>
+            </tr>
+            <tr>
+              <th scope='row'>Course ID</th>
+              <td>{this.state.courseId}</td>
+            </tr>
+            <tr>
+              <th scope='row'>Course Title</th>
+              <td>{this.state.courseTitle}</td>
+            </tr>
+            <tr>
+              <th scope='row'>Course UUID</th>
+              <td>{this.state.courseUUID}</td>
+            </tr>
+            <tr>
+              <th scope='row'>Course BatchUID</th>
+              <td>{this.state.courseBatchUid}</td>
+            </tr>
+            <tr>
+              <th scope='row'>Course Created</th>
+              <td>{this.state.courseCreated}</td>
+            </tr>
           </tbody>
         </table>
         {/*
@@ -108,8 +108,8 @@ export default class LtiBobcatView extends React.Component {
           Body: {JSON.stringify(this.state.body)}
         </p>
         */}
-        <p>
-          <pre>
+
+        <pre>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( \<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ \<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |\\<br/>
@@ -121,36 +121,36 @@ export default class LtiBobcatView extends React.Component {
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \&nbsp;&nbsp; ) \&nbsp;&nbsp;&nbsp;&nbsp; ) \ \<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; ) /__ \__&nbsp; ) (\ \___<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (___)))__))(__))(__)))
-          </pre>
-        </p>
+        </pre>
+
         <p>{verified}</p>
 
-        <Typography variant="h6">
+        <Typography variant='h6'>
           Response JWT
         </Typography>
         <JSONInput
-          id="jwt_header"
+          id='jwt_header'
           viewOnly={true}
-          confirmGood={false}
-          placeholder={this.state.decodedJwt.header}
+          confirmGood={true}
+          placeholder={this.state.header}
           theme={'dark_vscode_tribute'}
           style={{ body: styles.jsonEditor }}
           locale={locale}
-          height="100%"
-          width="100%"
+          height='100%'
+          width='100%'
         />
-        <Typography variant="h6">
+        <Typography variant='h6'>
           <b>JWT Body</b>
         </Typography>
         <JSONInput
-          id="jwt_body"
+          id='jwt_body'
           viewOnly={true}
           confirmGood={true}
-          placeholder={this.state.decodedJwt.payload}
+          placeholder={this.state.body}
           theme={'dark_vscode_tribute'}
           style={{ body: styles.jsonEditor }}
           locale={locale}
-          height="100%"
+          height='100%'
           width={'100%'}
         />
       </div>

@@ -1,19 +1,20 @@
 import React from 'react';
 import { FormControl, FormGroup, FormLabel } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const EmptyResponse = (
   <div>
     <table>
       <tbody>
-      <tr>
-        <td>Status</td>
-        <td>N/A</td>
-        <td>N/A</td>
-      </tr>
-      <tr>
-        <td>Body</td>
-        <td colSpan="2">N/A</td>
-      </tr>
+        <tr>
+          <td>Status</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>Body</td>
+          <td colSpan='2'>N/A</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -37,11 +38,11 @@ export default class Response extends React.Component {
         <div>
           <table>
             <tbody>
-            <tr>
-              <td>Status</td>
-              <td>{this.props.response.status}</td>
-              <td>{this.props.response.message}</td>
-            </tr>
+              <tr>
+                <td>Status</td>
+                <td>{this.props.response.status}</td>
+                <td>{this.props.response.message}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -51,19 +52,19 @@ export default class Response extends React.Component {
         <div>
           <table>
             <tbody>
-            <tr>
-              <td>Status</td>
-              <td>{this.props.response.status}</td>
-              <td>{this.props.response.message}</td>
-            </tr>
+              <tr>
+                <td>Status</td>
+                <td>{this.props.response.status}</td>
+                <td>{this.props.response.message}</td>
+              </tr>
             </tbody>
           </table>
           <FormGroup>
             <FormLabel>Response Body</FormLabel>
             <FormControl
-              componentClass="textarea"
+              componentClass='textarea'
               value={this.props.response.body}
-              placeholder="textarea"
+              placeholder='textarea'
             />
           </FormGroup>
         </div>
@@ -71,3 +72,7 @@ export default class Response extends React.Component {
     }
   }
 }
+
+Response.propTypes = {
+  response: PropTypes.object
+};

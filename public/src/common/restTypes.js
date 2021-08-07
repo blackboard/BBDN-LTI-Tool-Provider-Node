@@ -1,4 +1,4 @@
-class ContentItem {
+export class ContentItem {
   constructor() {
     this.data = new Map([]);
     this.consumer_key = '';
@@ -11,7 +11,7 @@ class ContentItem {
   }
 }
 
-class JWTPayload {
+export class JWTPayload {
   constructor() {
     this.header = Object;
     this.body = Object;
@@ -22,18 +22,5 @@ class JWTPayload {
     this.return_json = '';
     this.namesRoles = false;
     this.grading = false;
-  }
-}
-
-class SetupParameters {
-  constructor() {
-    this.privateKey = '';
-    this.tokenEndPoint = '';
-    this.issuer = '';
-    this.applicationId = '';
-    this.devPortalHost = '';
-    this.oidcAuthUrl = '';
-    this.appKey = "";
-    this.appSecret = "";
   }
 }

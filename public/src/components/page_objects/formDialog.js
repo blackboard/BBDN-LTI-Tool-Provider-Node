@@ -1,4 +1,5 @@
 import { Add, Assignment } from '@material-ui/icons';
+import PropTypes from 'prop-types';
 import React from 'react';
 import {
   Button,
@@ -34,12 +35,12 @@ const portals = [
 
 export default function FormDialog(props) {
   const { onAdd } = props;
-  const [open, setOpen] = React.useState(false);
-  const [appName, setAppName] = React.useState('');
-  const [appId, setAppId] = React.useState('');
-  const [devPortalUrl, setDevPortalUrl] = React.useState('');
-  const [appKey, setAppKey] = React.useState('');
-  const [appSecret, setAppSecret] = React.useState('');
+  const [ open, setOpen ] = React.useState(false);
+  const [ appName, setAppName ] = React.useState('');
+  const [ appId, setAppId ] = React.useState('');
+  const [ devPortalUrl, setDevPortalUrl ] = React.useState('');
+  const [ appKey, setAppKey ] = React.useState('');
+  const [ appSecret, setAppSecret ] = React.useState('');
 
   const pasteFromClipboard = () => {
     clipboardy.read().then((t) => {
@@ -88,13 +89,13 @@ export default function FormDialog(props) {
 
   return (
     <div>
-      <Tooltip title="Add New Application">
-        <Fab color="secondary" aria-label="add" onClick={handleClickAdd}>
+      <Tooltip title='Add New Application'>
+        <Fab color='secondary' aria-label='add' onClick={handleClickAdd}>
           <Add/>
         </Fab>
       </Tooltip>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title" style={{ paddingBottom: 0 }}>LTI Advantage Application Details</DialogTitle>
+      <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title' style={{ paddingBottom: 0 }}>LTI Advantage Application Details</DialogTitle>
         <form id={'setupForm'}>
           <DialogContent>
             <DialogContentText>
@@ -103,8 +104,8 @@ export default function FormDialog(props) {
             <br/>
             <TextField
               required
-              label="Application Name"
-              variant="outlined"
+              label='Application Name'
+              variant='outlined'
               fullWidth={true}
               InputLabelProps={{
                 shrink: true
@@ -117,8 +118,8 @@ export default function FormDialog(props) {
             <br/>
             <TextField
               required
-              label="Application Key"
-              variant="outlined"
+              label='Application Key'
+              variant='outlined'
               fullWidth={true}
               InputLabelProps={{
                 shrink: true
@@ -128,10 +129,10 @@ export default function FormDialog(props) {
               onInput={(e) => setAppKey(e.target.value)}
               InputProps={{
                 endAdornment:
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <Tooltip title={'Paste from clipboard'}>
                       <IconButton onClick={() => {
-                        clipboardy.read().then(t => setAppKey(t)).catch(e => console.log(e))
+                        clipboardy.read().then(t => setAppKey(t)).catch(e => console.log(e));
                       }}>
                         <Assignment/>
                       </IconButton>
@@ -143,8 +144,8 @@ export default function FormDialog(props) {
             <br/>
             <TextField
               required
-              label="Application Secret"
-              variant="outlined"
+              label='Application Secret'
+              variant='outlined'
               fullWidth={true}
               InputLabelProps={{
                 shrink: true
@@ -154,10 +155,10 @@ export default function FormDialog(props) {
               onInput={(e) => setAppSecret(e.target.value)}
               InputProps={{
                 endAdornment:
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <Tooltip title={'Paste from clipboard'}>
                       <IconButton onClick={() => {
-                        clipboardy.read().then(t => setAppSecret(t)).catch(e => console.log(e))
+                        clipboardy.read().then(t => setAppSecret(t)).catch(e => console.log(e));
                       }}>
                         <Assignment/>
                       </IconButton>
@@ -169,8 +170,8 @@ export default function FormDialog(props) {
             <br/>
             <TextField
               required
-              label="Application ID"
-              variant="outlined"
+              label='Application ID'
+              variant='outlined'
               fullWidth={true}
               InputLabelProps={{
                 shrink: true
@@ -180,10 +181,10 @@ export default function FormDialog(props) {
               onInput={(e) => setAppId(e.target.value)}
               InputProps={{
                 endAdornment:
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <Tooltip title={'Paste from clipboard'}>
                       <IconButton onClick={() => {
-                        clipboardy.read().then(t => setAppId(t)).catch(e => console.log(e))
+                        clipboardy.read().then(t => setAppId(t)).catch(e => console.log(e));
                       }}>
                         <Assignment/>
                       </IconButton>
@@ -196,8 +197,8 @@ export default function FormDialog(props) {
             <TextField
               select
               required
-              label="Developer Portal"
-              variant="outlined"
+              label='Developer Portal'
+              variant='outlined'
               fullWidth={true}
               InputLabelProps={{
                 shrink: true
@@ -215,13 +216,13 @@ export default function FormDialog(props) {
             <br/>
           </DialogContent>
           <DialogActions style={{ 'padding': '20px' }}>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleClose} color='primary'>
               Cancel
             </Button>
             <Button
               id={'save_button'}
-              variant="contained"
-              color="secondary"
+              variant='contained'
+              color='secondary'
               onClick={handleSubmit}>
               Save
             </Button>
@@ -231,3 +232,7 @@ export default function FormDialog(props) {
     </div>
   );
 }
+
+FormDialog.propTypes = {
+  onAdd: PropTypes.any
+};

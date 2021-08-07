@@ -33,36 +33,36 @@ export default class DeepLinkPayloadView extends React.Component {
 
   render() {
     const verified = this.state.verified ? (
-      <Typography variant="body1" style={styles.passed}>
+      <Typography variant='body1' style={styles.passed}>
         Verified
       </Typography>
     ) : (
-      <Typography variant="body1" style={styles.failed}>
+      <Typography variant='body1' style={styles.failed}>
         Verify failed
       </Typography>
     );
 
     return (
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Deep Linking Launch
         </Typography>
 
         <div>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             We have received your Deep Linking launch. You can view the JSON below.
           </Typography>
-          <form action={this.state.returnUrl} method="POST" style={{"padding": "20px"}}>
-            <input type="hidden" name="JWT" defaultValue={this.state.jwt} />
+          <form action={this.state.returnUrl} method='POST' style={{'padding': '20px'}}>
+            <input type='hidden' name='JWT' defaultValue={this.state.jwt} />
             <Button
-              type="submit"
-              value="Return Deep Linking"
-              variant={"contained"}
-              color={"secondary"}>Return Deep Linking
+              type='submit'
+              value='Return Deep Linking'
+              variant={'contained'}
+              color={'secondary'}>Return Deep Linking
             </Button>
           </form>
 
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             <b>Return JSON</b>
           </Typography>
           <JSONInput
@@ -70,20 +70,20 @@ export default class DeepLinkPayloadView extends React.Component {
             viewOnly={true}
             confirmGood={true}
             placeholder={this.state.returnJSON}
-            theme="dark_vscode_tribute"
+            theme='dark_vscode_tribute'
             style={{ body: styles.jsonEditor }}
             locale={locale}
-            height="100%"
-            width="100%"
+            height='100%'
+            width='100%'
           />
 
           <br />
-          <Typography variant="h5">
+          <Typography variant='h5'>
             Deep Linking Request
           </Typography>
           {verified}
 
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             <b>JWT Header</b>
           </Typography>
           <JSONInput
@@ -91,13 +91,13 @@ export default class DeepLinkPayloadView extends React.Component {
             viewOnly={true}
             confirmGood={false}
             placeholder={this.state.header}
-            theme="dark_vscode_tribute"
+            theme='dark_vscode_tribute'
             style={{ body: styles.jsonEditor }}
             locale={locale}
-            height="100%"
-            width="100%"
+            height='100%'
+            width='100%'
           />
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             <b>JWT Body</b>
           </Typography>
           <JSONInput
@@ -105,11 +105,11 @@ export default class DeepLinkPayloadView extends React.Component {
             viewOnly={true}
             confirmGood={true}
             placeholder={this.state.body}
-            theme="dark_vscode_tribute"
+            theme='dark_vscode_tribute'
             style={{ body: styles.jsonEditor }}
             locale={locale}
-            height="100%"
-            width="100%"
+            height='100%'
+            width='100%'
           />
         </div>
       </div>

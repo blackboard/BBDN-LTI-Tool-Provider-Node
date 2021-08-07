@@ -4,6 +4,7 @@ import config from '../../../../server/config/config.json';
 import locale from 'react-json-editor-ajrm/locale/en';
 import { Grid, TextField } from '@material-ui/core';
 import { styles } from '../../common/styles/custom';
+import PropTypes from 'prop-types';
 
 export const sampleJSON = {
   type: 'ltiResourceLink',
@@ -45,74 +46,74 @@ const PayloadBuilder = (props) => {
   } = props;
 
   return (
-    <Grid container direction="column" spacing={3}>
+    <Grid container direction='column' spacing={3}>
       <Grid item xs>
         <TextField
-          variant="outlined"
-          name="custom_ltiLinks"
+          variant='outlined'
+          name='custom_ltiLinks'
           type={'number'}
           onInput={handleChange}
-          label="LTI Links"
+          label='LTI Links'
           value={custom_ltiLinks}
         />
       </Grid>
       <Grid item xs>
         <TextField
-          variant="outlined"
-          name="embed_ltiLinks"
+          variant='outlined'
+          name='embed_ltiLinks'
           type={'number'}
           onInput={handleChange}
-          label="Embedded LTI Links"
+          label='Embedded LTI Links'
           value={embed_ltiLinks}
         />
       </Grid>
       <Grid item xs>
         <TextField
-          variant="outlined"
-          name="new_ltiLinks"
+          variant='outlined'
+          name='new_ltiLinks'
           type={'number'}
           onInput={handleChange}
-          label="New Window Links"
+          label='New Window Links'
           value={new_ltiLinks}
         />
       </Grid>
       <Grid item xs>
         <TextField
-          variant="outlined"
-          name="custom_contentLinks"
+          variant='outlined'
+          name='custom_contentLinks'
           type={'number'}
           onInput={handleChange}
-          label="Content Links"
+          label='Content Links'
           value={custom_contentLinks}
         />
       </Grid>
       <Grid item xs>
         <TextField
-          variant="outlined"
-          name="custom_files"
+          variant='outlined'
+          name='custom_files'
           type={'number'}
           onInput={handleChange}
-          label="Files"
+          label='Files'
           value={custom_files}
         />
       </Grid>
       <Grid item xs>
         <TextField
-          variant="outlined"
-          name="custom_htmls"
+          variant='outlined'
+          name='custom_htmls'
           type={'number'}
           onInput={handleChange}
-          label="HTML Snippets"
+          label='HTML Snippets'
           value={custom_htmls}
         />
       </Grid>
       <Grid item xs>
         <TextField
-          variant="outlined"
-          name="custom_images"
+          variant='outlined'
+          name='custom_images'
           type={'number'}
           onInput={handleChange}
-          label="Images"
+          label='Images'
           value={custom_images}
         />
       </Grid>
@@ -127,23 +128,23 @@ export const Messages = (props) => {
     <Grid container direction={'column'} spacing={3}>
       <Grid item xs lg={6}>
         <TextField
-          variant="outlined"
+          variant='outlined'
           fullWidth
-          name="custom_message"
+          name='custom_message'
           value={message}
           onInput={handleChange}
-          label="Custom message to send back to Learn"
+          label='Custom message to send back to Learn'
           placeholder={'I have a message'}
         />
       </Grid>
       <Grid item xs lg={6}>
         <TextField
-          variant="outlined"
+          variant='outlined'
           fullWidth
           value={error}
-          name="custom_error"
+          name='custom_error'
           onInput={handleChange}
-          label="Custom error message to display to user"
+          label='Custom error message to display to user'
           placeholder={'I have an error'}
         />
       </Grid>
@@ -184,4 +185,39 @@ export const DeepLinkBuilder = (props) => {
         />}
     </div>
   );
+};
+
+CustomEditor.propTypes = {
+  handleCustomJson: PropTypes.any,
+};
+
+PayloadBuilder.propTypes = {
+  custom_ltiLinks: PropTypes.number,
+  embed_ltiLinks: PropTypes.number,
+  new_ltiLinks: PropTypes.number,
+  custom_contentLinks: PropTypes.number,
+  custom_files: PropTypes.number,
+  custom_htmls: PropTypes.number,
+  custom_images: PropTypes.number,
+  handleChange: PropTypes.func
+};
+
+Messages.propTypes = {
+  message: PropTypes.string,
+  error: PropTypes.string,
+  handleChange: PropTypes.func
+};
+
+DeepLinkBuilder.propTypes = {
+  custom_option: PropTypes.bool,
+  custom_contentLinks: PropTypes.number,
+  custom_files: PropTypes.number,
+  custom_htmls: PropTypes.number,
+  custom_images: PropTypes.number,
+  custom_ltiLinks: PropTypes.number,
+  error: PropTypes.string,
+  new_ltiLinks: PropTypes.number,
+  embed_ltiLinks: PropTypes.number,
+  handleChange: PropTypes.func,
+  handleCustomJson: PropTypes.func
 };

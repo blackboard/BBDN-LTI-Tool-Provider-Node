@@ -29,25 +29,25 @@ export default class GroupsView extends React.Component {
     const body = JSON.stringify(this.state.origBody);
     const next =
       this.state.nextUrl !== '' ? (
-        <form action="/getgroups" method="POST">
+        <form action='/getgroups' method='POST'>
           <Button type={'submit'} variant={'contained'} color={'secondary'}>Groups Next</Button>
-          <input type="hidden" name="body" defaultValue={body}/>
-          <input type="hidden" name="url" defaultValue={this.state.nextUrl}/>
+          <input type='hidden' name='body' defaultValue={body}/>
+          <input type='hidden' name='url' defaultValue={this.state.nextUrl}/>
         </form>
       ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='body1' style={styles.notAvailable}>
           No next link
         </Typography>
       );
 
     return (
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Groups Service
         </Typography>
 
         <div>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             What would you like to do?
           </Typography>
           <Grid
@@ -55,28 +55,28 @@ export default class GroupsView extends React.Component {
             direction={'column'}
             spacing={2}>
             <Grid item xs>
-              <form action={this.state.returnUrl} method="post">
+              <form action={this.state.returnUrl} method='post'>
                 <Button type={'submit'} variant={'contained'} color={'secondary'}>Return to Learn</Button>
               </form>
             </Grid>
             <Grid item xs>
-              <form action="/getgroups" method="post">
+              <form action='/getgroups' method='post'>
                 <table>
                   <tbody>
-                  <tr>
-                    <td>
-                      <Button type={'submit'} variant={'contained'} color={'secondary'}>Groups</Button>
-                      <input type="hidden" name="body" defaultValue={body}/>
-                      <input type="hidden" name="url" defaultValue={this.state.url}/>
-                    </td>
-                    <td>
-                      <TextField
-                        variant={'outlined'}
-                        name={'userid'}
-                        placeholder={'User UUID'}
-                      />
-                    </td>
-                  </tr>
+                    <tr>
+                      <td>
+                        <Button type={'submit'} variant={'contained'} color={'secondary'}>Groups</Button>
+                        <input type='hidden' name='body' defaultValue={body}/>
+                        <input type='hidden' name='url' defaultValue={this.state.url}/>
+                      </td>
+                      <td>
+                        <TextField
+                          variant={'outlined'}
+                          name={'userid'}
+                          placeholder={'User UUID'}
+                        />
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </form>
@@ -87,11 +87,11 @@ export default class GroupsView extends React.Component {
           </Grid>
 
           <br/>
-          <Typography variant="h5">
+          <Typography variant='h5'>
             Groups Response
           </Typography>
           <JSONInput
-            id="jwt_body"
+            id='jwt_body'
             viewOnly={true}
             confirmGood={true}
             placeholder={this.state.body}

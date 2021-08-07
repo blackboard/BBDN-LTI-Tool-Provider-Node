@@ -1,3 +1,999 @@
 {
-    "auth-data": []
+    "auth-data": [
+        {
+            "state": "6a51ccaa-7acb-474c-a25e-f1c8c791fa09",
+            "auth": {
+                "client_id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                "jwt": {
+                    "header": {
+                        "kid": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "alg": "RS256"
+                    },
+                    "body": {
+                        "sub": "d810f805da4a44f5a803758893621fe4",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+                            "lineitems": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ]
+                        },
+                        "iss": "https://blackboard.com",
+                        "locale": "en-US",
+                        "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+                            "name": "Blackboard, Inc.",
+                            "description": "Blackboard, Inc.",
+                            "guid": "0794703dc3c44ae49ec0e086290fc8ac",
+                            "product_family_code": "BlackboardLearn",
+                            "version": "3900.22.0-ci.7620+3f12d97",
+                            "url": "https://theshannon.bbpd.io/",
+                            "contact_email": "admin@theshannon.bbpd.io"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/custom": {
+                            "courseBatchUIDLrn": "$Context.sourcedId",
+                            "courseIDLrn": "$Context.id",
+                            "caliper_profile_url": "https://theshannon.bbpd.io/learn/api/v1/telemetry/caliper/profile",
+                            "caliper_federated_session_id": "https://caliper-mapping.cloudbb.blackboard.com/v1/sites/76a75927-529d-40bc-a311-4709f8fe509a/sessions/6568A68B0B1F4719C0CA094AC763118A",
+                            "userNameLTI": "administrator"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/lis": {
+                            "person_sourcedid": "administrator",
+                            "course_section_sourcedid": "ben-course"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+                            "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_67849_1&toGC=false&launch_id=682866ea-c736-4b45-a22f-003a3c97ab1f&link_id=_67849_1&launch_time=1628368920638"
+                        },
+                        "exp": 1628372520,
+                        "iat": 1628368920,
+                        "email": "shannon.harris@blackboard.com",
+                        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+                            "context_memberships_url": "https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+                            ],
+                            "service_versions": [
+                                "2.0"
+                            ]
+                        },
+                        "given_name": "Blackboard",
+                        "https://purl.imsglobal.org/spec/lti/claim/roles": [
+                            "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+                        ],
+                        "nonce": "dcd048c1-cbb1-4ffb-a7be-102b05415273",
+                        "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://0aaba1023df6.ngrok.io/lti13bobcat",
+                        "https://purl.imsglobal.org/spec/lti/claim/context": {
+                            "id": "3129c5f00de54d799e308be4e87945c9",
+                            "label": "ben-course",
+                            "title": "ben-course",
+                            "type": [
+                                "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+                            ]
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                            "id": "_67849_1",
+                            "title": "Eric's Bobcat Page"
+                        },
+                        "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+                            "context_groups_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups",
+                            "context_group_sets_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+                            ],
+                            "service_versions": [
+                                "1.0"
+                            ]
+                        },
+                        "aud": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+                        "name": "Blackboard Administrator",
+                        "family_name": "Administrator",
+                        "https://blackboard.com/lti/claim/one_time_session_token": "aaeabce705984cc0af3ffd552cd912b0"
+                    },
+                    "verified": true,
+                    "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_67849_1&toGC=false&launch_id=682866ea-c736-4b45-a22f-003a3c97ab1f&link_id=_67849_1&launch_time=1628368920638",
+                    "error_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_67849_1&toGC=false&launch_id=682866ea-c736-4b45-a22f-003a3c97ab1f&link_id=_67849_1&launch_time=1628368920638",
+                    "jwt": "",
+                    "return_json": "",
+                    "names_roles": true,
+                    "grading": true,
+                    "groups": true,
+                    "target_link_uri": "https://0aaba1023df6.ngrok.io/lti13bobcat"
+                },
+                "auth_code": "oXoN2nRss6fuhMbNNOekrD7qXwubrPdf",
+                "learn_rest_token": "8z8YenJyjS7OIE0sSn669mFU1cWl59dN",
+                "lti_token": "eyJraWQiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJpbXNnbG9iYWwub3JnLnNlY3VyaXR5LnNjb3BlIjoiaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLW5ycHNcL3Njb3BlXC9jb250ZXh0bWVtYmVyc2hpcC5yZWFkb25seSBodHRwczpcL1wvcHVybC5pbXNnbG9iYWwub3JnXC9zcGVjXC9sdGktYWdzXC9zY29wZVwvbGluZWl0ZW0gaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL2xpbmVpdGVtLnJlYWRvbmx5IGh0dHBzOlwvXC9wdXJsLmltc2dsb2JhbC5vcmdcL3NwZWNcL2x0aS1hZ3NcL3Njb3BlXC9yZXN1bHQucmVhZG9ubHkgaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL3Njb3JlIiwiZXhwIjoxNjI4MzcyNTIyLCJpYXQiOjE2MjgzNjg5MjJ9.Td7PzjpKKAMESud_P1dBNWrw4PpkyV51fqfTdA4Q5yynrmWJgYGVgNjexVu2bEnPJo5QzwwISygSU_Q0k7j9AaM-R41PNfxj-NAR8wEZAZVTegLyDebttX6_lggWp7vOTwrzEF1EL-jRkq-C-SgcX8ekYyPUpYb_UNKf4QqELAbALrF4bSgjJvngFSWvHdCbfafiX7fOkcOLgoxynp5SQE28yIg_I79mvYMz4xYKZNnyuBdT14kPC2OJvlGrhVCNwMBzVYOU3EyJs0lfrOsWlVLzxMPXaz-jNjgXYAzgwiW5RdbRzgQgBTDCH-lA-pIderOjyqSmZx0L1ZpGIj9ckA"
+            }
+        },
+        {
+            "state": "c6927b65-9c40-43a9-8dff-35a2b31a2543",
+            "auth": {
+                "client_id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                "jwt": {
+                    "header": {
+                        "kid": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "alg": "RS256"
+                    },
+                    "body": {
+                        "sub": "d810f805da4a44f5a803758893621fe4",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+                            "lineitems": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ]
+                        },
+                        "iss": "https://blackboard.com",
+                        "locale": "en-US",
+                        "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+                            "name": "Blackboard, Inc.",
+                            "description": "Blackboard, Inc.",
+                            "guid": "0794703dc3c44ae49ec0e086290fc8ac",
+                            "product_family_code": "BlackboardLearn",
+                            "version": "3900.22.0-ci.7620+3f12d97",
+                            "url": "https://theshannon.bbpd.io/",
+                            "contact_email": "admin@theshannon.bbpd.io"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/lis": {
+                            "person_sourcedid": "administrator",
+                            "course_section_sourcedid": "ben-course"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+                            "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_65878_1&toGC=false&launch_id=e4c277e1-c213-4e81-bf86-e1220b40bedd&link_id=_65878_1&launch_time=1628368943619"
+                        },
+                        "exp": 1628372543,
+                        "iat": 1628368943,
+                        "email": "shannon.harris@blackboard.com",
+                        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+                            "context_memberships_url": "https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+                            ],
+                            "service_versions": [
+                                "2.0"
+                            ]
+                        },
+                        "given_name": "Blackboard",
+                        "https://purl.imsglobal.org/spec/lti/claim/roles": [
+                            "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+                        ],
+                        "nonce": "1c50e6ed-8bd0-4370-8ee4-1e65b5397e36",
+                        "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://0aaba1023df6.ngrok.io/lti13",
+                        "https://purl.imsglobal.org/spec/lti/claim/context": {
+                            "id": "3129c5f00de54d799e308be4e87945c9",
+                            "label": "ben-course",
+                            "title": "ben-course",
+                            "type": [
+                                "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+                            ]
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                            "description": "with Grading",
+                            "id": "_65878_1",
+                            "title": "Course Content"
+                        },
+                        "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+                            "context_groups_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups",
+                            "context_group_sets_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+                            ],
+                            "service_versions": [
+                                "1.0"
+                            ]
+                        },
+                        "aud": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+                        "name": "Blackboard Administrator",
+                        "family_name": "Administrator",
+                        "https://blackboard.com/lti/claim/one_time_session_token": "f5029020a49b495d9238dc064b1c71ce"
+                    },
+                    "verified": true,
+                    "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_65878_1&toGC=false&launch_id=e4c277e1-c213-4e81-bf86-e1220b40bedd&link_id=_65878_1&launch_time=1628368943619",
+                    "error_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_65878_1&toGC=false&launch_id=e4c277e1-c213-4e81-bf86-e1220b40bedd&link_id=_65878_1&launch_time=1628368943619",
+                    "jwt": "",
+                    "return_json": "",
+                    "names_roles": true,
+                    "grading": true,
+                    "groups": true,
+                    "target_link_uri": "https://0aaba1023df6.ngrok.io/lti13"
+                },
+                "auth_code": "zMscCvQtXC5wefKcY2rpwVC0G1xVSLdf",
+                "learn_rest_token": "8z8YenJyjS7OIE0sSn669mFU1cWl59dN",
+                "lti_token": "eyJraWQiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJpbXNnbG9iYWwub3JnLnNlY3VyaXR5LnNjb3BlIjoiaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLW5ycHNcL3Njb3BlXC9jb250ZXh0bWVtYmVyc2hpcC5yZWFkb25seSBodHRwczpcL1wvcHVybC5pbXNnbG9iYWwub3JnXC9zcGVjXC9sdGktYWdzXC9zY29wZVwvbGluZWl0ZW0gaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL2xpbmVpdGVtLnJlYWRvbmx5IGh0dHBzOlwvXC9wdXJsLmltc2dsb2JhbC5vcmdcL3NwZWNcL2x0aS1hZ3NcL3Njb3BlXC9yZXN1bHQucmVhZG9ubHkgaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL3Njb3JlIiwiZXhwIjoxNjI4MzcyNTQ1LCJpYXQiOjE2MjgzNjg5NDV9.YP7HGqDlc4q3mY6jlLVEqB4y3yIoZxuvsNDY9GuOkz-rborFSKYnCoTWh17PZ9t4eX5zz-x8n0lxRPbXoeCU7XdmOLvBWvLpvaTm7QJGBwch9J83lNo_reLH82Oa3g0GO2D8q57yXtc-7nZrJCHQMcAozoRK8V131n2B1eOwnZB4jzxIdf5MlduB6H8SJthN_4g8tTlRAEZ5SjqrTPL5M6-3OxjKz8bYXtF7kJily6iGemBTwn3yDnSuVwesw8_0VjEv5LfdlpCJPoQ7nTZXE42fCO3gAUyEtLHlA9iC0-NTUHdmK_ZA1PkwYY6sZ29iRCkeu0KcxbJ6IwePDzLTBA"
+            }
+        },
+        {
+            "state": "90927629-6d5a-4e81-a125-84aaa26e82fb",
+            "auth": {
+                "client_id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                "jwt": {
+                    "header": {
+                        "kid": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "alg": "RS256"
+                    },
+                    "body": {
+                        "sub": "d810f805da4a44f5a803758893621fe4",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+                            "lineitems": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ]
+                        },
+                        "iss": "https://blackboard.com",
+                        "locale": "en-US",
+                        "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+                            "name": "Blackboard, Inc.",
+                            "description": "Blackboard, Inc.",
+                            "guid": "0794703dc3c44ae49ec0e086290fc8ac",
+                            "product_family_code": "BlackboardLearn",
+                            "version": "3900.22.0-ci.7620+3f12d97",
+                            "url": "https://theshannon.bbpd.io/",
+                            "contact_email": "admin@theshannon.bbpd.io"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/custom": {
+                            "courseBatchUIDLrn": "$Context.sourcedId",
+                            "courseIDLrn": "$Context.id",
+                            "caliper_profile_url": "https://theshannon.bbpd.io/learn/api/v1/telemetry/caliper/profile",
+                            "caliper_federated_session_id": "https://caliper-mapping.cloudbb.blackboard.com/v1/sites/76a75927-529d-40bc-a311-4709f8fe509a/sessions/6568A68B0B1F4719C0CA094AC763118A",
+                            "userNameLTI": "administrator"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/lis": {
+                            "person_sourcedid": "administrator",
+                            "course_section_sourcedid": "ben-course"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+                            "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_67849_1&toGC=false&launch_id=824eac17-336e-4fa2-aa84-edb8c728c40c&link_id=_67849_1&launch_time=1628368957190"
+                        },
+                        "exp": 1628372557,
+                        "iat": 1628368957,
+                        "email": "shannon.harris@blackboard.com",
+                        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+                            "context_memberships_url": "https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+                            ],
+                            "service_versions": [
+                                "2.0"
+                            ]
+                        },
+                        "given_name": "Blackboard",
+                        "https://purl.imsglobal.org/spec/lti/claim/roles": [
+                            "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+                        ],
+                        "nonce": "ed4f32de-134e-42cd-9886-4edf884d2ea3",
+                        "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://0aaba1023df6.ngrok.io/lti13bobcat",
+                        "https://purl.imsglobal.org/spec/lti/claim/context": {
+                            "id": "3129c5f00de54d799e308be4e87945c9",
+                            "label": "ben-course",
+                            "title": "ben-course",
+                            "type": [
+                                "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+                            ]
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                            "id": "_67849_1",
+                            "title": "Eric's Bobcat Page"
+                        },
+                        "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+                            "context_groups_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups",
+                            "context_group_sets_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+                            ],
+                            "service_versions": [
+                                "1.0"
+                            ]
+                        },
+                        "aud": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+                        "name": "Blackboard Administrator",
+                        "family_name": "Administrator",
+                        "https://blackboard.com/lti/claim/one_time_session_token": "7abdfff5b86648259c75ade47b5a018c"
+                    },
+                    "verified": true,
+                    "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_67849_1&toGC=false&launch_id=824eac17-336e-4fa2-aa84-edb8c728c40c&link_id=_67849_1&launch_time=1628368957190",
+                    "error_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_67849_1&toGC=false&launch_id=824eac17-336e-4fa2-aa84-edb8c728c40c&link_id=_67849_1&launch_time=1628368957190",
+                    "jwt": "",
+                    "return_json": "",
+                    "names_roles": true,
+                    "grading": true,
+                    "groups": true,
+                    "target_link_uri": "https://0aaba1023df6.ngrok.io/lti13bobcat"
+                },
+                "auth_code": "roRqN4ldOyEMawVFKWzy929WaeknfQnn",
+                "learn_rest_token": "8z8YenJyjS7OIE0sSn669mFU1cWl59dN",
+                "lti_token": "eyJraWQiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJpbXNnbG9iYWwub3JnLnNlY3VyaXR5LnNjb3BlIjoiaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLW5ycHNcL3Njb3BlXC9jb250ZXh0bWVtYmVyc2hpcC5yZWFkb25seSBodHRwczpcL1wvcHVybC5pbXNnbG9iYWwub3JnXC9zcGVjXC9sdGktYWdzXC9zY29wZVwvbGluZWl0ZW0gaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL2xpbmVpdGVtLnJlYWRvbmx5IGh0dHBzOlwvXC9wdXJsLmltc2dsb2JhbC5vcmdcL3NwZWNcL2x0aS1hZ3NcL3Njb3BlXC9yZXN1bHQucmVhZG9ubHkgaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL3Njb3JlIiwiZXhwIjoxNjI4MzcyNTU4LCJpYXQiOjE2MjgzNjg5NTh9.D8F5uszchQjPQWPJFfytfY-M7em6rHdKbXUmFbcs8dKyw1Z6kHHWmO5CISvBo-gNWOm7mG4Dt-92Ek8F5kiXIXZZbI3DzSOuKXI4ES-aw3NiyzIf2LFr9OT05pv32q7NL8nXm8pNfZjUrkN09l5WwifZ1S4qWmAKp5Qecte0N_qxeExh1XWmLHmyQN8oH_rkLfRTCaMPLRv9IATA-YL-03DojgYFiUaWnaUlh0JXZVcriiKsAwZU3NqERsnbJOBiCl4On-TPhVB8leT3cxQwn0kWU0DOrZbAahp28VDuRNDxf3-0sZSZvEcxpvxox5fMc_1kDw2klajVcxoybb2v3A"
+            }
+        },
+        {
+            "state": "f6ae92b0-d80f-4500-bf3d-4569620e1a7e",
+            "auth": {
+                "client_id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                "jwt": {
+                    "header": {
+                        "kid": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "alg": "RS256"
+                    },
+                    "body": {
+                        "sub": "d810f805da4a44f5a803758893621fe4",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+                            "lineitems": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ]
+                        },
+                        "iss": "https://blackboard.com",
+                        "locale": "en-US",
+                        "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+                            "name": "Blackboard, Inc.",
+                            "description": "Blackboard, Inc.",
+                            "guid": "0794703dc3c44ae49ec0e086290fc8ac",
+                            "product_family_code": "BlackboardLearn",
+                            "version": "3900.22.0-ci.7620+3f12d97",
+                            "url": "https://theshannon.bbpd.io/",
+                            "contact_email": "admin@theshannon.bbpd.io"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/lis": {
+                            "person_sourcedid": "administrator",
+                            "course_section_sourcedid": "ben-course"
+                        },
+                        "exp": 1628372582,
+                        "iat": 1628368982,
+                        "email": "shannon.harris@blackboard.com",
+                        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+                            "context_memberships_url": "https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+                            ],
+                            "service_versions": [
+                                "2.0"
+                            ]
+                        },
+                        "given_name": "Blackboard",
+                        "https://purl.imsglobal.org/spec/lti/claim/roles": [
+                            "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+                        ],
+                        "nonce": "58375986-b0f0-406d-9c4e-981fddb50d08",
+                        "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://0aaba1023df6.ngrok.io/deepLinkOptions",
+                        "https://purl.imsglobal.org/spec/lti/claim/context": {
+                            "id": "3129c5f00de54d799e308be4e87945c9",
+                            "label": "ben-course",
+                            "title": "ben-course",
+                            "type": [
+                                "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+                            ]
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                            "id": "_32859_1"
+                        },
+                        "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+                            "context_groups_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups",
+                            "context_group_sets_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+                            ],
+                            "service_versions": [
+                                "1.0"
+                            ]
+                        },
+                        "aud": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiDeepLinkingRequest",
+                        "name": "Blackboard Administrator",
+                        "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings": {
+                            "accept_copy_advice": false,
+                            "data": "_5464_1::_32859_1::0::false::true::_219_1::1b1ad756b9ee498f89161d8ec8b3d075::false",
+                            "accept_types": [
+                                "ltiResourceLink",
+                                "link"
+                            ],
+                            "accept_multiple": true,
+                            "accept_presentation_document_targets": [
+                                "iframe",
+                                "window"
+                            ],
+                            "accept_media_types": "*/*",
+                            "auto_create": true,
+                            "deep_link_return_url": "https://theshannon.bbpd.io/webapps/blackboard/controller/lti/v2/deeplinking"
+                        },
+                        "family_name": "Administrator",
+                        "https://blackboard.com/lti/claim/one_time_session_token": "c447b7daa8cf46199b6c8951f09a3b1e"
+                    },
+                    "verified": true,
+                    "return_url": "https://theshannon.bbpd.io/webapps/blackboard/controller/lti/v2/deeplinking",
+                    "error_url": "",
+                    "jwt": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyMzQ1In0.eyJpc3MiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhdWQiOiJodHRwczovL2JsYWNrYm9hcmQuY29tIiwic3ViIjoiOTZhZWI5ODItNWE3Yy00YzZjLTljMWItNWMzM2U1YjE0ZmZjIiwiaWF0IjoxNjI4MzY4OTg2LCJleHAiOjE2MjgzNjkyODYsImxvY2FsZSI6ImVuX1VTIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vZGVwbG95bWVudF9pZCI6IjU4ZmE1YWQzLTU0NTQtNGRmNy04OTJmLTlhNWNmMzVlNWIzZCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL21lc3NhZ2VfdHlwZSI6Ikx0aURlZXBMaW5raW5nUmVzcG9uc2UiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS92ZXJzaW9uIjoiMS4zLjAiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS1kbC9jbGFpbS9kYXRhIjoiXzU0NjRfMTo6XzMyODU5XzE6OjA6OmZhbHNlOjp0cnVlOjpfMjE5XzE6OjFiMWFkNzU2YjllZTQ5OGY4OTE2MWQ4ZWM4YjNkMDc1OjpmYWxzZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpLWRsL2NsYWltL2NvbnRlbnRfaXRlbXMiOlt7InR5cGUiOiJsdGlSZXNvdXJjZUxpbmsiLCJ0aXRsZSI6IkEgdGl0bGUgZm9yIExUSSAmIDEuMyBcIiBMaW5rIiwidGV4dCI6IkEgJiBkZXNjcmlwdGlvbiB3aXRoIHF1b3RlcyBcIiIsInVybCI6Imh0dHBzOi8vMGFhYmExMDIzZGY2Lm5ncm9rLmlvL2x0aTEzIiwiYXZhaWxhYmxlIjp7InN0YXJ0RGF0ZVRpbWUiOiIyMDIxLTA4LTA3VDEyOjAwOjAwLjAwMFoiLCJlbmREYXRlVGltZSI6IjIwMjEtMDktMDZUMTI6MDA6MDAuMDAwWiJ9LCJzdWJtaXNzaW9uIjp7ImVuZERhdGVUaW1lIjoiMjAyMS0wOS0wNlQxMjowMDowMC4wMDBaIn0sImljb24iOnsidXJsIjoiaHR0cHM6Ly9waG90b3Muc211Z211Zy5jb20vcGhvdG9zL2ktdDRuTGtRZC8wL1RoL2ktdDRuTGtRZC1UaC5qcGciLCJ3aWR0aCI6MTAwLCJoZWlnaHQiOjEwMH0sInRodW1ibmFpbCI6eyJ1cmwiOiJodHRwczovL3Bob3Rvcy5zbXVnbXVnLmNvbS9waG90b3MvaS10NG5Ma1FkLzAvVGgvaS10NG5Ma1FkLVRoLmpwZyIsIndpZHRoIjo5MCwiaGVpZ2h0Ijo5MH0sImxpbmVJdGVtIjp7InNjb3JlTWF4aW11bSI6MTAwLCJsYWJlbCI6IkNoYXB0ZXIgMTIgcXVpeiIsInJlc291cmNlSWQiOiJ4eXpwZHExMjM0IiwidGFnIjoib3JpZ2luYWxpdHkifSwiY3VzdG9tIjp7ImtleTEiOiJzb21lICYgdmFsdWUiLCJjb250ZXh0SGlzdG9yeSI6IiRDb250ZXh0LmlkLmhpc3RvcnkiLCJyZXNvdXJjZUhpc3RvcnkiOiIkUmVzb3VyY2VMaW5rLmlkLmhpc3RvcnkiLCJmaXJzdEF2YWlsYWJsZSI6IiRSZXNvdXJjZUxpbmsuYXZhaWxhYmxlLnN0YXJ0RGF0ZVRpbWUiLCJsYXN0QXZhaWxhYmxlIjoiJFJlc291cmNlTGluay5hdmFpbGFibGUuZW5kRGF0ZVRpbWUiLCJkdWVEYXRlIjoiJFJlc291cmNlTGluay5zdWJtaXNzaW9uLmVuZERhdGVUaW1lIiwidXNlck5hbWUiOiIkVXNlci51c2VybmFtZSIsInVzZXJFbWFpbCI6IiRQZXJzb24uZW1haWwucHJpbWFyeSIsInVzZXJTeXNSb2xlcyI6IkBYQHVzZXIucm9sZUBYQCIsInNvdXJjZSI6ImxpbmsifX1dfQ.mxXLbjsLI-yrHbvAAt5_LLQSCvRZw7trj0-MLebp34mXC63Sn6JWXoNuNReGaSveiQjhGVL-xvqax5RBGVUaD50aHPavpW4vPpjDOdxlN1MIB34u3ZWkydTMceM6HNEhhkAEBKmz_OVG5OZAq4Zw3sfAK3wrzIqbgoW606jtlX3bysmrza7bvXMstoFy9_G8IOC2zbFHazO0Ki6_eCzIa2Ic8bwPH0dIOHgfqNNhoxDYyGYKSOUKEfjWHbiI7FJq431X9GjVt347CH82YEq_awmcAoIIZnhH7feg9h-Z0vStnYsiOPDO_6oK4P8cfsq0EcKeYlyfdhaCq4ayFy5XAw",
+                    "return_json": {
+                        "iss": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "aud": "https://blackboard.com",
+                        "sub": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "iat": 1628368986,
+                        "exp": 1628369286,
+                        "locale": "en_US",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiDeepLinkingResponse",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-dl/claim/data": "_5464_1::_32859_1::0::false::true::_219_1::1b1ad756b9ee498f89161d8ec8b3d075::false",
+                        "https://purl.imsglobal.org/spec/lti-dl/claim/content_items": [
+                            {
+                                "type": "ltiResourceLink",
+                                "title": "A title for LTI & 1.3 \" Link",
+                                "text": "A & description with quotes \"",
+                                "url": "https://0aaba1023df6.ngrok.io/lti13",
+                                "available": {
+                                    "startDateTime": "2021-08-07T12:00:00.000Z",
+                                    "endDateTime": "2021-09-06T12:00:00.000Z"
+                                },
+                                "submission": {
+                                    "endDateTime": "2021-09-06T12:00:00.000Z"
+                                },
+                                "icon": {
+                                    "url": "https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg",
+                                    "width": 100,
+                                    "height": 100
+                                },
+                                "thumbnail": {
+                                    "url": "https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg",
+                                    "width": 90,
+                                    "height": 90
+                                },
+                                "lineItem": {
+                                    "scoreMaximum": 100,
+                                    "label": "Chapter 12 quiz",
+                                    "resourceId": "xyzpdq1234",
+                                    "tag": "originality"
+                                },
+                                "custom": {
+                                    "key1": "some & value",
+                                    "contextHistory": "$Context.id.history",
+                                    "resourceHistory": "$ResourceLink.id.history",
+                                    "firstAvailable": "$ResourceLink.available.startDateTime",
+                                    "lastAvailable": "$ResourceLink.available.endDateTime",
+                                    "dueDate": "$ResourceLink.submission.endDateTime",
+                                    "userName": "$User.username",
+                                    "userEmail": "$Person.email.primary",
+                                    "userSysRoles": "@X@user.role@X@",
+                                    "source": "link"
+                                }
+                            }
+                        ]
+                    },
+                    "names_roles": true,
+                    "grading": true,
+                    "groups": true,
+                    "target_link_uri": "https://0aaba1023df6.ngrok.io/deepLinkOptions"
+                },
+                "auth_code": "W9vvCZFO2ZogzkIJRPyTxuIya1Mlvxn9",
+                "learn_rest_token": "8z8YenJyjS7OIE0sSn669mFU1cWl59dN",
+                "lti_token": "eyJraWQiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJpbXNnbG9iYWwub3JnLnNlY3VyaXR5LnNjb3BlIjoiaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLW5ycHNcL3Njb3BlXC9jb250ZXh0bWVtYmVyc2hpcC5yZWFkb25seSBodHRwczpcL1wvcHVybC5pbXNnbG9iYWwub3JnXC9zcGVjXC9sdGktYWdzXC9zY29wZVwvbGluZWl0ZW0gaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL2xpbmVpdGVtLnJlYWRvbmx5IGh0dHBzOlwvXC9wdXJsLmltc2dsb2JhbC5vcmdcL3NwZWNcL2x0aS1hZ3NcL3Njb3BlXC9yZXN1bHQucmVhZG9ubHkgaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL3Njb3JlIiwiZXhwIjoxNjI4MzcyNTg0LCJpYXQiOjE2MjgzNjg5ODR9.g36SC3GVEV3wvVkwXK1tgxay9v-nJd66AG4SmC_EamBxGtnmnQ559Oh4dZqzVWumv9CbEp232qHN9OPmtEDsriZbGDdftYwed5Mhhcm2uHm6JFXN7xDebJAZcKcMr9cdLoIs1nBJYIUT3tSkVq-oywmmwhkaMmCef7NaQys1ZrtJLd-FYWaQvQ1Qi_uAAq0J2hJWFb5QmlfBx5lxX_Q9LcUY3HMitDcFYN-PNDrfmYcrbROMbt7NdKUyRZJEPXY5GR97EJHYepjN3_eM1CRrzWZqc7t9KdckHGXKg3HThdtRBLuQ9aQnvIhRAi_rUJDgoDVe_SPkoNVhmb-uEFgr9A",
+                "dljwt": "{\"header\":{\"kid\":\"96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc\",\"alg\":\"RS256\"},\"body\":{\"sub\":\"d810f805da4a44f5a803758893621fe4\",\"https://purl.imsglobal.org/spec/lti/claim/deployment_id\":\"58fa5ad3-5454-4df7-892f-9a5cf35e5b3d\",\"https://purl.imsglobal.org/spec/lti/claim/version\":\"1.3.0\",\"https://purl.imsglobal.org/spec/lti-ags/claim/endpoint\":{\"lineitems\":\"https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems\",\"scope\":[\"https://purl.imsglobal.org/spec/lti-ags/scope/lineitem\",\"https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly\",\"https://purl.imsglobal.org/spec/lti-ags/scope/score\"]},\"iss\":\"https://blackboard.com\",\"locale\":\"en-US\",\"https://purl.imsglobal.org/spec/lti/claim/tool_platform\":{\"name\":\"Blackboard, Inc.\",\"description\":\"Blackboard, Inc.\",\"guid\":\"0794703dc3c44ae49ec0e086290fc8ac\",\"product_family_code\":\"BlackboardLearn\",\"version\":\"3900.22.0-ci.7620+3f12d97\",\"url\":\"https://theshannon.bbpd.io/\",\"contact_email\":\"admin@theshannon.bbpd.io\"},\"https://purl.imsglobal.org/spec/lti/claim/lis\":{\"person_sourcedid\":\"administrator\",\"course_section_sourcedid\":\"ben-course\"},\"exp\":1628372582,\"iat\":1628368982,\"email\":\"shannon.harris@blackboard.com\",\"https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice\":{\"context_memberships_url\":\"https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1\",\"scope\":[\"https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly\"],\"service_versions\":[\"2.0\"]},\"given_name\":\"Blackboard\",\"https://purl.imsglobal.org/spec/lti/claim/roles\":[\"http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor\"],\"nonce\":\"58375986-b0f0-406d-9c4e-981fddb50d08\",\"https://purl.imsglobal.org/spec/lti/claim/target_link_uri\":\"https://0aaba1023df6.ngrok.io/deepLinkOptions\",\"https://purl.imsglobal.org/spec/lti/claim/context\":{\"id\":\"3129c5f00de54d799e308be4e87945c9\",\"label\":\"ben-course\",\"title\":\"ben-course\",\"type\":[\"http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering\"]},\"https://purl.imsglobal.org/spec/lti/claim/resource_link\":{\"id\":\"_32859_1\"},\"https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice\":{\"context_groups_url\":\"https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups\",\"context_group_sets_url\":\"https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets\",\"scope\":[\"https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly\"],\"service_versions\":[\"1.0\"]},\"aud\":\"96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc\",\"https://purl.imsglobal.org/spec/lti/claim/message_type\":\"LtiDeepLinkingRequest\",\"name\":\"Blackboard Administrator\",\"https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings\":{\"accept_copy_advice\":false,\"data\":\"_5464_1::_32859_1::0::false::true::_219_1::1b1ad756b9ee498f89161d8ec8b3d075::false\",\"accept_types\":[\"ltiResourceLink\",\"link\"],\"accept_multiple\":true,\"accept_presentation_document_targets\":[\"iframe\",\"window\"],\"accept_media_types\":\"*/*\",\"auto_create\":true,\"deep_link_return_url\":\"https://theshannon.bbpd.io/webapps/blackboard/controller/lti/v2/deeplinking\"},\"family_name\":\"Administrator\",\"https://blackboard.com/lti/claim/one_time_session_token\":\"c447b7daa8cf46199b6c8951f09a3b1e\"},\"verified\":true,\"return_url\":\"https://theshannon.bbpd.io/webapps/blackboard/controller/lti/v2/deeplinking\",\"error_url\":\"\",\"jwt\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyMzQ1In0.eyJpc3MiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhdWQiOiJodHRwczovL2JsYWNrYm9hcmQuY29tIiwic3ViIjoiOTZhZWI5ODItNWE3Yy00YzZjLTljMWItNWMzM2U1YjE0ZmZjIiwiaWF0IjoxNjI4MzY4OTg2LCJleHAiOjE2MjgzNjkyODYsImxvY2FsZSI6ImVuX1VTIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vZGVwbG95bWVudF9pZCI6IjU4ZmE1YWQzLTU0NTQtNGRmNy04OTJmLTlhNWNmMzVlNWIzZCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL21lc3NhZ2VfdHlwZSI6Ikx0aURlZXBMaW5raW5nUmVzcG9uc2UiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS92ZXJzaW9uIjoiMS4zLjAiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS1kbC9jbGFpbS9kYXRhIjoiXzU0NjRfMTo6XzMyODU5XzE6OjA6OmZhbHNlOjp0cnVlOjpfMjE5XzE6OjFiMWFkNzU2YjllZTQ5OGY4OTE2MWQ4ZWM4YjNkMDc1OjpmYWxzZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpLWRsL2NsYWltL2NvbnRlbnRfaXRlbXMiOlt7InR5cGUiOiJsdGlSZXNvdXJjZUxpbmsiLCJ0aXRsZSI6IkEgdGl0bGUgZm9yIExUSSAmIDEuMyBcIiBMaW5rIiwidGV4dCI6IkEgJiBkZXNjcmlwdGlvbiB3aXRoIHF1b3RlcyBcIiIsInVybCI6Imh0dHBzOi8vMGFhYmExMDIzZGY2Lm5ncm9rLmlvL2x0aTEzIiwiYXZhaWxhYmxlIjp7InN0YXJ0RGF0ZVRpbWUiOiIyMDIxLTA4LTA3VDEyOjAwOjAwLjAwMFoiLCJlbmREYXRlVGltZSI6IjIwMjEtMDktMDZUMTI6MDA6MDAuMDAwWiJ9LCJzdWJtaXNzaW9uIjp7ImVuZERhdGVUaW1lIjoiMjAyMS0wOS0wNlQxMjowMDowMC4wMDBaIn0sImljb24iOnsidXJsIjoiaHR0cHM6Ly9waG90b3Muc211Z211Zy5jb20vcGhvdG9zL2ktdDRuTGtRZC8wL1RoL2ktdDRuTGtRZC1UaC5qcGciLCJ3aWR0aCI6MTAwLCJoZWlnaHQiOjEwMH0sInRodW1ibmFpbCI6eyJ1cmwiOiJodHRwczovL3Bob3Rvcy5zbXVnbXVnLmNvbS9waG90b3MvaS10NG5Ma1FkLzAvVGgvaS10NG5Ma1FkLVRoLmpwZyIsIndpZHRoIjo5MCwiaGVpZ2h0Ijo5MH0sImxpbmVJdGVtIjp7InNjb3JlTWF4aW11bSI6MTAwLCJsYWJlbCI6IkNoYXB0ZXIgMTIgcXVpeiIsInJlc291cmNlSWQiOiJ4eXpwZHExMjM0IiwidGFnIjoib3JpZ2luYWxpdHkifSwiY3VzdG9tIjp7ImtleTEiOiJzb21lICYgdmFsdWUiLCJjb250ZXh0SGlzdG9yeSI6IiRDb250ZXh0LmlkLmhpc3RvcnkiLCJyZXNvdXJjZUhpc3RvcnkiOiIkUmVzb3VyY2VMaW5rLmlkLmhpc3RvcnkiLCJmaXJzdEF2YWlsYWJsZSI6IiRSZXNvdXJjZUxpbmsuYXZhaWxhYmxlLnN0YXJ0RGF0ZVRpbWUiLCJsYXN0QXZhaWxhYmxlIjoiJFJlc291cmNlTGluay5hdmFpbGFibGUuZW5kRGF0ZVRpbWUiLCJkdWVEYXRlIjoiJFJlc291cmNlTGluay5zdWJtaXNzaW9uLmVuZERhdGVUaW1lIiwidXNlck5hbWUiOiIkVXNlci51c2VybmFtZSIsInVzZXJFbWFpbCI6IiRQZXJzb24uZW1haWwucHJpbWFyeSIsInVzZXJTeXNSb2xlcyI6IkBYQHVzZXIucm9sZUBYQCIsInNvdXJjZSI6ImxpbmsifX1dfQ.mxXLbjsLI-yrHbvAAt5_LLQSCvRZw7trj0-MLebp34mXC63Sn6JWXoNuNReGaSveiQjhGVL-xvqax5RBGVUaD50aHPavpW4vPpjDOdxlN1MIB34u3ZWkydTMceM6HNEhhkAEBKmz_OVG5OZAq4Zw3sfAK3wrzIqbgoW606jtlX3bysmrza7bvXMstoFy9_G8IOC2zbFHazO0Ki6_eCzIa2Ic8bwPH0dIOHgfqNNhoxDYyGYKSOUKEfjWHbiI7FJq431X9GjVt347CH82YEq_awmcAoIIZnhH7feg9h-Z0vStnYsiOPDO_6oK4P8cfsq0EcKeYlyfdhaCq4ayFy5XAw\",\"return_json\":{\"iss\":\"96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc\",\"aud\":\"https://blackboard.com\",\"sub\":\"96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc\",\"iat\":1628368986,\"exp\":1628369286,\"locale\":\"en_US\",\"https://purl.imsglobal.org/spec/lti/claim/deployment_id\":\"58fa5ad3-5454-4df7-892f-9a5cf35e5b3d\",\"https://purl.imsglobal.org/spec/lti/claim/message_type\":\"LtiDeepLinkingResponse\",\"https://purl.imsglobal.org/spec/lti/claim/version\":\"1.3.0\",\"https://purl.imsglobal.org/spec/lti-dl/claim/data\":\"_5464_1::_32859_1::0::false::true::_219_1::1b1ad756b9ee498f89161d8ec8b3d075::false\",\"https://purl.imsglobal.org/spec/lti-dl/claim/content_items\":[{\"type\":\"ltiResourceLink\",\"title\":\"A title for LTI & 1.3 \\\" Link\",\"text\":\"A & description with quotes \\\"\",\"url\":\"https://0aaba1023df6.ngrok.io/lti13\",\"available\":{\"startDateTime\":\"2021-08-07T12:00:00.000Z\",\"endDateTime\":\"2021-09-06T12:00:00.000Z\"},\"submission\":{\"endDateTime\":\"2021-09-06T12:00:00.000Z\"},\"icon\":{\"url\":\"https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg\",\"width\":100,\"height\":100},\"thumbnail\":{\"url\":\"https://photos.smugmug.com/photos/i-t4nLkQd/0/Th/i-t4nLkQd-Th.jpg\",\"width\":90,\"height\":90},\"lineItem\":{\"scoreMaximum\":100,\"label\":\"Chapter 12 quiz\",\"resourceId\":\"xyzpdq1234\",\"tag\":\"originality\"},\"custom\":{\"key1\":\"some & value\",\"contextHistory\":\"$Context.id.history\",\"resourceHistory\":\"$ResourceLink.id.history\",\"firstAvailable\":\"$ResourceLink.available.startDateTime\",\"lastAvailable\":\"$ResourceLink.available.endDateTime\",\"dueDate\":\"$ResourceLink.submission.endDateTime\",\"userName\":\"$User.username\",\"userEmail\":\"$Person.email.primary\",\"userSysRoles\":\"@X@user.role@X@\",\"source\":\"link\"}}]},\"names_roles\":true,\"grading\":true,\"groups\":true,\"target_link_uri\":\"https://0aaba1023df6.ngrok.io/deepLinkOptions\"}"
+            }
+        },
+        {
+            "state": "f0a72a15-50da-4afa-bc95-3383f2811a7b",
+            "auth": {
+                "client_id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                "jwt": {
+                    "header": {
+                        "kid": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "alg": "RS256"
+                    },
+                    "body": {
+                        "sub": "d810f805da4a44f5a803758893621fe4",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+                            "lineitems": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ]
+                        },
+                        "iss": "https://blackboard.com",
+                        "locale": "en-US",
+                        "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+                            "name": "Blackboard, Inc.",
+                            "description": "Blackboard, Inc.",
+                            "guid": "0794703dc3c44ae49ec0e086290fc8ac",
+                            "product_family_code": "BlackboardLearn",
+                            "version": "3900.22.0-ci.7620+3f12d97",
+                            "url": "https://theshannon.bbpd.io/",
+                            "contact_email": "admin@theshannon.bbpd.io"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/lis": {
+                            "person_sourcedid": "administrator",
+                            "course_section_sourcedid": "ben-course"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+                            "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&launch_id=24961a3a-d017-4acb-a29c-1cb597cf68ba&link_id=_5464_156caa65c1bee47fea1f52e6f06071b11&launch_time=1628369190728"
+                        },
+                        "exp": 1628372790,
+                        "iat": 1628369190,
+                        "email": "shannon.harris@blackboard.com",
+                        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+                            "context_memberships_url": "https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+                            ],
+                            "service_versions": [
+                                "2.0"
+                            ]
+                        },
+                        "given_name": "Blackboard",
+                        "https://purl.imsglobal.org/spec/lti/claim/roles": [
+                            "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+                        ],
+                        "nonce": "d5150ac5-6f47-4cbc-9dad-b372c818624c",
+                        "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://0aaba1023df6.ngrok.io/lti13",
+                        "https://purl.imsglobal.org/spec/lti/claim/context": {
+                            "id": "3129c5f00de54d799e308be4e87945c9",
+                            "label": "ben-course",
+                            "title": "ben-course",
+                            "type": [
+                                "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+                            ]
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                            "id": "_5464_156caa65c1bee47fea1f52e6f06071b11"
+                        },
+                        "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+                            "context_groups_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups",
+                            "context_group_sets_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+                            ],
+                            "service_versions": [
+                                "1.0"
+                            ]
+                        },
+                        "aud": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+                        "name": "Blackboard Administrator",
+                        "family_name": "Administrator",
+                        "https://blackboard.com/lti/claim/one_time_session_token": "6989e2abcc42413faca47c9a6c09dfd0"
+                    },
+                    "verified": true,
+                    "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&launch_id=24961a3a-d017-4acb-a29c-1cb597cf68ba&link_id=_5464_156caa65c1bee47fea1f52e6f06071b11&launch_time=1628369190728",
+                    "error_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&launch_id=24961a3a-d017-4acb-a29c-1cb597cf68ba&link_id=_5464_156caa65c1bee47fea1f52e6f06071b11&launch_time=1628369190728",
+                    "jwt": "",
+                    "return_json": "",
+                    "names_roles": true,
+                    "grading": true,
+                    "groups": true,
+                    "target_link_uri": "https://0aaba1023df6.ngrok.io/lti13"
+                },
+                "auth_code": "MMsyAjZciPMoLBqHBXGCTmNfKbmgPmsb",
+                "learn_rest_token": "8z8YenJyjS7OIE0sSn669mFU1cWl59dN",
+                "lti_token": "eyJraWQiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJpbXNnbG9iYWwub3JnLnNlY3VyaXR5LnNjb3BlIjoiaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLW5ycHNcL3Njb3BlXC9jb250ZXh0bWVtYmVyc2hpcC5yZWFkb25seSBodHRwczpcL1wvcHVybC5pbXNnbG9iYWwub3JnXC9zcGVjXC9sdGktYWdzXC9zY29wZVwvbGluZWl0ZW0gaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL2xpbmVpdGVtLnJlYWRvbmx5IGh0dHBzOlwvXC9wdXJsLmltc2dsb2JhbC5vcmdcL3NwZWNcL2x0aS1hZ3NcL3Njb3BlXC9yZXN1bHQucmVhZG9ubHkgaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL3Njb3JlIiwiZXhwIjoxNjI4MzcyNzkzLCJpYXQiOjE2MjgzNjkxOTN9.UAZcKKyw8wgo_iuu9I0pSr2Q1OY1j4-g6HI7JN1hcTfO4YaQbFIHgQ-zlICUJghWQlvvqRc2FthcRmU1Uaq2n7wTFkEzzTxpKGwvbEVO-FayjyOTtsDwL3bqqCbndDXnHBZWx6RkOydOMbEv-oE5lIjlAdlz6zn3yAx3n0dyW41JnAcP2I6DHNKHPY3HJStgQ35gS-koebA8l3sK7On-qPKJUDRPlj30HC8v0qRR7Pv0nJRAJOriGhcaJ40r1lJ42ESdNBHzeJljqFcZRbb7w_0LsKH0GUjxrYrFLwcMxX3SF0qXeqUegRLT9h2oLuFkOpSWYaWySl4KyRLhiAlo3Q"
+            }
+        },
+        {
+            "state": "a2e1fe1e-2327-45fd-ad36-3a427a3f5cb4",
+            "auth": {
+                "client_id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                "jwt": {
+                    "header": {
+                        "kid": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "alg": "RS256"
+                    },
+                    "body": {
+                        "sub": "d810f805da4a44f5a803758893621fe4",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+                            "lineitems": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems",
+                            "lineitem": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems/_31760_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ]
+                        },
+                        "iss": "https://blackboard.com",
+                        "locale": "en-US",
+                        "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+                            "name": "Blackboard, Inc.",
+                            "description": "Blackboard, Inc.",
+                            "guid": "0794703dc3c44ae49ec0e086290fc8ac",
+                            "product_family_code": "BlackboardLearn",
+                            "version": "3900.22.0-ci.7620+3f12d97",
+                            "url": "https://theshannon.bbpd.io/",
+                            "contact_email": "admin@theshannon.bbpd.io"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/lis": {
+                            "person_sourcedid": "administrator",
+                            "course_section_sourcedid": "ben-course"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+                            "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_71379_1&toGC=false&launch_id=b0d256d8-0722-47e8-a0b8-c7f020d721d0&link_id=_71379_1&launch_time=1628369223033"
+                        },
+                        "exp": 1628372823,
+                        "iat": 1628369223,
+                        "email": "shannon.harris@blackboard.com",
+                        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+                            "context_memberships_url": "https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+                            ],
+                            "service_versions": [
+                                "2.0"
+                            ]
+                        },
+                        "given_name": "Blackboard",
+                        "https://purl.imsglobal.org/spec/lti/claim/roles": [
+                            "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+                        ],
+                        "nonce": "84fb7206-9060-47cb-8cc5-2fcb26d6fa4c",
+                        "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://0aaba1023df6.ngrok.io/lti13",
+                        "https://purl.imsglobal.org/spec/lti/claim/context": {
+                            "id": "3129c5f00de54d799e308be4e87945c9",
+                            "label": "ben-course",
+                            "title": "ben-course",
+                            "type": [
+                                "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+                            ]
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                            "description": "with Grading",
+                            "id": "_71379_1",
+                            "title": "Course Content"
+                        },
+                        "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+                            "context_groups_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups",
+                            "context_group_sets_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+                            ],
+                            "service_versions": [
+                                "1.0"
+                            ]
+                        },
+                        "aud": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+                        "name": "Blackboard Administrator",
+                        "family_name": "Administrator",
+                        "https://blackboard.com/lti/claim/one_time_session_token": "d2e1e324ba94486193e1b0c636f204c6"
+                    },
+                    "verified": true,
+                    "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_71379_1&toGC=false&launch_id=b0d256d8-0722-47e8-a0b8-c7f020d721d0&link_id=_71379_1&launch_time=1628369223033",
+                    "error_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_71379_1&toGC=false&launch_id=b0d256d8-0722-47e8-a0b8-c7f020d721d0&link_id=_71379_1&launch_time=1628369223033",
+                    "jwt": "",
+                    "return_json": "",
+                    "names_roles": true,
+                    "grading": true,
+                    "groups": true,
+                    "target_link_uri": "https://0aaba1023df6.ngrok.io/lti13"
+                },
+                "auth_code": "bNWezj5T3mlajrar0tVoIQavIut9lbWz",
+                "learn_rest_token": "8z8YenJyjS7OIE0sSn669mFU1cWl59dN",
+                "lti_token": "eyJraWQiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJpbXNnbG9iYWwub3JnLnNlY3VyaXR5LnNjb3BlIjoiaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLW5ycHNcL3Njb3BlXC9jb250ZXh0bWVtYmVyc2hpcC5yZWFkb25seSBodHRwczpcL1wvcHVybC5pbXNnbG9iYWwub3JnXC9zcGVjXC9sdGktYWdzXC9zY29wZVwvbGluZWl0ZW0gaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL2xpbmVpdGVtLnJlYWRvbmx5IGh0dHBzOlwvXC9wdXJsLmltc2dsb2JhbC5vcmdcL3NwZWNcL2x0aS1hZ3NcL3Njb3BlXC9yZXN1bHQucmVhZG9ubHkgaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL3Njb3JlIiwiZXhwIjoxNjI4MzcyODI1LCJpYXQiOjE2MjgzNjkyMjV9.iGm1e-eYURrYrTyS8GqziFK7apssSFXFGr_0cHzhQRXck1hQFGmT3YrvbCgVMoxcIiu4DhDC37_7I1Bw2ply7TvfDmlYJufw3TvJsVVNo-WB8QB4Aazrh9fuZJuTpBmNxRxZ4DMSgsrWgRIqkyuziYKtnlZIf2fCXXVbjqxxoxuKt2bwRQE-nCml34ACOtvzSUXaV0qfF8sFCfmC6S5dEChJ-h3HgJORB-13MvAlNthpW5-tiox_QszU6Df3wsDiJRcumaiAVJruNtJ6EfxcfEx7yqiWIRLQvjGN0ZCQLvZyq-gFuE9nInRcUkMLZJjo_nzgw0xQP6cvAWWip38JWg"
+            }
+        },
+        {
+            "state": "d624f095-f210-4ce0-97bc-33dbd9ed5db2",
+            "auth": {
+                "client_id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                "jwt": {
+                    "header": {
+                        "kid": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "alg": "RS256"
+                    },
+                    "body": {
+                        "sub": "d810f805da4a44f5a803758893621fe4",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+                            "lineitems": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ]
+                        },
+                        "iss": "https://blackboard.com",
+                        "locale": "en-US",
+                        "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+                            "name": "Blackboard, Inc.",
+                            "description": "Blackboard, Inc.",
+                            "guid": "0794703dc3c44ae49ec0e086290fc8ac",
+                            "product_family_code": "BlackboardLearn",
+                            "version": "3900.22.0-ci.7620+3f12d97",
+                            "url": "https://theshannon.bbpd.io/",
+                            "contact_email": "admin@theshannon.bbpd.io"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/lis": {
+                            "person_sourcedid": "administrator",
+                            "course_section_sourcedid": "ben-course"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+                            "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_65878_1&toGC=false&launch_id=39cd3a71-0fdc-43e8-8135-cdf8fb3ae0c8&link_id=_65878_1&launch_time=1628369252340"
+                        },
+                        "exp": 1628372852,
+                        "iat": 1628369252,
+                        "email": "shannon.harris@blackboard.com",
+                        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+                            "context_memberships_url": "https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+                            ],
+                            "service_versions": [
+                                "2.0"
+                            ]
+                        },
+                        "given_name": "Blackboard",
+                        "https://purl.imsglobal.org/spec/lti/claim/roles": [
+                            "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+                        ],
+                        "nonce": "e5eb8cbe-d764-4f6a-909e-d8d45502c8ac",
+                        "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://0aaba1023df6.ngrok.io/lti13",
+                        "https://purl.imsglobal.org/spec/lti/claim/context": {
+                            "id": "3129c5f00de54d799e308be4e87945c9",
+                            "label": "ben-course",
+                            "title": "ben-course",
+                            "type": [
+                                "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+                            ]
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                            "description": "with Grading",
+                            "id": "_65878_1",
+                            "title": "Course Content"
+                        },
+                        "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+                            "context_groups_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups",
+                            "context_group_sets_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+                            ],
+                            "service_versions": [
+                                "1.0"
+                            ]
+                        },
+                        "aud": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+                        "name": "Blackboard Administrator",
+                        "family_name": "Administrator",
+                        "https://blackboard.com/lti/claim/one_time_session_token": "dfb4c174893d4f508d7ce9c82fcb9d33"
+                    },
+                    "verified": true,
+                    "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_65878_1&toGC=false&launch_id=39cd3a71-0fdc-43e8-8135-cdf8fb3ae0c8&link_id=_65878_1&launch_time=1628369252340",
+                    "error_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_65878_1&toGC=false&launch_id=39cd3a71-0fdc-43e8-8135-cdf8fb3ae0c8&link_id=_65878_1&launch_time=1628369252340",
+                    "jwt": "",
+                    "return_json": "",
+                    "names_roles": true,
+                    "grading": true,
+                    "groups": true,
+                    "target_link_uri": "https://0aaba1023df6.ngrok.io/lti13"
+                },
+                "auth_code": "vJmWXSZ9OOlmCnZ19ZSY4oJ0GoDXQd5C",
+                "learn_rest_token": "8z8YenJyjS7OIE0sSn669mFU1cWl59dN",
+                "lti_token": "eyJraWQiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJpbXNnbG9iYWwub3JnLnNlY3VyaXR5LnNjb3BlIjoiaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLW5ycHNcL3Njb3BlXC9jb250ZXh0bWVtYmVyc2hpcC5yZWFkb25seSBodHRwczpcL1wvcHVybC5pbXNnbG9iYWwub3JnXC9zcGVjXC9sdGktYWdzXC9zY29wZVwvbGluZWl0ZW0gaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL2xpbmVpdGVtLnJlYWRvbmx5IGh0dHBzOlwvXC9wdXJsLmltc2dsb2JhbC5vcmdcL3NwZWNcL2x0aS1hZ3NcL3Njb3BlXC9yZXN1bHQucmVhZG9ubHkgaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL3Njb3JlIiwiZXhwIjoxNjI4MzcyODU0LCJpYXQiOjE2MjgzNjkyNTR9.asMpVjKpJlQYAGN5Wu4g2wLslL0LRJR7m-g5v5Z1r2HEz3VzSJg1TWFfhA3W1EXKDTtGCXMTuGSN3Foh4Cl9nNS2XdsJTyRbAc9peDKaXsIhUQvqVZghKMcOprlkIXGBkQoqExmKg2JsxQ-dZuaP9p3j7tk58QKo5_mJQzJJ34oZxV2s2TyiNXUSYrKF9rQOYKssV0ZnvQryICpiXgvncjr8Yw7n8pUNRAIHcut7IuAH0F9YMqc4qGZZtzyGmbcW_xyoMcVl0GZG7mUP2gvJLvrrofsm04s9RqIwb31Xhelj1tp2xEfIRejf3mRYEW-zAWBmIsC2SAjFlyr46T9afQ"
+            }
+        },
+        {
+            "state": "7b6f2a7f-74c5-449b-8f8b-1e9be60338a7",
+            "auth": {
+                "client_id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                "jwt": {
+                    "header": {
+                        "kid": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "alg": "RS256"
+                    },
+                    "body": {
+                        "sub": "67a0cdc0844746c28483382d1321f666",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+                            "lineitems": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems",
+                            "lineitem": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems/_31760_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ]
+                        },
+                        "iss": "https://blackboard.com",
+                        "locale": "en-US",
+                        "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+                            "name": "Blackboard, Inc.",
+                            "description": "Blackboard, Inc.",
+                            "guid": "0794703dc3c44ae49ec0e086290fc8ac",
+                            "product_family_code": "BlackboardLearn",
+                            "version": "3900.22.0-ci.7620+3f12d97",
+                            "url": "https://theshannon.bbpd.io/",
+                            "contact_email": "admin@theshannon.bbpd.io"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/lis": {
+                            "person_sourcedid": "administrator_previewuser",
+                            "course_section_sourcedid": "ben-course"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+                            "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_71379_1&toGC=false&launch_id=bcf50302-2094-4429-b6bf-76684e7f77d6&link_id=_71379_1&launch_time=1628369268396"
+                        },
+                        "exp": 1628372868,
+                        "iat": 1628369268,
+                        "email": "shannon.harris@blackboard.com",
+                        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+                            "context_memberships_url": "https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+                            ],
+                            "service_versions": [
+                                "2.0"
+                            ]
+                        },
+                        "given_name": "Blackboard",
+                        "https://purl.imsglobal.org/spec/lti/claim/roles": [
+                            "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner",
+                            "http://purl.imsglobal.org/vocab/lti/system/person#TestUser"
+                        ],
+                        "nonce": "10583b57-087e-461f-ac8a-93a3a5d88668",
+                        "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://0aaba1023df6.ngrok.io/lti13",
+                        "https://purl.imsglobal.org/spec/lti/claim/context": {
+                            "id": "3129c5f00de54d799e308be4e87945c9",
+                            "label": "ben-course",
+                            "title": "ben-course",
+                            "type": [
+                                "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+                            ]
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                            "description": "with Grading",
+                            "id": "_71379_1",
+                            "title": "Course Content"
+                        },
+                        "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+                            "context_groups_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups",
+                            "context_group_sets_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+                            ],
+                            "service_versions": [
+                                "1.0"
+                            ]
+                        },
+                        "aud": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+                        "name": "Blackboard Administrator_PreviewUser",
+                        "family_name": "Administrator_PreviewUser",
+                        "https://blackboard.com/lti/claim/one_time_session_token": "c27a051ff6e044adb1cae28442d7bd3e"
+                    },
+                    "verified": true,
+                    "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_71379_1&toGC=false&launch_id=bcf50302-2094-4429-b6bf-76684e7f77d6&link_id=_71379_1&launch_time=1628369268396",
+                    "error_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_71379_1&toGC=false&launch_id=bcf50302-2094-4429-b6bf-76684e7f77d6&link_id=_71379_1&launch_time=1628369268396",
+                    "jwt": "",
+                    "return_json": "",
+                    "names_roles": true,
+                    "grading": true,
+                    "groups": true,
+                    "target_link_uri": "https://0aaba1023df6.ngrok.io/lti13"
+                },
+                "auth_code": "TTDB3XmzgtpyPmoXS4PozviumMxaY5q0",
+                "learn_rest_token": "8z8YenJyjS7OIE0sSn669mFU1cWl59dN",
+                "lti_token": "eyJraWQiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJpbXNnbG9iYWwub3JnLnNlY3VyaXR5LnNjb3BlIjoiaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLW5ycHNcL3Njb3BlXC9jb250ZXh0bWVtYmVyc2hpcC5yZWFkb25seSBodHRwczpcL1wvcHVybC5pbXNnbG9iYWwub3JnXC9zcGVjXC9sdGktYWdzXC9zY29wZVwvbGluZWl0ZW0gaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL2xpbmVpdGVtLnJlYWRvbmx5IGh0dHBzOlwvXC9wdXJsLmltc2dsb2JhbC5vcmdcL3NwZWNcL2x0aS1hZ3NcL3Njb3BlXC9yZXN1bHQucmVhZG9ubHkgaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL3Njb3JlIiwiZXhwIjoxNjI4MzcyODcwLCJpYXQiOjE2MjgzNjkyNzB9.BpaNIaKypi3fzwGp-EUud3f_IhXD-xwhqY8RhvSSSYXBISq8CcC0dkjOqOWDtvx8kdO1FV934S4IIUIWmhvskC7qKBaPtrYhFHgadDQhvL_4nBOkHR68HoTOQzmz9PfiEXaProcvjWvaoEAbXn7bmkpfSLeEyat0Dt9cR0ORv4K1tgbYx0M-GW87Njj2zhTwxcJtUZS6lnWJeaxhN5s45QD8p_AHIg1iumcA1jQuo7lqs70y12uPfBC5WeIoonrEzISgBzDR7dKkjoYZrhUWmIaBv_kMEREl-CIIbdvaXSDVyowIftDt4h2KL_HMMI3zMeufLHpl3de6UqyPDIc_YQ"
+            }
+        },
+        {
+            "state": "11c92bac-2ce3-469e-b80a-a08e558c59bd",
+            "auth": {
+                "client_id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                "jwt": {
+                    "header": {
+                        "kid": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "alg": "RS256"
+                    },
+                    "body": {
+                        "sub": "67a0cdc0844746c28483382d1321f666",
+                        "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "58fa5ad3-5454-4df7-892f-9a5cf35e5b3d",
+                        "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+                        "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+                            "lineitems": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/lineItems",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ]
+                        },
+                        "iss": "https://blackboard.com",
+                        "locale": "en-US",
+                        "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+                            "name": "Blackboard, Inc.",
+                            "description": "Blackboard, Inc.",
+                            "guid": "0794703dc3c44ae49ec0e086290fc8ac",
+                            "product_family_code": "BlackboardLearn",
+                            "version": "3900.22.0-ci.7620+3f12d97",
+                            "url": "https://theshannon.bbpd.io/",
+                            "contact_email": "admin@theshannon.bbpd.io"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/custom": {
+                            "courseBatchUIDLrn": "$Context.sourcedId",
+                            "courseIDLrn": "$Context.id",
+                            "caliper_profile_url": "https://theshannon.bbpd.io/learn/api/v1/telemetry/caliper/profile",
+                            "caliper_federated_session_id": "https://caliper-mapping.cloudbb.blackboard.com/v1/sites/76a75927-529d-40bc-a311-4709f8fe509a/sessions/6568A68B0B1F4719C0CA094AC763118A",
+                            "userNameLTI": "administrator_previewuser"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/lis": {
+                            "person_sourcedid": "administrator_previewuser",
+                            "course_section_sourcedid": "ben-course"
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+                            "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_67849_1&toGC=false&launch_id=95f1ba7e-7875-420d-995b-12899ebf57fd&link_id=_67849_1&launch_time=1628369308520"
+                        },
+                        "exp": 1628372908,
+                        "iat": 1628369308,
+                        "email": "shannon.harris@blackboard.com",
+                        "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+                            "context_memberships_url": "https://theshannon.bbpd.io/learn/api/v1/lti/external/namesandroles/_5464_1",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+                            ],
+                            "service_versions": [
+                                "2.0"
+                            ]
+                        },
+                        "given_name": "Blackboard",
+                        "https://purl.imsglobal.org/spec/lti/claim/roles": [
+                            "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner",
+                            "http://purl.imsglobal.org/vocab/lti/system/person#TestUser"
+                        ],
+                        "nonce": "197da894-0b79-477c-93f8-30c11b978170",
+                        "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://0aaba1023df6.ngrok.io/lti13bobcat",
+                        "https://purl.imsglobal.org/spec/lti/claim/context": {
+                            "id": "3129c5f00de54d799e308be4e87945c9",
+                            "label": "ben-course",
+                            "title": "ben-course",
+                            "type": [
+                                "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+                            ]
+                        },
+                        "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                            "id": "_67849_1",
+                            "title": "Eric's Bobcat Page"
+                        },
+                        "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+                            "context_groups_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groups",
+                            "context_group_sets_url": "https://theshannon.bbpd.io/learn/api/v1/lti/courses/_5464_1/groupsets",
+                            "scope": [
+                                "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+                            ],
+                            "service_versions": [
+                                "1.0"
+                            ]
+                        },
+                        "aud": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
+                        "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+                        "name": "Blackboard Administrator_PreviewUser",
+                        "family_name": "Administrator_PreviewUser",
+                        "https://blackboard.com/lti/claim/one_time_session_token": "384112da080a4945a908ea21019820ee"
+                    },
+                    "verified": true,
+                    "return_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_67849_1&toGC=false&launch_id=95f1ba7e-7875-420d-995b-12899ebf57fd&link_id=_67849_1&launch_time=1628369308520",
+                    "error_url": "https://theshannon.bbpd.io/webapps/blackboard/execute/blti/launchReturn?course_id=_5464_1&content_id=_67849_1&toGC=false&launch_id=95f1ba7e-7875-420d-995b-12899ebf57fd&link_id=_67849_1&launch_time=1628369308520",
+                    "jwt": "",
+                    "return_json": "",
+                    "names_roles": true,
+                    "grading": true,
+                    "groups": true,
+                    "target_link_uri": "https://0aaba1023df6.ngrok.io/lti13bobcat"
+                },
+                "auth_code": "dSonwwCb4ho4LRwz6Gy6GOd0DSc4wzcz",
+                "learn_rest_token": "8z8YenJyjS7OIE0sSn669mFU1cWl59dN",
+                "lti_token": "eyJraWQiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NmFlYjk4Mi01YTdjLTRjNmMtOWMxYi01YzMzZTViMTRmZmMiLCJpbXNnbG9iYWwub3JnLnNlY3VyaXR5LnNjb3BlIjoiaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLW5ycHNcL3Njb3BlXC9jb250ZXh0bWVtYmVyc2hpcC5yZWFkb25seSBodHRwczpcL1wvcHVybC5pbXNnbG9iYWwub3JnXC9zcGVjXC9sdGktYWdzXC9zY29wZVwvbGluZWl0ZW0gaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL2xpbmVpdGVtLnJlYWRvbmx5IGh0dHBzOlwvXC9wdXJsLmltc2dsb2JhbC5vcmdcL3NwZWNcL2x0aS1hZ3NcL3Njb3BlXC9yZXN1bHQucmVhZG9ubHkgaHR0cHM6XC9cL3B1cmwuaW1zZ2xvYmFsLm9yZ1wvc3BlY1wvbHRpLWFnc1wvc2NvcGVcL3Njb3JlIiwiZXhwIjoxNjI4MzcyOTEwLCJpYXQiOjE2MjgzNjkzMTB9.NeVYKr-mnIJWsXZ4TfxaI12a_ndYeZ7aJJpKeKf15PSIdgpdPdKvadskYMF-_OuzSM0Doj6fy5IbxDkrNhAd4ZWIA6YW2wY87ShANqM0bs47H07VHAoOa_3WR3jEYbWhbIYugOWRFip4Wq5z-_hn3pHm7cJ_NT9g5nW1DIQaDNJUB4VWMf5ByNnIEG7Rd8T0Qk2mSzgJUdvwnG6qvnRUdxJRMxukRfSFOrwcOo5H3JYEAI9EBRyov8gmCoFLaLk1WSOGKh8FWE6XSkweHpZyqQ9Cr2ZkvgFDXpx7leuOp1-vPDgDkXmqa1Fpci61GlLFaUjaFIyUlxxhTK6nsrBQLg"
+            }
+        }
+    ]
 }

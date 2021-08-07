@@ -41,12 +41,12 @@ export const getCachedLTIToken = async (nonce, clientId, scope) => {
     console.log(`Couldn't get cached token for nonce ${nonce}.`);
     const tokenUrl = getAppById(clientId).setup.jwtUrl;
     token = await getLTIToken(clientId, tokenUrl, scope, nonce);
-    await insertNewAuthToken(nonce, token, 'lti_token')
+    await insertNewAuthToken(nonce, token, 'lti_token');
   }
 
   return token;
 };
 
 const cacheToken = async (token, nonce) => {
-  await insertNewAuthToken(nonce, `${token}`, "lti_token");
+  await insertNewAuthToken(nonce, `${token}`, 'lti_token');
 };

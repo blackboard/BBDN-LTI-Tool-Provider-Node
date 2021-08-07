@@ -7,13 +7,13 @@ export const namesRoles = (req, res, nrPayload) => {
     let namesRoles =
       nrPayload.orig_body[
         'https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice'
-        ];
+      ];
     nrPayload.url = namesRoles.context_memberships_url + '?groups=true';
     nrPayload.version = namesRoles.service_version;
     nrPayload.return_url =
       nrPayload.orig_body[
         'https://purl.imsglobal.org/spec/lti/claim/launch_presentation'
-        ].return_url;
+      ].return_url;
   }
 
   // Get OAuth2 token and make call to Learn

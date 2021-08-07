@@ -1,21 +1,21 @@
-var MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient;
 
 const MAX_RECORDS = 5;
 
-var return_url = 'https://community.blackboard.com/community/developers';
+const return_url = 'https://community.blackboard.com/community/developers';
 
 //Connection URL
-var url = 'mongodb://localhost:27017/caliper';
+const url = 'mongodb://localhost:27017/caliper';
 
 //replaces all "." in keys with ":"
-var processData = function (data) {
+const processData = function (data) {
   if (!data) {
     return data;
   } else if (Array.isArray(data)) {
     return data.map(processData);
   } else if (typeof data === 'object') {
     return Object.keys(data).reduce(function (obj, key) {
-      var newKey = key.replace(/\./g, ':');
+      const newKey = key.replace(/\./g, ':');
       obj[newKey] = processData(data[key]);
       return obj;
     }, {});
@@ -25,7 +25,7 @@ var processData = function (data) {
 };
 
 
-exports.got_caliper = function (req, res) {
+exports.got_caliper = function (req) {
 
   // console.log(req.headers);
   //console.log(JSON.stringify(req.body, null, '\t'));
@@ -34,12 +34,12 @@ exports.got_caliper = function (req, res) {
   MongoClient.connect(url, function (err, db) {
     //console.log('Connected correctly to server');
 
-    var event = processData(req.body);
+    const event = processData(req.body);
 
     //console.log(JSON.stringify(event, null, '\t'));
 
     // Insert a single document
-    db.collection('caliper').insert(event, function (err, r) {
+    db.collection('caliper').insert(event, function () {
       //if (err) console.log('Error encountered during caliper event save: ' + err.message);
 
       //console.log('Caliper event saved successfully!');
@@ -51,7 +51,7 @@ exports.got_caliper = function (req, res) {
 
         if (count > MAX_RECORDS) {
 
-          var num_prune_recs = count - MAX_RECORDS;
+          const num_prune_recs = count - MAX_RECORDS;
 
           //console.log('Record count exceeds the maximum number of records to store. Pruning the oldest ' + num_prune_recs + ' records.');
 
@@ -75,7 +75,7 @@ exports.got_caliper = function (req, res) {
         }
       });
     });
-  });
+  }).catch(r => console.log(r));
 };
 
 
@@ -85,7 +85,22 @@ exports.show_events = function (req, res) {
   MongoClient.connect(url, function (err, db) {
     //console.log('Connected correctly to server');
 
-    var events = '<table style="border: 1px solid\;"><thead><tr style="border: 1px solid\;color: white\;background-color:blue\;"><th style="border: 1px solid\;"><b>SENSOR</b</th><th style="border: 1px solid\;"><b>SENDTIME</b></th><th style="border: 1px solid\;"><b>TYPE</b></th><th style="border: 1px solid\;"><b>ACTOR</b></th><th style="border: 1px solid\;"><b>SESSION</b></th></tr></thead><tbody>';
+    let events = '<table style="border: 1px solid;">' +
+      '<thead><tr style="border: 1px solid;color: white;background-color:blue;">' +
+      '<th style="border: 1px solid;">' +
+      '<b>SENSOR</b' +
+      '</th>' +
+      '<th style="border: 1px solid;">' +
+      '<b>SENDTIME</b>' +
+      '</th>' +
+      '<th style="border: 1px solid;">' +
+      '<b>TYPE</b>' +
+      '</th><th style="border: 1px solid;">' +
+      '<b>ACTOR</b>' +
+      '</th><th style="border: 1px solid;">' +
+      '<b>SESSION</b>' +
+      '</th></tr>' +
+      '</thead><tbody>';
 
     if (db !== null) {
       // Insert a single document
@@ -116,13 +131,13 @@ exports.show_events = function (req, res) {
 
         //console.log(JSON.stringify(doc, null, '\t'));
 
-        var date = new Date(doc['sendTime']);
+        const date = new Date(doc['sendTime']);
 
-        events += '<tr style="border: 1px solid\;"><td style="border: 1px solid\;">' + doc['sensor'] +
-          '</td><td style="border: 1px solid\;">' + date +
-          '</td><td style="border: 1px solid\;">' + doc['data'][0]['@type'] +
-          '</td><td style="border: 1px solid\;">' + doc['data'][0]['actor']['@id'] +
-          '</td><td style="border: 1px solid\;">' + doc['data'][0]['federatedSession'] + '</tr>';
+        events += '<tr style="border: 1px solid;"><td style="border: 1px solid;">' + doc['sensor'] +
+          '</td><td style="border: 1px solid;">' + date +
+          '</td><td style="border: 1px solid;">' + doc['data'][0]['@type'] +
+          '</td><td style="border: 1px solid;">' + doc['data'][0]['actor']['@id'] +
+          '</td><td style="border: 1px solid;">' + doc['data'][0]['federatedSession'] + '</tr>';
 
         //console.log(events);
       });
@@ -134,5 +149,5 @@ exports.show_events = function (req, res) {
         return_onclick: 'location.href=' + '\'' + return_url + '\''
       });
     }
-  });
+  }).catch(r => console.log(r));
 };

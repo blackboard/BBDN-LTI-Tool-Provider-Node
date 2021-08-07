@@ -1,6 +1,6 @@
-import Dashboard from "./components/pages/dashboard";
-import React from "react";
-import ReactDOM from "react-dom";
+import Dashboard from './components/pages/dashboard';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import queryString from 'query-string';
 import parameters from './util/parameters';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
@@ -15,8 +15,8 @@ if (queryParams) {
 }
 
 ReactDOM.render(
-    <BrowserRouter>
-      <Switch>
-      <Route path="/" component={Dashboard}/>
-      </Switch>
-    </BrowserRouter>, document.getElementById("root"));
+  <BrowserRouter>
+    <Switch>
+      <Route path='/' component={Dashboard}/>
+    </Switch>
+  </BrowserRouter>, document.getElementById('root'));

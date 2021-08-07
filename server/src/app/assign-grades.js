@@ -35,7 +35,7 @@ export default function assignGrades(req, res, agPayload) {
   });
   agPayload.lineItems = agPayload.claim.lineitems;
   agPayload.lineItem = agPayload.claim.lineitem;
-};
+}
 
 export const readCols = (req, res, agPayload) => {
   const agPayload_orig = JSON.parse(req.body.body);
@@ -73,7 +73,7 @@ export const readCols = (req, res, agPayload) => {
       });
     },
     function (error) {
-      //console.log(error);
+      console.log(error);
     }
   );
 };
@@ -95,7 +95,7 @@ export const addCol = (req, res, agPayload) => {
         tag: label + ' tag',
         endDateTime: dueDate ? dueDate : null
       };
-      let options = {};
+      let options;
 
       if (columnId) {
         // This is an update
@@ -141,7 +141,7 @@ export const addCol = (req, res, agPayload) => {
       });
     },
     function (error) {
-      //console.log(error);
+      console.log(error);
     }
   );
 };
@@ -195,7 +195,7 @@ export const delCol = (req, res, agPayload) => {
       });
     },
     function (error) {
-      //console.log(error);
+      console.log(error);
     }
   );
 };
@@ -234,7 +234,7 @@ export const results = (req, res, agPayload) => {
       });
     },
     function (error) {
-      //console.log(error);
+      console.log(error);
     }
   );
 };
@@ -318,7 +318,7 @@ export const scores = (req, res, agPayload, task) => {
       });
     },
     function (error) {
-      //console.log(error);
+      console.log(error);
     }
   );
 };

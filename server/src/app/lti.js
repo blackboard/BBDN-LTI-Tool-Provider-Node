@@ -9,43 +9,40 @@ import moment from 'moment';
 import url from 'url';
 import utils from './utils';
 import { getAppById } from '../database/db-utility';
+import { EntityFactory, EventFactory } from 'ims-caliper';
+import * as config from '../../config/config.json';
 
 let rejectUnauthorized = true;
 
 //LTI Variables
 
-let lis_result_sourcedid = '';
-let lis_outcome_service_url = '';
+let lis_result_sourcedid;
+let lis_outcome_service_url;
 let return_url = 'https://community.blackboard.com/community/developers';
-let membership_url = '';
-let placement_parm = '';
-let sha_method = '';
+let membership_url;
+let sha_method;
 
 //Caliper Variables
-let caliper_profile_url = '';
-let custom_caliper_federated_session_id = '';
-let caliper_id = '';
-let eventStoreUrl = '';
-let apiKey = '';
+let caliper_profile_url;
+let custom_caliper_federated_session_id;
+let caliper_id;
+let eventStoreUrl;
+let apiKey;
 
 //REST
-let access_token = '';
-let token_type = '';
-let expires_in = '';
-let user_id = '';
-let course_id = '';
+let access_token;
+let user_id;
+let course_id;
 
-let oauth_consumer_key = '';
-let oauth_nonce = '';
+let oauth_consumer_key;
 
-let caliper_profile_url_parts = '';
+let caliper_profile_url_parts;
 
 /*
  * POST LTI Launch Received
  */
 
 export const got_launch = (req, res) => {
-  console.log('shannon ' + req)
   req.body = _.omit(req.body, '__proto__');
 
   let content = '';
@@ -62,26 +59,23 @@ export const got_launch = (req, res) => {
   custom_caliper_federated_session_id =
     req.body.custom_caliper_federated_session_id;
   oauth_consumer_key = req.body.oauth_consumer_key;
-  oauth_nonce = req.body.oauth_nonce;
   course_id = req.body.context_id;
   user_id = req.body.user_id;
   return_url = req.body.launch_presentation_return_url;
   sha_method = req.body.oauth_signature_method;
   //console.log('Signature Method: ' + sha_method);
-
   if (req.body.custom_context_memberships_url !== undefined) {
     membership_url = req.body.custom_context_memberships_url;
-    placement_parm = membership_url.substring(membership_url.indexOf('=') + 1);
+    membership_url.substring(membership_url.indexOf('=') + 1);
   } else {
     membership_url = '';
-    placement_parm = '';
   }
 
   if (return_url === undefined && caliper_profile_url !== undefined) {
     let parts = url.parse(caliper_profile_url, true);
     return_url = parts.protocol + '//' + parts.host;
   } else if (return_url === undefined) {
-    return_url = 'http://google.com';
+    return_url = 'https://google.com';
   }
 
   res.render('lti', {
@@ -90,12 +84,12 @@ export const got_launch = (req, res) => {
     return_url: return_url,
     return_onclick: 'location.href=' + '\'' + return_url + '\';'
   });
-}
+};
 
 export const caliper = (req, res) => {
   let options = {
-    consumer_key: consumer_key,
-    consumer_secret: consumer_secret,
+    consumer_key: oauth_consumer_key,
+    consumer_secret: oauth_consumer_key === config.lti11Setup.key ? config.lti11Setup.secret : '',
     url: caliper_profile_url,
     signer: new HMAC_SHA.HMAC_SHA1(),
     oauth_version: '1.0',
@@ -103,8 +97,6 @@ export const caliper = (req, res) => {
   };
 
   let parts = caliper_profile_url_parts = url.parse(options.url, true);
-  let caliper_profile_url_oauth = parts.protocol + '//' + parts.host + parts.pathname;
-
   let req_options = {
     hostname: caliper_profile_url_parts.hostname,
     path: caliper_profile_url_parts.path,
@@ -156,17 +148,12 @@ export const caliper_send = (req, res) =>  {
     // Initialize the caliper client and sensor
 
 
-    // Id with canned value
-    uuid = user_id;
-
-
     // Any asynchronous calls within this function will be captured
     // Just wrap each asynchronous call with function 'async'.
     // Each asynchronous call should invoke 'done' as its callback.
     // 'done' tasks two arguments: error and result.
     async('sensor', function (done) {
       // Initialize sensor with options
-
       sensor.initialize(caliper_id);
 
       client.initialize(caliper_id, {
@@ -187,20 +174,20 @@ export const caliper_send = (req, res) =>  {
 
     async('actor', function (done) {
       // The Actor for the caliper Event
-      var actor = entityFactory().create(ims_caliper.Person, { id: BASE_IRI.concat('/users/554433') });
+      const actor = new EntityFactory().create(ims_caliper.Person, { id: BASE_IRI.concat('/users/554433') });
 
       done(null, actor);
     });
 
     async('action', function (done) {
       // The Action for the caliper Event
-      var action = caliper.Actions.navigatedTo.term;
+      const action = caliper.Actions.navigatedTo.term;
 
       done(null, action);
     });
 
     async('target', function (done) {
-      var target = entityFactory().create(ims_caliper.WebPage, {
+      const target = new EntityFactory().create(ims_caliper.WebPage, {
         id: BASE_SECTION_IRI.concat('/pages/2'),
         name: 'Learning Analytics Specifications',
         description: 'Overview of Learning Analytics Specifications with particular emphasis on IMS Caliper.',
@@ -212,13 +199,13 @@ export const caliper_send = (req, res) =>  {
 
     async('navigatedFrom', function (done) {
       // Specific to the Navigation Event - the location where the user navigated from
-      var navigatedFrom = entityFactory().create(ims_caliper.WebPage, { id: BASE_SECTION_IRI.concat('/pages/1') });
+      const navigatedFrom = new EntityFactory().create(ims_caliper.WebPage, { id: BASE_SECTION_IRI.concat('/pages/1') });
 
       done(null, navigatedFrom);
     });
 
     async('edApp', function (done) {
-      var edApp = entityFactory().create(ims_caliper.SoftwareApplication, {
+      const edApp = new EntityFactory().create(ims_caliper.SoftwareApplication, {
         id: BASE_SECTION_IRI,
         type: 'SoftwareApplication',
         version: '1.0'
@@ -228,7 +215,7 @@ export const caliper_send = (req, res) =>  {
     });
 
     async('group', function (done) {
-      var group = entityFactory().create(ims_caliper.CourseSection, {
+      const group = new EntityFactory().create(ims_caliper.CourseSection, {
         id: BASE_SECTION_IRI,
         courseNumber: 'CPS 435-01',
         academicSession: 'Fall 2016'
@@ -238,11 +225,11 @@ export const caliper_send = (req, res) =>  {
     });
 
     async('membership', function (done) {
-      var membership = entityFactory().create(ims_caliper.Membership, {
+      const membership = new EntityFactory().create(ims_caliper.Membership, {
         id: BASE_SECTION_IRI.concat('/rosters/1'),
         member: BASE_IRI.concat('/users/554433'),
         organization: BASE_SECTION_IRI,
-        roles: [caliper.Role.learner.term],
+        roles: [ caliper.Role.learner.term ],
         status: caliper.Status.active.term,
         dateCreated: moment.utc('2016-08-01T06:00:00.000Z')
       });
@@ -252,7 +239,7 @@ export const caliper_send = (req, res) =>  {
 
   }, function (err, results) {
 
-    var event = eventFactory().create(ims_caliper.NavigationEvent, {
+    const event = new EventFactory().create(ims_caliper.NavigationEvent, {
       id: user_id,
       actor: results['actor'],
       action: results['action'],
@@ -269,7 +256,7 @@ export const caliper_send = (req, res) =>  {
 
     //console.log('results %O', results);
 
-    var envelope = sensor.createEnvelope({ data: event });
+    const envelope = sensor.createEnvelope({ data: event });
 
     sensor.sendToClients(envelope);
     // This callback is invoked after all asynchronous calls finish
@@ -278,7 +265,7 @@ export const caliper_send = (req, res) =>  {
     //console.log('Sensor: %O Actor: %O Action: %O Object: %O Target: %O NavigatedFrom: %O EdApp: %O Group: %O Membership: %O', results['sensor'], results['actor'], results['action'], results['eventObj'], results['target'], results['navigatedFrom'], results['edApp'], results['group'], results['membership']);
     //console.log('eventObj from target: %O', results['target'].isPartOf);
 
-    var content = JSON.stringify(event, null, '\t');
+    const content = JSON.stringify(event, null, '\t');
 
     //console.log('JSON: ' + content);
 
@@ -291,8 +278,8 @@ export const outcomes = (req, res) =>  {
     title: 'Enter Grade',
     sourcedid: lis_result_sourcedid,
     endpoint: lis_outcome_service_url,
-    key: consumer_key,
-    secret: consumer_secret
+    key: oauth_consumer_key,
+    secret: oauth_consumer_key === config.lti11Setup.key ? config.lti11Setup.secret : ''
   });
 };
 
@@ -363,9 +350,10 @@ export const get_outcomes = (req, res) =>  {
 export const rest_auth = (req, res, key, secret) =>  {
   //build url from caliper profile url
   let parts = url.parse(caliper_profile_url, true);
+  // eslint-disable-next-line no-unused-vars
   let oauth_host = parts.protocol + '//' + parts.host;
 
-  let auth_hash = new Buffer(key + ":" + secret).toString("base64");
+  let auth_hash = new Buffer(key + ':' + secret).toString('base64');
 
   let auth_string = 'Basic ' + auth_hash;
 
@@ -400,9 +388,10 @@ export const rest_auth = (req, res, key, secret) =>  {
       //console.log(responseString);
       let json = JSON.parse(responseString);
       access_token = json.access_token;
-      token_type = json.token_type;
-      expires_in = json.expires_in;
-
+      // eslint-disable-next-line no-unused-vars
+      let token_type = json.token_type;
+      // eslint-disable-next-line no-unused-vars
+      let expires_in = json.expires_in;
       /*console.log(
         'Access Token: ' +
         access_token +
@@ -411,7 +400,6 @@ export const rest_auth = (req, res, key, secret) =>  {
         ' Expires In: ' +
         expires_in
       );*/
-
       res.render('lti', {
         title: 'REST Token Response Received!',
         content: `<pre>${JSON.stringify(json, null, '  ')}</pre>`,
@@ -601,7 +589,7 @@ let _build_headers = function (options, parts) {
         let results;
         results = [];
         for (key in headers) {
-          if (headers.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(headers, key)) {
             val = headers[key];
             results.push(key + '="' + utils.special_encode(val) + '"');
           }

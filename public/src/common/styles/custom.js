@@ -23,7 +23,7 @@ export class styles {
 
   static monokai = {
     scheme: 'monokai',
-    author: 'wimer hazenberg (http://www.monokai.nl)',
+    author: 'wimer hazenberg',
     base00: '#272822',
     base01: '#383830',
     base02: '#49483e',

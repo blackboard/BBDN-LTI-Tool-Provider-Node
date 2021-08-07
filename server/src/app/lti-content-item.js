@@ -1,3 +1,5 @@
+// noinspection HttpUrlsUsage
+
 import config from '../config/config';
 
 export const constructLTIContentItem1 = () => {

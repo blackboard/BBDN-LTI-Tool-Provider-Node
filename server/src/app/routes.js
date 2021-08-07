@@ -5,25 +5,8 @@ import cookieParser from 'cookie-parser';
 import eventstore from './eventstore';
 import fs from 'fs';
 import path from 'path';
-import {
-  caliper,
-  caliper_send,
-  get_membership,
-  get_outcomes,
-  outcomes,
-  rest_auth,
-  rest_getcourse,
-  rest_getuser,
-  send_outcomes
-} from './lti';
-import {
-  deleteAppById,
-  getAllApplications,
-  getAppById, getAuthFromState,
-  getCIMFromKey, getSecretFromKey,
-  insertNewApp, insertNewAuthToken,
-  insertNewCIM
-} from '../database/db-utility';
+import * as lti from './lti';
+import * as db from '../database/db-utility';
 import { getCachedToken, getLearnRestToken } from './rest-service';
 import { getGroups, groups, groupSets } from './groups';
 import { getLTIToken } from './lti-token-service';
@@ -34,6 +17,7 @@ import { oidcLogin, verifyToken } from './lti-adv';
 import { AGPayload, ContentItem, GroupsPayload, NRPayload } from '../common/restTypes';
 import { buildProctoringEndReturnPayload, buildProctoringStartReturnPayload } from './proctoring';
 import { deepLinkContent } from './deep-linking';
+import { URL } from 'url';
 
 const contentitem_key = 'contentItemData';
 
@@ -56,10 +40,10 @@ module.exports = function (app) {
   //=======================================================
   // LTI 1.1 provider and caliper stuff
   app.post('/caliper/send', (req, res) => {
-    caliper_send(req, res);
+    lti.caliper_send(req, res);
   });
   app.post('/caliper/register', (req, res) => {
-    caliper(req, res);
+    lti.caliper(req, res);
   });
   app.post('/caliper', (req, res) => {
     eventstore.got_caliper(req, res);
@@ -68,34 +52,32 @@ module.exports = function (app) {
     eventstore.show_events(req, res);
   });
   app.post('/rest/auth', (req, res) => {
-    rest_auth(req, res, lti11Setup.key, lti11Setup.secret);
+    lti.rest_auth(req, res, lti11Setup.key, lti11Setup.secret);
   });
   app.post('/rest/user', (req, res) => {
-    rest_getuser(req, res);
+    lti.rest_getuser(req, res);
   });
   app.post('/rest/course', (req, res) => {
-    rest_getcourse(req, res);
+    lti.rest_getcourse(req, res);
   });
   app.post('/lti/outcomes', (req, res) => {
-    outcomes(req, res);
+    lti.outcomes(req, res);
   });
   app.post('/lti/send_outcomes', (req, res) => {
-    send_outcomes(req, res);
+    lti.send_outcomes(req, res);
   });
   app.post('/lti/get_outcomes', (req, res) => {
-    get_outcomes(req, res);
+    lti.get_outcomes(req, res);
   });
   app.get('/lti/membership', (req, res) => {
-    get_membership(req, res);
+    lti.get_membership(req, res);
   });
   app.post('/lti', (req, res) => {
     console.log('--------------------\nlti');
     if (req.body.lti_message_type === 'ContentItemSelectionRequest') {
-      console.log(req.body);
       got_launch(req, res, contentItemData).then(() => {
-        insertNewCIM(contentitem_key, contentItemData);
+        db.insertNewCIM(contentitem_key, contentItemData);
         ciLoaded = true;
-
         const redirectUrl = `${frontendUrl}content_item`;
         console.log('Redirecting to : ' + redirectUrl);
         res.redirect(redirectUrl);
@@ -115,39 +97,39 @@ module.exports = function (app) {
 
   app.post('/CIMRequest', (req, res) => {
     console.log('--------------------\nCIMRequest');
-      if (req.body.custom_option === undefined) {
-        // no custom_option set so go to CIM request menu and save req and res to pass through
-        // after custom_option has been selected
+    if (req.body.custom_option === undefined) {
+      // no custom_option set so go to CIM request menu and save req and res to pass through
+      // after custom_option has been selected
+      passthru_req = req;
+      passthru_res = res;
+      passthru = true;
+      res.redirect('/cim_request');
+    } else {
+      if (!passthru) {
+        // custom_option was set in call from TC so use current req and res
         passthru_req = req;
         passthru_res = res;
-        passthru = true;
-        res.redirect('/cim_request');
+        passthru = false;
       } else {
-        if (!passthru) {
-          // custom_option was set in call from TC so use current req and res
-          passthru_req = req;
-          passthru_res = res;
-          passthru = false;
-        } else {
-          // custom_option was set from menu so add option and content (if available) to passthru_req
-          passthru_req.body.custom_option = req.body.custom_option;
-          passthru_req.body.custom_content = req.body.custom_content;
-        }
-        got_launch(passthru_req, passthru_res, contentItemData)
-          .then(() => {
-            insertNewCIM(contentitem_key, contentItemData);
-            ciLoaded = true;
-
-            const redirectUrl = `${frontendUrl}content_item`;
-            //console.log('Redirecting to : ' + redirectUrl);
-            res.redirect(redirectUrl);
-          });
+        // custom_option was set from menu so add option and content (if available) to passthru_req
+        passthru_req.body.custom_option = req.body.custom_option;
+        passthru_req.body.custom_content = req.body.custom_content;
       }
+      got_launch(passthru_req, passthru_res, contentItemData)
+        .then(() => {
+          db.insertNewCIM(contentitem_key, contentItemData);
+          ciLoaded = true;
+
+          const redirectUrl = `${frontendUrl}content_item`;
+          //console.log('Redirecting to : ' + redirectUrl);
+          res.redirect(redirectUrl);
+        });
+    }
   });
 
   app.get('/contentitemdata', (req, res) => {
     if (!ciLoaded) {
-      getCIMFromKey(contentitem_key).then(contentData => {
+      db.getCIMFromKey(contentitem_key).then(contentData => {
         contentItemData = contentData;
         res.send(contentItemData);
       });
@@ -179,96 +161,97 @@ module.exports = function (app) {
     // Per the OIDC best practices, ensure the state parameter passed in here matches the one in our cookie
     const state = req.cookies['state'];
     if (state !== req.body.state) {
-      console.log(`The state field is missing or doesn't match. Maybe cookies are blocked?`);
+      console.log('The state field is missing or doesn\'t match. Maybe cookies are blocked?');
     }
-    let lmsServer;
     // Parse, verify and save the id_token JWT
-    await verifyToken(req.body.id_token)
-      .then(async jwt => {
-        await insertNewAuthToken(state, jwt, 'jwt');
-        lmsServer = jwt.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-        return getAppById(jwt.body.aud);
-      })
-      .then(app => {
-        const redirectUri = `${config.frontend_url}tlocode&scope=*&response_type=code&client_id=${app.setup.key}&state=${req.body.state}`;
-        const authcodeUrl = `${lmsServer}learn/api/public/v1/oauth2/authorizationcode?redirect_uri=${redirectUri}`;
-        console.log(`6-Redirect to Learn to get 3LO code`);
-        return res.redirect(authcodeUrl);
-      })
-      .catch(e => console.log(e));
+    const jwtPayload = await verifyToken(req.body.id_token);
+    await db.insertNewAuthToken(state, jwtPayload, 'jwt');
+    //await insertNewAuthToken(state, appInfo.appId, 'client_id');
+    const app = db.getAppById(jwtPayload.body.aud);
+    // Now we have the JWT but next we need to get an OAuth2 bearer token for REST calls.
+    // Before we can do that we need to get an authorization code for the current user.
+    // Save off the JWT to our database so we can get it back after we get the auth code.
+    const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+    const oneTimeSessionToken = jwtPayload.body['https://blackboard.com/lti/claim/one_time_session_token'];
+    const redirectUri = `${config.frontend_url}tlocode`;
+    const authcodeUrl = new URL('/learn/api/public/v1/oauth2/authorizationcode', lmsServer);
+    authcodeUrl.searchParams.append('response_type', 'code');
+    authcodeUrl.searchParams.append('client_id', app.setup.key);
+    authcodeUrl.searchParams.append('scope', '*');
+    authcodeUrl.searchParams.append('redirect_uri', redirectUri);
+    authcodeUrl.searchParams.append('one_time_session_token', oneTimeSessionToken);
+    authcodeUrl.searchParams.append('state', state);
+    console.log('Adv6 - Redirect to Learn to get 3LO code');
+    res.redirect(authcodeUrl);
   });
 
   // The 3LO redirect route
   app.get('/tlocode', async (req, res) => {
-    console.log(`7-Learn sent back: code: ${JSON.stringify(req.query)}`);
-    let jwtPayload;
-    let state;
-    let app;
-    await insertNewAuthToken(req.query.state, req.query.code, 'auth_code')
-      .then(() => {
-        state = req.cookies['state'];
-        if (state !== req.query.state) {
-          console.log(`The state field is missing or doesn't match.`);
-        }
-        console.log('8-using state ' + state);
-        return getAuthFromState(state);
-      })
-      .then(auth => {
-        jwtPayload = auth.jwt;
-        return getAppById(jwtPayload.body.aud);
-      })
-      .then(devApp => {
-        app = devApp
-        const redirectUri = `${config.frontend_url}tlocode`;
-        const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-        const learnUrl = lmsServer + `learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
-        return getLearnRestToken(learnUrl, state, app)
-      })
-      .then(token => {
-        console.log(`12-Learn REST token ${JSON.stringify(token)}`);
-        return getLTIToken(app.id, app.setup.jwtUrl, ltiScopes, state);
-      })
-      .then(() => {
-        if (jwtPayload.target_link_uri.endsWith('deepLinkOptions') || jwtPayload.target_link_uri.endsWith('CIMRequest')) {
-          res.redirect(`/deep_link_options?nonce=${state}`);
-        } else if (jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
-          res.redirect(`/lti_bobcat_view?nonce=${state}`);
-        } else if (jwtPayload.target_link_uri.endsWith('proctoring')) {
-          const messageType = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/message_type'];
-          if (messageType === 'LtiStartProctoring') {
-            res.redirect(`/proctoring_start_options_view?nonce=${state}`);
-          } else if (messageType === 'LtiEndAssessment') {
-            res.redirect(`/proctoring_end_options_view?nonce=${state}`);
-          } else {
-            res.send(`Unrecognized proctoring message type: ${messageType}`);
-          }
-        } else if (jwtPayload.target_link_uri.endsWith('lti')) {
-          res.redirect(`/lti_adv_view?nonce=${state}`);
-        } else if (jwtPayload.target_link_uri.endsWith('lti13')) {
-          res.redirect(`/lti_adv_view?nonce=${state}`);
-        } else if (jwtPayload.target_link_uri.endsWith('msteams')) {
-          res.redirect(`/ms_teams_view?nonce=${state}`);
-        } else {
-          res.send(`Sorry Dave, I can't use that target_link_uri ${jwtPayload.target_link_uri}`);
-        }
-      });
+    console.log(`Auth7 - Learn sent back: code: ${JSON.stringify(req.query)}`);
+    await db.insertNewAuthToken(req.query.state, req.query.code, 'auth_code');
+
+    const state = req.cookies['state'];
+    if (state !== req.query.state) {
+      console.log('The state field is missing or doesn\'t match.');
+    }
+    const auth = await db.getAuthFromState(state);
+
+    const jwtPayload = auth.jwt;
+    //console.log("jwt payload is " + JSON.stringify(jwtPayload));
+    const app = await db.getAppById(jwtPayload.body.aud);
+    // If we have a 3LO auth code, let's get us a bearer token here.
+    const redirectUri = `${config.frontend_url}tlocode`;
+    const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+    const learnUrl = lmsServer + `learn/api/public/v1/oauth2/token?code=${req.query.code}&redirect_uri=${redirectUri}`;
+
+    const restToken = await getLearnRestToken(learnUrl, state, app);
+    console.log(`Auth12 - Learn REST token ${JSON.stringify(restToken)}`);
+
+    // Now get the LTI OAuth 2 bearer token (shame they aren't the same)
+    await getLTIToken(app.id, app.setup.jwtUrl, ltiScopes, state);
+
+    // Now finally redirect to the UI
+    if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
+      res.redirect(`/deep_link_options?nonce=${state}`);
+    } else if (jwtPayload.target_link_uri.endsWith('CIMRequest')) {
+      res.redirect(`/deep_link_options?nonce=${state}`);
+    } else if (jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
+      res.redirect(`/lti_bobcat_view?nonce=${state}`);
+    } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
+      const messageType = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/message_type'];
+      if (messageType === 'LtiStartProctoring') {
+        res.redirect(`/proctoring_start_options_view?nonce=${state}`);
+      } else if (messageType === 'LtiEndAssessment') {
+        res.redirect(`/proctoring_end_options_view?nonce=${state}`);
+      } else {
+        res.send(`Unrecognized proctoring message type: ${messageType}`);
+      }
+    } else if (jwtPayload.target_link_uri.endsWith('lti')) {
+      res.redirect(`/lti_adv_view?nonce=${state}`);
+    } else if (jwtPayload.target_link_uri.endsWith('lti13')) {
+      res.redirect(`/lti_adv_view?nonce=${state}`);
+    } else if (jwtPayload.target_link_uri.endsWith('msteams')) {
+      res.redirect(`/ms_teams_view?nonce=${state}`);
+    } else {
+      res.send(`Sorry Dave, I can't use that target_link_uri ${jwtPayload.target_link_uri}`);
+    }
   });
 
   app.get('/jwtPayloadData', async (req, res) => {
-      try {
-        const jwtPayload = await getAuthFromState(req.query.nonce).jwt;
-        console.log('Nonce matches the state we have so send the jwt')
-        res.send(jwtPayload);
-      } catch (e) {
-        return e
-      }
+    try {
+      const jwtPayload = await db.getAuthFromState(req.query.nonce).jwt;
+      console.log('Auth13 - Nonce matches the state we have so send the jwt');
+      res.send(jwtPayload);
+    } catch (e) {
+      return e;
+    }
   });
 
   app.get('/courseData', async (req, res) => {
     const nonce = req.query.nonce;
     const restToken = await getCachedToken(nonce);
-    console.log(`courseData nonce: ${nonce}, restToken: ${restToken}`);
-    const jwt = await getAuthFromState(nonce).auth.jwt;
+    console.log(`Bobcat - courseData nonce: ${nonce}, restToken: ${restToken}`);
+    const jwt = db.getAuthFromState(nonce).jwt;
     const lmsServer = jwt.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
     const courseUUID = jwt.body['https://purl.imsglobal.org/spec/lti/claim/context']['id'];
     const xhrConfig = {
@@ -277,10 +260,10 @@ module.exports = function (app) {
 
     try {
       const courseResponse = await axios.get(`${lmsServer}learn/api/public/v2/courses/uuid:${courseUUID}`, xhrConfig);
-      console.log(`Got course; Ultra status is ${courseResponse.data.ultraStatus}, and PK1 is: ${courseResponse.data.id}`);
+      console.log(`Bobcat - Got course; Ultra status is ${courseResponse.data.ultraStatus}, and PK1 is: ${courseResponse.data.id}`);
       res.send(courseResponse.data);
     } catch (exception) {
-      console.log(`Error getting courseData for ${courseUUID}: ${JSON.stringify(exception)}, from: ${lmsServer}`);
+      console.log(`Bobcat - Error getting courseData for ${courseUUID}: ${JSON.stringify(exception)}, from: ${lmsServer}`);
     }
   });
 
@@ -288,16 +271,16 @@ module.exports = function (app) {
   // Deep Linking
   app.get('/dlPayloadData', async (req, res) => {
     const nonce = req.query.nonce;
-    const dljwt = await getAuthFromState(nonce);
+    const dljwt = await db.getAuthFromState(nonce);
     res.send(dljwt);
   });
 
   app.post('/deepLinkContent', async (req, res) => {
     console.log('--------------------\ndeepLinkContent');
     const nonce = req.query.nonce;
-    const jwtPayload = await getAuthFromState(nonce).jwt;
+    const jwtPayload = await db.getAuthFromState(nonce).jwt;
     let dljwt = deepLinkContent(req, res, jwtPayload);
-    await insertNewAuthToken(nonce, `${dljwt}`, 'dljwt');
+    await db.insertNewAuthToken(nonce, `${dljwt}`, 'dljwt');
     res.redirect(`/deep_link?nonce=${nonce}`);
   });
 
@@ -307,20 +290,20 @@ module.exports = function (app) {
   app.get('/getProctoringPayloadData', async (req, res) => {
     const nonce = req.query.nonce;
     console.log(`--------------------\ngetProctoringPayloadData nonce: ${nonce}`);
-    const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
+    const jwtPayload = await db.getAuthFromState(nonce).auth['jwt'];
     res.send(jwtPayload);
   });
 
   app.post('/buildProctoringStartReturnPayload', async (req, res) => {
     const nonce = req.body.nonce;
-    const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
+    const jwtPayload = await db.getAuthFromState(nonce).auth['jwt'];
     buildProctoringStartReturnPayload(req, res, jwtPayload);
     res.redirect('/proctoring_start_actions_view?nonce=${nonce}');
   });
 
   app.post('/buildProctoringEndReturnPayload', async (req, res) => {
     const nonce = req.body.nonce;
-    const jwtPayload = await getAuthFromState(nonce).auth['jwt'];
+    const jwtPayload = await db.getAuthFromState(nonce).auth['jwt'];
     buildProctoringEndReturnPayload(req, res, jwtPayload);
     res.redirect('/proctoring_end_actions_view?nonce=${nonce}');
   });
@@ -446,7 +429,7 @@ module.exports = function (app) {
   // Application Registration processing
 
   app.get('/applications/all', (req, res) => {
-    res.send(getAllApplications());
+    res.send(db.getAllApplications());
   });
 
   app.post('/saveSetup', (req, res) => {
@@ -457,16 +440,16 @@ module.exports = function (app) {
       'devPortalUrl': req.body.devPortalUrl,
       'appKey': req.body.appKey
     };
-    const result = insertNewApp(app);
+    const result = db.insertNewApp(app);
     res.send(result);
   });
 
   app.get('/applications/:appId', (req, res) => {
-    res.send(getAppById(req.params.appId));
+    res.send(db.getAppById(req.params.appId));
   });
 
   app.delete('/applications/:appId', (req, res) => {
-    res.send(deleteAppById(req.params.appId));
+    res.send(db.deleteAppById(req.params.appId));
   });
 
   app.get('/version', (req, res) => {

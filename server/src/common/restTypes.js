@@ -60,17 +60,3 @@ export class AGPayload {
     this.lineitem = [];
   }
 }
-
-export class SetupParameters {
-  constructor() {
-    this.tokenEndPoint = "";
-    this.oidcAuthUrl = "";
-    this.issuer = "";
-    this.applicationId = "";
-    this.devPortalHost = "";
-    this.cookies = "";
-    this.host = "";
-    this.appKey = "";
-    this.appSecret = "";
-  }
-}

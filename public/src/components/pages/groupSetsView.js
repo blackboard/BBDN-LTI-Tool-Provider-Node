@@ -13,7 +13,7 @@ export default class GroupSetsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("groupSetsPayloadData")
+    fetch('groupSetsPayloadData')
       .then(result => result.json())
       .then(groupSetsPayload => {
         this.setState({
@@ -29,42 +29,42 @@ export default class GroupSetsView extends React.Component {
   render() {
     const body = JSON.stringify(this.state.origBody);
     const next =
-      this.state.nextUrl !== "" ? (
-        <form action="/groupsets" method="POST">
-          <Button type="submit" variant="contained" color="secondary">Group Sets Next</Button>
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.nextUrl} />
+      this.state.nextUrl !== '' ? (
+        <form action='/groupsets' method='POST'>
+          <Button type='submit' variant='contained' color='secondary'>Group Sets Next</Button>
+          <input type='hidden' name='body' defaultValue={body} />
+          <input type='hidden' name='url' defaultValue={this.state.nextUrl} />
         </form>
       ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='body1' style={styles.notAvailable}>
           No next link
         </Typography>
       );
 
     return (
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Groups Service
         </Typography>
 
         <div>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             What would you like to do?
           </Typography>
           <Grid
             container
             spacing={2}
-            direction="column"
+            direction='column'
           >
             <Grid item xs>
-              <form action={this.state.returnUrl} method="post">
-                <Button type="submit" variant="contained" color="secondary">Return to Learn</Button>
+              <form action={this.state.returnUrl} method='post'>
+                <Button type='submit' variant='contained' color='secondary'>Return to Learn</Button>
               </form>
             </Grid>
             <Grid item xs>
-              <form action="/groupsets" method="post">
-                <Button type="submit" variant="contained" color="secondary">Group Sets</Button>
-                <input type="hidden" name="body" defaultValue={body} />
+              <form action='/groupsets' method='post'>
+                <Button type='submit' variant='contained' color='secondary'>Group Sets</Button>
+                <input type='hidden' name='body' defaultValue={body} />
               </form>
             </Grid>
             <Grid item xs>
@@ -73,7 +73,7 @@ export default class GroupSetsView extends React.Component {
           </Grid>
 
           <br />
-          <Typography variant="h5">
+          <Typography variant='h5'>
             Group Sets Response
           </Typography>
           <JSONInput
@@ -81,11 +81,11 @@ export default class GroupSetsView extends React.Component {
             viewOnly={true}
             confirmGood={true}
             placeholder={this.state.body}
-            theme="dark_vscode_tribute"
+            theme='dark_vscode_tribute'
             style={{ body: styles.jsonEditor }}
             locale={locale}
-            height="100%"
-            width="100%"
+            height='100%'
+            width='100%'
           />
         </div>
       </div>
