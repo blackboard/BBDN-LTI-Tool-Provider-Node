@@ -16,22 +16,21 @@ class DataItemList extends React.Component {
       'content_item_return_url'
     ];
 
-    for (const value of data) {
-      const key = data.indexOf(value);
+    data.forEach((value, key) => {
       if (required.indexOf(key) >= 0) {
         items.push(
-          <li className='reqd'>
+          <li className='reqd' key={key}>
             {key} : {value}
           </li>
         );
       } else {
         items.push(
-          <li>
+          <li key={key}>
             {key} : {value}
           </li>
         );
       }
-    }
+    });
 
     return <ul style={style}>{items}</ul>;
   }
@@ -110,7 +109,7 @@ export default class ContentItemView extends React.Component {
                       className='ci'
                       type='text'
                       name='lti_message_type'
-                      value='ContentItemSelection'
+                      defaultValue='ContentItemSelection'
                     />
                   </td>
                 </tr>
@@ -121,7 +120,7 @@ export default class ContentItemView extends React.Component {
                       className='ci'
                       type='text'
                       name='lti_version'
-                      value={this.state.ltiVersion}
+                      defaultValue={this.state.ltiVersion}
                     />
                   </td>
                 </tr>
@@ -133,7 +132,7 @@ export default class ContentItemView extends React.Component {
                       cols='75'
                       rows='10'
                       name='content_items'
-                      value={items}
+                      defaultValue={items}
                     />
                   </td>
                 </tr>
@@ -144,7 +143,7 @@ export default class ContentItemView extends React.Component {
                       className='ci'
                       type='text'
                       name='data'
-                      value={this.state.tcData}
+                      defaultValue={this.state.tcData}
                     />
                   </td>
                 </tr>
@@ -166,7 +165,7 @@ export default class ContentItemView extends React.Component {
                       className='ci'
                       type='text'
                       name='oauth_nonce'
-                      value={this.state.oauth_nonce}
+                      defaultValue={this.state.oauth_nonce}
                     />
                   </td>
                 </tr>
@@ -177,7 +176,7 @@ export default class ContentItemView extends React.Component {
                       className='ci'
                       type='text'
                       name='oauth_timestamp'
-                      value={this.state.oauth_timestamp}
+                      defaultValue={this.state.oauth_timestamp}
                     />
                   </td>
                 </tr>
@@ -188,7 +187,7 @@ export default class ContentItemView extends React.Component {
                       className='ci'
                       type='text'
                       name='oauth_consumer_key'
-                      value={this.state.consumerKey}
+                      defaultValue={this.state.consumerKey}
                     />
                   </td>
                 </tr>
@@ -199,7 +198,7 @@ export default class ContentItemView extends React.Component {
                       className='ci'
                       type='text'
                       name='oauth_callback'
-                      value='about:blank'
+                      defaultValue='about:blank'
                     />
                   </td>
                 </tr>
@@ -210,7 +209,7 @@ export default class ContentItemView extends React.Component {
                       className='ci'
                       type='text'
                       name='oauth_signature_method'
-                      value={this.state.oauth_signature_method}
+                      defaultValue={this.state.oauth_signature_method}
                     />
                   </td>
                 </tr>
@@ -221,7 +220,7 @@ export default class ContentItemView extends React.Component {
                       className='ci'
                       type='text'
                       name='oauth_signature'
-                      value={this.state.oauth_signature}
+                      defaultValue={this.state.oauth_signature}
                     />
                   </td>
                 </tr>

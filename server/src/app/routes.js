@@ -74,6 +74,7 @@ module.exports = function (app) {
   });
   app.post('/lti', (req, res) => {
     console.log('--------------------\nlti');
+    console.log('LTI11 - receive post from Learn LTI launch');
     if (req.body.lti_message_type === 'ContentItemSelectionRequest') {
       got_launch(req, res, contentItemData).then(() => {
         db.insertNewCIM(contentitem_key, contentItemData);
@@ -85,7 +86,12 @@ module.exports = function (app) {
     }
 
     if (req.body.lti_message_type === 'basic-lti-launch-request') {
-      lti_got_launch(req, res);
+      console.log('insert new state from launch');
+      //for lti 1.1 we use the ext_launch_id
+      db.insertNewState(req.body.ext_launch_id).then(() => {
+        db.insertNewAuthToken(req.body.ext_launch_id, req.body, 'lti11launch')
+          .catch(e => console.log(e));
+      }).then(() => lti_got_launch(req, res)).catch(e => console.log(e));
     }
   });
 
@@ -194,10 +200,9 @@ module.exports = function (app) {
     if (state !== req.query.state) {
       console.log('The state field is missing or doesn\'t match.');
     }
+    console.log('Auth8 - using state ' + state);
     const auth = await db.getAuthFromState(state);
-
     const jwtPayload = auth.jwt;
-    //console.log("jwt payload is " + JSON.stringify(jwtPayload));
     const app = await db.getAppById(jwtPayload.body.aud);
     // If we have a 3LO auth code, let's get us a bearer token here.
     const redirectUri = `${config.frontend_url}tlocode`;
@@ -211,9 +216,8 @@ module.exports = function (app) {
     await getLTIToken(app.id, app.setup.jwtUrl, ltiScopes, state);
 
     // Now finally redirect to the UI
-    if (jwtPayload.target_link_uri.endsWith('deepLinkOptions')) {
-      res.redirect(`/deep_link_options?nonce=${state}`);
-    } else if (jwtPayload.target_link_uri.endsWith('CIMRequest')) {
+    const messageType = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/message_type'];
+    if (messageType === 'LtiDeepLinkingRequest') {
       res.redirect(`/deep_link_options?nonce=${state}`);
     } else if (jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
       res.redirect(`/lti_bobcat_view?nonce=${state}`);

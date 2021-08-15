@@ -11,13 +11,13 @@ export default class DeepLinkOptions extends React.Component {
     this.state = {
       custom_json: JSON.stringify(sampleJSON),
       custom_option: false,
-      custom_ltiLinks: '1',
-      embed_ltiLinks: '0',
-      new_ltiLinks: '0',
-      custom_contentLinks: '0',
-      custom_files: '0',
-      custom_htmls: '0',
-      custom_images: '0',
+      custom_ltiLinks: 1,
+      embed_ltiLinks: 0,
+      new_ltiLinks: 0,
+      custom_contentLinks: 0,
+      custom_files: 0,
+      custom_htmls: 0,
+      custom_images: 0,
       custom_message: '',
       custom_error: ''
     }

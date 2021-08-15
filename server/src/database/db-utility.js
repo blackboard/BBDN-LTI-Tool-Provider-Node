@@ -4,7 +4,6 @@ import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
 const apps = new JsonDB(new Config('server/src/database/applications-data', true, true, '.'));
 const contentItemMessage = new JsonDB(new Config('server/src/database/cim-data',true,true,'.'));
 const auth = new JsonDB(new Config('server/src/database/auth-data', true, true, '.'));
-new JsonDB(new Config('server/src/database/config-data', true, true, '.'));
 const jwtApi = '/api/v1/gateway/oauth2/jwttoken';
 const oidcApi = '/api/v1/gateway/oidcauth';
 
@@ -69,18 +68,21 @@ export const getAllAuth = () => {
   return auth.getData('.auth-data');
 };
 
-export const insertNewState = (state) => {
+export const insertNewState = async (state) => {
+  const now = new Date(Date.now());
+  const twoHoursFromNow = now.setHours(now.getHours() + 2);
   if (!auth.exists(`.auth-data.${state}`)) {
     try {
       auth.push('.auth-data[]', {
-        state: state
+        'expirationDate': twoHoursFromNow,
+        'state': state
       });
       return 'success';
     } catch (e) {
       return e;
     }
   } else {
-    //console.log(`${state} already has a record`)
+    console.log(`${state} already has a record`);
   }
 };
 
@@ -92,17 +94,22 @@ export const insertNewAuthToken = async (state, token, type) => {
         [type]: token
       }
     }, false);
+    console.log(`${type} added to state: ${state}`);
     return 'success';
   } catch (e) {
+    console.log(e);
     return e;
   }
 };
 
 export const insertNewCIM = (cimKey, cim) => {
+  const now = new Date(Date.now());
+  const twoHoursFromNow = now.setHours(now.getHours() + 2);
   try {
     contentItemMessage.push('.cim-data[]', {
-      key: cimKey,
-      message: cim
+      'expirationDate': twoHoursFromNow,
+      'key': cimKey,
+      'message': cim
     });
     return 'success';
   } catch (error) {
@@ -120,14 +127,21 @@ export const getCIMFromKey = (cimKey) => {
 };
 
 export const getExpiredSessions = () => {
-  const now = new Date().getTime() / 1000;
+  const now = Date.now();
   try {
     let expiredSessions = [];
     const sessions = getAllAuth();
     sessions.forEach(session => {
-      const exp = session.auth.jwt.body.exp;
-      if (now > exp) {
-        expiredSessions.push(session);
+      const created = new Date(session.expirationDate);
+      if (Object.prototype.hasOwnProperty.call(sessions, 'jwt')) {
+        const exp = session.auth.jwt.body.exp;
+        if (now > exp) {
+          expiredSessions.push(session);
+        }
+      } else {
+        if(now > created) {
+          expiredSessions.push(session);
+        }
       }
     });
     return expiredSessions;

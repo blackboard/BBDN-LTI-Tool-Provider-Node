@@ -127,7 +127,7 @@ export const groupSets = (req, res, groupSetsPayload) => {
         } else {
           groupSetsPayload.body = json;
           console.log('Group Sets call returned:');
-          console.log(body);
+          // console.log(body);
           if (response.headers.link) {
             let links = response.headers.link.split(',');
             links.forEach(link => {
