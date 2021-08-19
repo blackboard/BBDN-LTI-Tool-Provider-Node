@@ -1,5 +1,5 @@
 {
-  "frontend_url": "https://5dc40c625355.ngrok.io/",
+  "frontend_url": "https://localhost/",
   "provider_port": "3000",
   "database_directory": "server/src/database",
   "publicKeys": {
