@@ -24,9 +24,4 @@ if (process.env.LTI_TEST_PROVIDER_DOMAIN) {
 if (process.env.LTI_TEST_PROVIDER_PORT) {
   configResult['provider_port'] = process.env.LTI_TEST_PROVIDER_PORT;
 }
-if (process.env.LTI_TEST_USE_SSL) {
-  configResult['use_ssl'] = process.env.LTI_TEST_USE_SSL;
-}
 export default _.defaultsDeep(configResult, configJson);
-
-// console.log(JSON.stringify(configResult, null, 2));

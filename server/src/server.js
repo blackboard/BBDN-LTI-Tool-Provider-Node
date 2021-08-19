@@ -1,7 +1,6 @@
 import bodyParser from 'body-parser';
 import config from './config/config.js';
 import express from 'express';
-import fs from 'fs';
 import request from 'request';
 import routes from './app/routes.js';
 import { Task, SimpleIntervalJob, ToadScheduler } from 'toad-scheduler';
@@ -9,14 +8,6 @@ import { deleteExpiredSessions } from './database/db-utility';
 
 const app = express();
 const httpProxy = express();
-
-// eslint-disable-next-line no-unused-vars
-const options = config.use_ssl
-  ? {
-    key: fs.readFileSync(config.ssl_key),
-    cert: fs.readFileSync(config.ssl_crt)
-  }
-  : { key: null, cert: null };
 
 const scheduler = new ToadScheduler();
 
@@ -67,7 +58,6 @@ httpProxy.use(function (err, req, res) {
   res.status(500).send('Something broke!');
 });
 
-//httpProxy.use(bodyParser.json());       // to support JSON-encoded bodies
 httpProxy.use(bodyParser.json({ type: '*/*' }));
 httpProxy.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
