@@ -30,6 +30,10 @@ const portals = [
   {
     value: 'https://devportal-ci.dev.bbpd.io',
     label: 'CI (registrar-blue-next)'
+  },
+  {
+    value: 'other',
+    label: 'Other'
   }
 ];
 
@@ -39,6 +43,7 @@ export default function FormDialog(props) {
   const [ appName, setAppName ] = React.useState('');
   const [ appId, setAppId ] = React.useState('');
   const [ devPortalUrl, setDevPortalUrl ] = React.useState('');
+  const [ customPortal, setCustomPortal ] = React.useState('');
   const [ appKey, setAppKey ] = React.useState('');
   const [ appSecret, setAppSecret ] = React.useState('');
 
@@ -60,7 +65,7 @@ export default function FormDialog(props) {
     const app = {
       'appId': appId,
       'appName': appName,
-      'devPortalUrl': devPortalUrl,
+      'devPortalUrl': devPortalUrl === 'other' ? customPortal : devPortalUrl,
       'appKey': appKey,
       'appSecret': appSecret
     };
@@ -207,12 +212,29 @@ export default function FormDialog(props) {
               value={devPortalUrl}
               onChange={(e) => setDevPortalUrl(e.target.value)}
             >
-              {portals.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
+              {
+                portals.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))
+              }
             </TextField>
+            <br/>
+            <br/>
+            {devPortalUrl === 'other' ?
+              <TextField
+                label={'Custom URL'}
+                variant={'outlined'}
+                fullWidth
+                InputLabelProps={{
+                  shrink: true
+                }}
+                name={'Custom URL'}
+                value={customPortal}
+                onChange={(e) => setCustomPortal(e.target.value)}
+              />
+              : ''}
             <br/>
           </DialogContent>
           <DialogActions style={{ 'padding': '20px' }}>

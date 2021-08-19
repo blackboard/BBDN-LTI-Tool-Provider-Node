@@ -1,17 +1,3 @@
 {
-    "applications-data": [
-        {
-            "id": "96aeb982-5a7c-4c6c-9c1b-5c33e5b14ffc",
-            "setup": {
-                "name": "Shannon's New Local App",
-                "key": "f4bff810-0ffd-42f4-a93a-f7fc511d8d1d",
-                "secret": "iTJhsEjBE6cH93ipUsatC2lChBfnKfRy",
-                "devPortalUrl": "https://devportal-stage.saas.bbpd.io",
-                "jwtUrl": "https://devportal-stage.saas.bbpd.io/api/v1/gateway/oauth2/jwttoken",
-                "oidcUrl": "https://devportal-stage.saas.bbpd.io/api/v1/gateway/oidcauth",
-                "issuer": "www.blackboard.com"
-            }
-        }
-    ],
-    "auth - data[-1]": {}
+    "applications-data": []
 }

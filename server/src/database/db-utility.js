@@ -1,7 +1,8 @@
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
+import * as config from '../../config/config.json';
 
-const apps = new JsonDB(new Config('server/src/database/applications-data', true, true, '.'));
+const apps = new JsonDB(new Config(`${config.database_directory}/applications-data`, true, true, '.'));
 const contentItemMessage = new JsonDB(new Config('server/src/database/cim-data',true,true,'.'));
 const auth = new JsonDB(new Config('server/src/database/auth-data', true, true, '.'));
 const jwtApi = '/api/v1/gateway/oauth2/jwttoken';
@@ -24,7 +25,7 @@ export const getAppById = (appId) => {
 export const insertNewApp = (app) => {
   if ( !apps.exists(`.applications-data.${app.id}`) ) {
     try {
-      apps.push('.applications-data[]', {
+      apps.push('.applications-data[0]', {
         'id': app.appId,
         'setup': {
           'name': app.name,
@@ -73,7 +74,7 @@ export const insertNewState = async (state) => {
   const twoHoursFromNow = now.setHours(now.getHours() + 2);
   if (!auth.exists(`.auth-data.${state}`)) {
     try {
-      auth.push('.auth-data[]', {
+      auth.push('.auth-data[0]', {
         'expirationDate': twoHoursFromNow,
         'state': state
       });
