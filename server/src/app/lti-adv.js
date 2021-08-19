@@ -1,12 +1,13 @@
 import * as uuid from 'uuid';
 import axios from 'axios';
-import * as config from '../../config/config.json';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import request from 'request';
 import { JWTPayload } from '../common/restTypes';
 import { jwk2pem } from 'pem-jwk';
 import { getAppById, insertNewAuthToken, insertNewState } from '../database/db-utility';
+
+const config = require('../config/config');
 
 export const applicationInfo = (client_id) => {
   const info = getAppById(client_id);
@@ -150,7 +151,7 @@ export const getOauth2Token = (scope, client_id) => {
   });
 };
 
-export const oidcLogin = (req, res) => {
+export const oidcLogin = async (req, res) => {
   console.log('Auth1 - OIDC login');
   const appInfo = applicationInfo(req.query.client_id);
   let state = uuid.v4();
@@ -159,7 +160,7 @@ export const oidcLogin = (req, res) => {
   // This tool only supports one redirect_uri...the routing is handled by looking at target_link_uri claim or custom params
   const redirectUri = `${config.frontend_url}lti13`;
   console.log(`DB2 - Inserting new state: ${state}\nDB2a - Inserting new client_id: ${appInfo.appId}`);
-  insertNewState(state, 'state');
+  await insertNewState(state, 'state');
   insertNewAuthToken(state, appInfo.appId, 'client_id').catch(e => console.log(e));
 
   let url =

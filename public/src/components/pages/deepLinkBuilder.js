@@ -1,6 +1,5 @@
 import JSONInput from 'react-json-editor-ajrm';
 import React from 'react';
-import config from '../../../../server/config/config.json';
 import locale from 'react-json-editor-ajrm/locale/en';
 import { Grid, TextField } from '@material-ui/core';
 import { styles } from '../../common/styles/custom';
@@ -10,7 +9,7 @@ export const sampleJSON = {
   type: 'ltiResourceLink',
   title: 'An Embedded Resource',
   text: 'A description',
-  url: `${config.frontend_url}lti13`,
+  url: 'https://lti-tool.dev.bbpd.io/lti13',
   iframe: {
     width: 500,
     height: 800

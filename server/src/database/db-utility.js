@@ -1,10 +1,10 @@
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
-import * as config from '../../config/config.json';
+import config from '../config/config';
 
 const apps = new JsonDB(new Config(`${config.database_directory}/applications-data`, true, true, '.'));
-const contentItemMessage = new JsonDB(new Config('server/src/database/cim-data',true,true,'.'));
-const auth = new JsonDB(new Config('server/src/database/auth-data', true, true, '.'));
+const contentItemMessage = new JsonDB(new Config(`${config.database_directory}/cim-data`,true,true,'.'));
+const auth = new JsonDB(new Config(`${config.database_directory}/auth-data`, true, true, '.'));
 const jwtApi = '/api/v1/gateway/oauth2/jwttoken';
 const oidcApi = '/api/v1/gateway/oidcauth';
 

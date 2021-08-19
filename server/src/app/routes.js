@@ -1,4 +1,4 @@
-import * as config from '../../config/config.json';
+import config from '../config/config';
 import assignGrades, { addCol, delCol, readCols, results, scores } from './assign-grades';
 import axios from 'axios';
 import cookieParser from 'cookie-parser';

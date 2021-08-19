@@ -121,6 +121,7 @@ routes(app);
 
 app.listen(listenPort);
 const frontendUrl = config.frontend_url;
+const dbDir = config.database_directory;
 
 console.log('Home page:                    ' + frontendUrl);
 console.log('Registered Applications List: ' + frontendUrl + 'applications');
@@ -133,5 +134,5 @@ console.log('LTI 1.3 Deep Linking  URL:    ' + frontendUrl + 'deepLinkOptions');
 console.log('LTI 1.3 Bobcat Target URL:    ' + frontendUrl + 'lti13bobcat');
 console.log('LTI 1.3 Proctoring URL:       ' + frontendUrl + 'proctoring');
 console.log('JWKS URL:                     ' + frontendUrl + '.well-known/jwks.json');
-console.log('Setup URL:                    ' + frontendUrl + 'setup');
+console.log('Data will be saved in ' + dbDir);
 console.log('Listening on ' + listenPort);
