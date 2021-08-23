@@ -10,7 +10,7 @@ import url from 'url';
 import utils from './utils';
 import { getAppById } from '../database/db-utility';
 import { EntityFactory, EventFactory } from 'ims-caliper';
-import * as config from '../../config/config.json';
+const config = require('../config/config');
 
 let rejectUnauthorized = true;
 

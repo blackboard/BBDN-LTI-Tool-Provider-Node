@@ -1,5 +1,5 @@
 import * as ltiAdv from './lti-adv';
-import config from '../config/config.js';
+import config from '../config/config';
 
 export const deepLink = (req, res, dlPayload) => {
   const app = ltiAdv.applicationInfo(dlPayload.body.aud);
