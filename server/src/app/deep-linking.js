@@ -142,8 +142,8 @@ let deepLinkingLTILink = function() {
 
   return {
     type: "ltiResourceLink",
-    title: "A title for LTI & 1.3 \" Link",
-    text: "A & description with quotes \"",
+    title: "A title for LTI & 1.3 \" Link's",
+    text: "A & description with quotes \" and plural thing's",
     url:  `${config.frontend_url}lti13`,
     available: {
       startDateTime: start,
@@ -164,7 +164,7 @@ let deepLinkingLTILink = function() {
     },
     lineItem: {
       scoreMaximum: 100,
-      label: "Chapter 12 quiz",
+      label: "Chapter 12 quiz for bob's class",
       resourceId: "xyzpdq1234",
       tag: "originality"
     },

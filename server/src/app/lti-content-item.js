@@ -118,9 +118,9 @@ module.exports = {
           mediaType: "application/vnd.ims.lti.v1.ltilink",
           "@type": "LtiLinkItem",
           url: `${config.frontend_url}lti`,
-          title: "Sample LTI launch",
+          title: "Sample LTI launch's plural",
           text:
-            "This is an example of an LTI launch link set via the Content-Item launch message.  Please launch it to pass the related certification test.",
+            "This is an example of an LTI launch link set via the Content-Item launch message. It's a happy link.  Please launch it to pass the related certification test.",
           icon: {
             "@id": "https://apps.imsglobal.org//lti/cert/images/icon.png",
             height: 50,
@@ -133,7 +133,7 @@ module.exports = {
           },
           lineItem: {
             "@type": "LineItem",
-            label: "Chapter 13 quiz",
+            label: "Chapter 13 quiz's",
             reportingMethod: "res:totalScore",
             assignedActivity: {
               "@id": "http://toolprovider.example.com/assessment/66400",
