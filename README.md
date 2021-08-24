@@ -33,7 +33,7 @@ If you want to run under SSL you should use a reverse proxy, like nginx or ngrok
 ## How To Run the code
 All packages needed are in the package.json.
 
-You should have node installed (built with v10.13.0). Then from the project directory at the command line, type `npm start`. This will install all of your dependencies and start the server.
+You should have node installed (built with v16.3.0). Then from the project directory at the command line, type `npm start`. This will install all of your dependencies and start the server.
 
 Access the application via http://localhost:3000. You can customize the host name and port number by creating a server/config/config_override.json file (see the server/config/config.json file for a template)
 
