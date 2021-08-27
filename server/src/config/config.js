@@ -10,8 +10,8 @@ import * as fs from 'fs';
 let overrides = '';
 
 let configResult = {};
-if (fs.existsSync('server/config/config_overrides.json')) {
-  overrides = require('../../config/config_overrides.json');
+if (fs.existsSync('server/config/config_override.json')) {
+  overrides = require('../../config/config_override.json');
   configResult = _.defaultsDeep(overrides, configJson);
 }
 
