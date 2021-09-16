@@ -1,7 +1,7 @@
 {
   "frontend_url": "https://localhost/",
   "provider_port": "3000",
-  "database_directory": "server/src/database",
+  "database_directory": "data",
   "publicKeys": {
     "keys": [
       {

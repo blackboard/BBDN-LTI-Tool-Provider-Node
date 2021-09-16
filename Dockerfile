@@ -11,5 +11,7 @@ RUN npm install
 # Bundle app source
 COPY . /usr/app
 
+VOLUME /data
+
 EXPOSE 3000
 CMD ./launch.sh

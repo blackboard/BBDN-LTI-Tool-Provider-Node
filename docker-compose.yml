@@ -2,6 +2,12 @@ lti-tool:
   image: lti-tool
   ports:
     - "3000:3000"
+  volumes:
+    - data
+
+volumes:
+  data:
+    external: true
 # Entry for /etc/hosts in container so the tool can make calls
 # out to the Learn instance. This is for developers when working
 # on one machine. The IP address will need to be changed to the

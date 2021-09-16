@@ -25,7 +25,7 @@ export const getAppById = (appId) => {
 export const insertNewApp = (app) => {
   if ( !apps.exists(`.applications-data.${app.id}`) ) {
     try {
-      apps.push('.applications-data[0]', {
+      apps.push('.applications-data[]', {
         'id': app.appId,
         'setup': {
           'name': app.name,
@@ -74,7 +74,7 @@ export const insertNewState = async (state) => {
   const twoHoursFromNow = now.setHours(now.getHours() + 2);
   if (!auth.exists(`.auth-data.${state}`)) {
     try {
-      auth.push('.auth-data[0]', {
+      auth.push('.auth-data[]', {
         'expirationDate': twoHoursFromNow,
         'state': state
       });
