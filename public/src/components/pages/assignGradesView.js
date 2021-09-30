@@ -1,7 +1,9 @@
-import React from "react";
-import JSONTree from "react-json-tree";
-import Typography from "@material-ui/core/Typography";
-import {styles} from "../../common/styles/custom.js";
+import JSONInput from 'react-json-editor-ajrm';
+import React from 'react';
+import Typography from '@material-ui/core/Typography';
+import locale from 'react-json-editor-ajrm/locale/en';
+import { Button, Grid, TextField } from '@material-ui/core';
+import { styles } from '../../common/styles/custom.js';
 
 class AssignGradesView extends React.Component {
   constructor(props) {
@@ -10,7 +12,7 @@ class AssignGradesView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("agPayloadData")
+    fetch('agPayloadData')
       .then(result => result.json())
       .then(agPayload => {
         this.setState({
@@ -18,240 +20,245 @@ class AssignGradesView extends React.Component {
           claim: agPayload.claim,
           lineItems: agPayload.lineItems,
           lineItem: agPayload.lineItem,
-          body: agPayload.body
+          body: agPayload.body,
+          lineItemScope: agPayload.scopeLineItem,
+          readScope: agPayload.scopeLineItemReadonly,
+          scoreScope: agPayload.scopeScore,
+          resultsScope: agPayload.scopeResult
         });
       });
   }
 
   render() {
     const body = JSON.stringify(this.state.origBody);
-    const readcol =
-      this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
-        <form action="/agsReadCols" method="post">
-          <input type="submit" value="Read Column" />
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.lineItem} />
+
+    const readAllCols =
+      this.state.lineItemScope ? (
+        <form action='/agsReadCols' method='post'>
+          <Button type={'submit'} variant={'contained'} color={'secondary'}>Read Columns</Button>
+          <input type='hidden' name='body' defaultValue={body}/>
+          <input type='hidden' name='url' defaultValue={this.state.lineItems}/>
         </form>
       ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='subtitle1' style={styles.notAvailable}>
           <b>Read Column not available</b>
         </Typography>
       );
-    const delcol =
-      this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
-        <form action="/agsDeleteCol" method="post">
+
+    const addNewCol =
+      this.state.lineItemScope ? (
+        <form action='/agsAddCol' method='post'>
           <table>
             <tbody>
-            <tr>
-              <td>
-                <input type="submit" value="Delete Column"/>
-                <input type="hidden" name="body" defaultValue={body}/>
-                <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
-                <input type="hidden" name="itemsUrl" defaultValue={this.state.lineItems}/>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="columnId"
-                  size="10"
-                  placeholder="Column ID"
-                />
-              </td>
-            </tr>
+              <tr>
+                <td>
+                  <Button type={'submit'} variant={'contained'} color={'secondary'}>Add/Update Column</Button>
+                  <input type='hidden' name='body' defaultValue={body}/>
+                  <input
+                    type='hidden'
+                    name='url'
+                    defaultValue={this.state.lineItems}
+                  />
+                </td>
+                <td>
+                  <TextField
+                    variant={'outlined'}
+                    name={'score'}
+                    label={'Score'}
+                    size={'small'}/>
+                </td>
+                <td>
+                  <TextField
+                    variant={'outlined'}
+                    name={'label'}
+                    label={'Column Name'}
+                    size={'small'}/>
+                </td>
+                <td>
+                  <TextField
+                    variant={'outlined'}
+                    name={'columnId'}
+                    label={'Column ID'}
+                    size={'small'}/>
+                </td>
+                <td>
+                  <TextField
+                    variant={'outlined'}
+                    name={'dueDate'}
+                    label={'Due Date'}
+                    size={'small'}/>
+                </td>
+              </tr>
             </tbody>
           </table>
         </form>
       ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='subtitle1' style={styles.notAvailable}>
+          <b>Add New Column not available</b>
+        </Typography>
+      );
+
+    const delcol =
+      !this.state.readScope ? (
+        <form action='/agsDeleteCol' method='post'>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <Button type={'submit'} variant={'contained'} color={'secondary'}>Delete Column</Button>
+                  <input type='hidden' name='body' defaultValue={body}/>
+                  <input type='hidden' name='url' defaultValue={this.state.lineItem}/>
+                  <input type='hidden' name='itemsUrl' defaultValue={this.state.lineItems}/>
+                </td>
+                <td>
+                  <TextField variant={'outlined'} name={'columnId'} label={'Column Id'} size={'small'}/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      ) : (
+        <Typography variant='subtitle1' style={styles.notAvailable}>
           <b>Delete Column not available</b>
         </Typography>
       );
+
     const results =
-      this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
-        <form action="/agsResults" method="post">
-          <input type="submit" value="Read Results" />
-          <input type="hidden" name="body" defaultValue={body} />
-          <input type="hidden" name="url" defaultValue={this.state.lineItem} />
+      this.state.resultsScope ? (
+        <form action='/agsResults' method='post'>
+          <Button type={'submit'} variant={'contained'} color={'secondary'}>Read Results</Button>
+          <input type='hidden' name='body' defaultValue={body}/>
+          <input type='hidden' name='url' defaultValue={this.state.lineItem}/>
         </form>
       ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='subtitle1' style={styles.notAvailable}>
           <b>Results not available</b>
         </Typography>
       );
+
     const scores =
-      this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
-        <form action="/agsScores" method="post">
+      this.state.scoreScope ? (
+        <form action='/agsScores' method='post'>
           <table>
             <tbody>
-            <tr>
-              <td>
-                <input type="submit" value="Send Scores"/>
-                <input type="hidden" name="body" defaultValue={body}/>
-                <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
-                <input type="hidden" name="itemsUrl" defaultValue={this.state.lineItems}/>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="userid"
-                  size="10"
-                  placeholder="User UUID"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="score"
-                  size="10"
-                  placeholder="score"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="column"
-                  size="10"
-                  placeholder="Column ID"
-                />
-              </td>
-            </tr>
+              <tr>
+                <td>
+                  <Button type={'submit'} variant={'contained'} color={'secondary'}>Send Scores</Button>
+                  <input type='hidden' name='body' defaultValue={body}/>
+                  <input type='hidden' name='url' defaultValue={this.state.lineItem}/>
+                  <input type='hidden' name='itemsUrl' defaultValue={this.state.lineItems}/>
+                </td>
+                <td>
+                  <TextField variant={'outlined'} name={'userid'} label={'User UUID'} size={'small'}/>
+                </td>
+                <td>
+                  <TextField variant={'outlined'} name={'score'} label={'Score'} size={'small'}/>
+                </td>
+                <td>
+                  <TextField variant={'outlined'} name={'column'} label={'Column ID'} size={'small'}/>
+                </td>
+              </tr>
             </tbody>
           </table>
         </form>
       ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='subtitle1' style={styles.notAvailable}>
           <b>Scores not available</b>
         </Typography>
       );
+
     const submitAttempt =
-      this.state.lineItem !== "" && this.state.lineItem !== undefined ? (
-        <form action="/agsSubmitAttempt" method="post">
+      this.state.lineItemScope ? (
+        <form action='/agsSubmitAttempt' method='post'>
           <table>
             <tbody>
-            <tr>
-              <td>
-                <input type="submit" value="Submit Attempt"/>
-                <input type="hidden" name="body" defaultValue={body}/>
-                <input type="hidden" name="url" defaultValue={this.state.lineItem}/>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="userid"
-                  size="10"
-                  placeholder="User UUID"
-                />
-              </td>
-            </tr>
+              <tr>
+                <td>
+                  <Button type={'submit'} variant={'contained'} color={'secondary'}>Submit Attempt</Button>
+                  <input type='hidden' name='body' defaultValue={body}/>
+                  <input type='hidden' name='url' defaultValue={this.state.lineItem}/>
+                </td>
+                <td>
+                  <TextField variant={'outlined'} name={'userid'} label={'User UUID'} size={'small'}/>
+                </td>
+              </tr>
             </tbody>
           </table>
         </form>
       ) : (
-        <Typography variant="body1" style={styles.notAvailable}>
+        <Typography variant='subtitle1' style={styles.notAvailable}>
           <b>Scores not available</b>
         </Typography>
       );
 
     return (
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Assignment and Grade Service
         </Typography>
 
         <div>
-          <Typography variant="body1">
+          <Typography variant='h6' gutterBottom>
             What would you like to do?
           </Typography>
-          <ul style={styles.ulNoDecoration}>
-            <li>
-              <form action="/agsReadCols" method="post">
-                <input type="submit" value="Read Columns"/>
-                <input type="hidden" name="body" defaultValue={body}/>
-                <input type="hidden" name="url" defaultValue={this.state.lineItems}/>
-              </form>
-            </li>
-            <li>
-              <form action="/agsAddCol" method="post">
-                <table>
-                  <tbody>
-                  <tr>
-                    <td>
-                      <input type="submit" value="Add/Update Column"/>
-                      <input type="hidden" name="body" defaultValue={body}/>
-                      <input
-                        type="hidden"
-                        name="url"
-                        defaultValue={this.state.lineItems}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="score"
-                        size="10"
-                        placeholder="score"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="label"
-                        size="10"
-                        placeholder="column name"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="columnId"
-                        size="10"
-                        placeholder="Column ID"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="dueDate"
-                        size="20"
-                        placeholder="Due Date"
-                      />
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </form>
-            </li>
-            <li>
-              {readcol}
-            </li>
-            <li>
+          <Grid
+            container
+            direction={'column'}
+            spacing={2}>
+            <Grid item xs>
+              {readAllCols}
+            </Grid>
+            <Grid item xs>
+              {addNewCol}
+            </Grid>
+            <Grid item xs>
               {delcol}
-            </li>
-            <li>
+            </Grid>
+            <Grid item xs>
               {results}
-            </li>
-            <li>
+            </Grid>
+            <Grid item xs>
               {scores}
-            </li>
-            <li>
+            </Grid>
+            <Grid item xs>
               {submitAttempt}
-            </li>
-          </ul>
+            </Grid>
+          </Grid>
 
-          <br />
-          <Typography variant="h5">
+          <br/>
+          <Typography variant='h5' gutterBottom>
             Assignment and Grades Response
           </Typography>
 
-          <Typography variant="body1">
+          <Typography variant='h6' gutterBottom>
             <b>Claims</b>
           </Typography>
-          <JSONTree data={this.state.claim} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='claim'
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.claim}
+            theme='dark_vscode_tribute'
+            style={{ body: styles.jsonEditor }}
+            locale={locale}
+            height='100%'
+            width='max-content'
+          />
 
-          <Typography variant="body1">
+          <Typography variant='h6' gutterBottom>
             <b>Response</b>
           </Typography>
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='jwt_body'
+            viewOnly={true}
+            confirmGood={true}
+            placeholder={this.state.body}
+            theme='dark_vscode_tribute'
+            style={{ body: styles.jsonEditor }}
+            locale={locale}
+            height='100%'
+            width='100%'
+          />
         </div>
       </div>
     );

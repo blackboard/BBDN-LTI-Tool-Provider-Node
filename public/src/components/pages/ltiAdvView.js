@@ -1,12 +1,15 @@
-import React from "react";
-import JSONTree from "react-json-tree";
-import Typography from "@material-ui/core/Typography";
-import {styles} from "../../common/styles/custom.js";
-import { parameters } from '../../util/parameters';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import JSONInput from 'react-json-editor-ajrm';
+import React from 'react';
+import Typography from '@material-ui/core/Typography';
+import locale from 'react-json-editor-ajrm/locale/en';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Grid } from '@material-ui/core';
+import { styles } from '../../common/styles/custom.js';
+import parameters from '../../util/parameters';
 
 const params = parameters.getInstance();
 
-class LtiAdvView extends React.Component {
+export default class LtiAdvView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -32,113 +35,161 @@ class LtiAdvView extends React.Component {
   render() {
     const body = JSON.stringify(this.state.body);
     const verified = this.state.verified ? (
-      <Typography variant="body1" style={styles.passed}>
+      <Typography variant='body1' style={styles.passed} gutterBottom>
         Verified
       </Typography>
     ) : (
-      <Typography variant="body1" style={styles.failed}>
+      <Typography variant='body1' style={styles.failed} gutterBottom>
         Verify failed
       </Typography>
     );
     const msgReturn =
       this.state.returnUrl +
-      "&lti_msg=" +
-      encodeURI("I have a message for you") +
-      "&lti_log=" +
-      encodeURI("Log this message");
+      '&lti_msg=' +
+      encodeURI('I have a message for you') +
+      '&lti_log=' +
+      encodeURI('Log this message');
     const errorReturn =
       this.state.errorUrl +
-      "&lti_errormsg=" +
-      encodeURI("An error has occurred") +
-      "&lti_errorlog=" +
-      encodeURI("Log this error");
+      '&lti_errormsg=' +
+      encodeURI('An error has occurred') +
+      '&lti_errorlog=' +
+      encodeURI('Log this error');
     const namesRoles = this.state.namesRoles ? (
-      <form action="/namesAndRoles" method="POST">
-        <input type="submit" value="Names and Roles" />
-        <input type="hidden" name="body" value={body} />
+      <form action='/namesAndRoles' method='POST'>
+        <Button variant='contained' type='submit' color='secondary'>Names and Roles</Button>
+        <input type='hidden' name='body' value={body}/>
       </form>
     ) : (
-      <Typography variant="body1" style={styles.notAvailable}>
+      <Typography variant='body1' style={styles.notAvailable}>
         <b>Names and Roles not available</b>
       </Typography>
     );
     const grading = this.state.grading ? (
-      <form action="/assignAndGrades" method="POST">
-        <input type="submit" value="submit" value="Assignments and Grades" />
-        <input type="hidden" name="body" value={body} />
+      <form action='/assignAndGrades' method='POST'>
+        <Button variant='contained' type='submit' color='secondary'>Assignments and Grades</Button>
+        <input type='hidden' name='body' value={body}/>
       </form>
     ) : (
-      <Typography variant="body1" style={styles.notAvailable}>
+      <Typography variant='body1' style={styles.notAvailable}>
         <b>Assignments and Grades not available</b>
       </Typography>
     );
     const groups = this.state.groups ? (
-      <form action="/groups" method="POST">
-        <input type="submit" value="Groups"/>
-        <input type="hidden" name="body" value={body}/>
+      <form action='/groups' method='POST'>
+        <Button variant='contained' type='submit' color='secondary'>Groups</Button>
+        <input type='hidden' name='body' value={body}/>
       </form>
     ) : (
-      <Typography variant="body1" style={styles.notAvailable}>
+      <Typography variant='body1' style={styles.notAvailable}>
         <b>Groups not available</b>
       </Typography>
     );
     const groupSets = this.state.groups ? (
-      <form action="/groupsets" method="POST">
-        <input type="submit" value="Group Sets"/>
-        <input type="hidden" name="body" value={body}/>
+      <form action='/groupsets' method='POST'>
+        <Button variant='contained' type='submit' color='secondary'>Group Sets</Button>
+        <input type='hidden' name='body' value={body}/>
       </form>
     ) : (
-      <Typography variant="body1" style={styles.notAvailable}>
+      <Typography variant='body1' style={styles.notAvailable}>
         <b>Group Sets not available</b>
       </Typography>
     );
 
     return (
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           LTI Advantage Launch
         </Typography>
 
         <div>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             We have received your LTI launch. You can view the JSON below.
           </Typography>
-          <Typography variant="body1">
+          <Typography variant='h6' gutterBottom>
             What would you like to do?
           </Typography>
-          <form action={this.state.returnUrl} method="post">
-            <input type="submit" value="Return to Learn" />
-          </form>
-          <form action={msgReturn} method="post">
-            <input type="submit" value="Return with message" />
-          </form>
-          <form action={errorReturn} method="post">
-            <input type="submit" value="Return with error" />
-          </form>
-          {namesRoles}
-          {grading}
-          {groups}
-          {groupSets}
+          <Grid
+            container
+            direction='column'
+            spacing={2}
+          >
+            <Grid item xs>
+              <form action={this.state.returnUrl} method='post'>
+                <Button variant='contained' type='submit' color='secondary'>Return to Learn</Button>
+              </form>
+            </Grid>
+            <Grid item xs>
+              <form action={msgReturn} method='post'>
+                <Button variant='contained' type='submit' color='secondary'>Return with Message</Button>
+              </form>
+            </Grid>
+            <Grid item xs>
+              <form action={errorReturn} method='post'>
+                <Button variant='contained' type='submit' color='secondary'>Return with Error</Button>
+              </form>
+            </Grid>
+            <Grid item xs>
+              {namesRoles}
+            </Grid>
+            <Grid item xs>
+              {grading}
+            </Grid>
+            <Grid item xs>
+              {groups}
+            </Grid>
+            <Grid item xs>
+              {groupSets}
+            </Grid>
+          </Grid>
 
-          <br />
-          <Typography variant="h5">
+          <br/>
+          <Typography variant='h5'>
             Resource Launch
           </Typography>
           {verified}
 
-          <Typography variant="body1">
+          <Typography variant='h6'>
             <b>JWT Header</b>
           </Typography>
-          <JSONTree data={this.state.header} hideRoot={true} theme={styles.monokai} invertTheme={true} />
-
-          <Typography variant="body1">
-            <b>JWT Body</b>
-          </Typography>
-          <JSONTree data={this.state.body} hideRoot={true} theme={styles.monokai} invertTheme={true} />
+          <JSONInput
+            id='jwt_header'
+            viewOnly={true}
+            confirmGood={false}
+            placeholder={this.state.header}
+            theme='dark_vscode_tribute'
+            style={{ body: styles.jsonEditor }}
+            locale={locale}
+            height='100%'
+            width='max-content'
+          /> <br/>
+          {verified ?
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                <Typography variant='h6' gutterBottom>
+                  <b>JWT Body</b>
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <JSONInput
+                  id='jwt_body'
+                  viewOnly={true}
+                  confirmGood={true}
+                  placeholder={this.state.body}
+                  theme='dark_vscode_tribute'
+                  style={{ body: styles.jsonEditor }}
+                  locale={locale}
+                  height='100%'
+                  width='100%'
+                />
+              </AccordionDetails>
+            </Accordion>
+            :
+            <Typography variant='h4'>
+              Not verified
+            </Typography>}
         </div>
       </div>
     );
   }
 }
-
-export default LtiAdvView;

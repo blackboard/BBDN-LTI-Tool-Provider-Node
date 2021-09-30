@@ -1,10 +1,10 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
-import {parameters} from "../../util/parameters";
+import React from 'react';
+import Typography from '@material-ui/core/Typography';
+import parameters from '../../util/parameters';
 
 const params = parameters.getInstance();
 
-class ProctoringEndActionsView extends React.Component {
+export default class ProctoringEndActionsView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -23,19 +23,17 @@ class ProctoringEndActionsView extends React.Component {
   render() {
     return (
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Proctoring End: Actions
         </Typography>
-        <br />
-        <Typography variant="h5" gutterBottom>
+        <br/>
+        <Typography variant='h5' gutterBottom>
           Return URL
         </Typography>
-        <Typography variant="body1">
+        <Typography variant='body1'>
           <a href={this.state.returnUrl} style={{ overflowWrap: 'break-word' }}>{this.state.returnUrl}</a>
         </Typography>
       </div>
     );
   }
 }
-
-export default ProctoringEndActionsView;

@@ -1,44 +1,42 @@
 import AppBar from "@material-ui/core/AppBar/index";
-import Badge from "@material-ui/core/Badge/index";
+import ApplicationsView from "./applicationsView";
+import AssignGradesView from "./assignGradesView";
+import CIMRequestView from "./cimRequestView";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ContentItemView from "./contentItemView";
 import CssBaseline from "@material-ui/core/CssBaseline/index";
+import DeepLinkOptions from "./deepLinkOptions";
+import DeepLinkPayloadView from "./deepLinkView";
 import Divider from "@material-ui/core/Divider/index";
 import Drawer from "@material-ui/core/Drawer/index";
+import ErrorBoundary from "../errorBoundary";
+import GroupSetsView from "./groupSetsView";
+import GroupsView from "./groupsView";
 import IconButton from "@material-ui/core/IconButton/index";
+import LaunchEndpoint from "./home";
 import List from "@material-ui/core/List/index";
-import { MuiThemeProvider, withStyles } from "@material-ui/core/styles/index";
+import LtiAdvView from "./ltiAdvView";
+import LtiBobcatView from "./ltiBobcatView";
+import MenuIcon from "@material-ui/icons/Menu";
+import MicrosoftTeamsView from './msTeamsView';
+import ModeButton from "@material-ui/icons/Brightness4Outlined";
+import NamesRolesView from "./namesRolesView";
+import ProctoringEndActionsView from "./proctoringEndActions";
+import ProctoringEndOptionsView from "./proctoringEndOptions";
+import ProctoringStartActionsView from "./proctoringStartActions";
+import ProctoringStartOptionsView from "./proctoringStartOptions";
+import PropTypes from "prop-types";
+import React from "react";
+import SnackBar from "../page_objects/snackbar";
 import Toolbar from "@material-ui/core/Toolbar/index";
 import Tooltip from "@material-ui/core/Tooltip/index";
 import Typography from "@material-ui/core/Typography/index";
-import ModeButton from "@material-ui/icons/Brightness4Outlined";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import MenuIcon from "@material-ui/icons/Menu";
-import MicrosoftTeamsView from './msTeamsView';
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import classNames from "classnames";
-import PropTypes from "prop-types";
-import React from "react";
-import {BrowserRouter, Route} from 'react-router-dom';
+import { MuiThemeProvider, withStyles } from "@material-ui/core/styles/index";
+import { Route } from 'react-router-dom';
 import { darkMode, lightMode } from "../../common/styles/palette";
-import { styles } from "../../common/styles/styles";
-import ErrorBoundary from "../errorBoundary";
 import { fullListItems } from "../page_objects/listItems";
-import AssignGradesView from "./assignGradesView";
-import CIMRequestView from "./cimRequestView";
-import ContentItemView from "./contentItemView";
-import DeepLinkOptions from "./deepLinkOptions";
-import DeepLinkPayloadView from "./deepLinkView";
-import LaunchEndpoint from "./home";
-import LtiAdvView from "./ltiAdvView";
-import LtiBobcatView from "./ltiBobcatView";
-import NamesRolesView from "./namesRolesView";
-import GroupsView from "./groupsView";
-import GroupSetsView from "./groupSetsView";
-import SetupView from "./setupView";
-import ProctoringStartOptionsView from "./proctoringStartOptions";
-import ProctoringStartActionsView from "./proctoringStartActions";
-import ProctoringEndOptionsView from "./proctoringEndOptions";
-import ProctoringEndActionsView from "./proctoringEndActions";
-import SnackBar from "../page_objects/snackbar";
+import { styles } from "../../common/styles/styles";
 
 class Dashboard extends React.Component {
   state = {
@@ -55,8 +53,7 @@ class Dashboard extends React.Component {
     this.setState({ open: false });
   };
 
-  handleDarkMode = evt => {
-    console.log(evt);
+  handleDarkMode = () => {
     if (!this.state.darkMode) {
       this.setState({ theme: darkMode, darkMode: true });
     } else {
@@ -104,11 +101,6 @@ class Dashboard extends React.Component {
                   <ModeButton/>
                 </IconButton>
               </Tooltip>
-              <IconButton color="secondary">
-                <Badge badgeContent={4} color="error">
-                  <NotificationsIcon/>
-                </Badge>
-              </IconButton>
             </Toolbar>
           </AppBar>
           <Drawer
@@ -137,7 +129,6 @@ class Dashboard extends React.Component {
               <Route path="/cim_request" component={CIMRequestView}/>
               <Route path="/lti_adv_view" component={LtiAdvView}/>
               <Route path="/lti_bobcat_view" component={LtiBobcatView}/>
-              <Route path="/setup_page" component={SetupView}/>
               <Route path="/deep_link" component={DeepLinkPayloadView}/>
               <Route path="/deep_link_options" component={DeepLinkOptions}/>
               <Route path="/names_roles_view" component={NamesRolesView}/>
@@ -148,6 +139,7 @@ class Dashboard extends React.Component {
               <Route path="/proctoring_end_options_view" component={ProctoringEndOptionsView}/>
               <Route path="/proctoring_end_actions_view" component={ProctoringEndActionsView}/>
               <Route path="/ms_teams_view" component={MicrosoftTeamsView}/>
+              <Route path="/applications" component={ApplicationsView}/>
               <Route
                 path="/assign_grades_view"
                 component={AssignGradesView}

@@ -1,30 +1,31 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class DataItemList extends React.Component {
   render() {
     let items = [];
     const data = this.props.dataItems;
     const style = {
-      listStyle: "none"
+      listStyle: 'none'
     };
     const required = [
-      "lti_version",
-      "lti_message_type",
-      "accept_media_types",
-      "accept_presentation_document_targets",
-      "content_item_return_url"
+      'lti_version',
+      'lti_message_type',
+      'accept_media_types',
+      'accept_presentation_document_targets',
+      'content_item_return_url'
     ];
 
-    data.forEach((value, key, map) => {
+    data.forEach((value, key) => {
       if (required.indexOf(key) >= 0) {
         items.push(
-          <li className="reqd">
+          <li className='reqd' key={key}>
             {key} : {value}
           </li>
         );
       } else {
         items.push(
-          <li>
+          <li key={key}>
             {key} : {value}
           </li>
         );
@@ -35,7 +36,7 @@ class DataItemList extends React.Component {
   }
 }
 
-class ContentItemView extends React.Component {
+export default class ContentItemView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,18 +45,18 @@ class ContentItemView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("contentitemdata")
+    fetch('contentitemdata')
       .then(result => result.json())
       .then(contentItemData => {
         this.setState({
           ciData: this.buildMap(contentItemData.data),
           consumerKey: contentItemData.consumer_key,
           contentItems: contentItemData.content_items,
-          ltiVersion: this.getEntry(contentItemData.data, "lti_version"),
-          tcData: this.getEntry(contentItemData.data, "data"),
+          ltiVersion: this.getEntry(contentItemData.data, 'lti_version'),
+          tcData: this.getEntry(contentItemData.data, 'data'),
           returnUrl: this.getEntry(
             contentItemData.data,
-            "content_item_return_url"
+            'content_item_return_url'
           ),
           oauth_nonce: contentItemData.oauth_nonce,
           oauth_timestamp: contentItemData.oauth_timestamp,
@@ -74,7 +75,7 @@ class ContentItemView extends React.Component {
   }
 
   getEntry(obj, findKey) {
-    let retVal = "Not found";
+    let retVal = 'Not found';
     Object.keys(obj).forEach(key => {
       if (key === findKey) {
         retVal = obj[key];
@@ -88,8 +89,8 @@ class ContentItemView extends React.Component {
 
     return (
       <div>
-        <div className="row">
-          <div className="large-6 columns">
+        <div className='row'>
+          <div className='large-6 columns'>
             <h2>LTI Content Item</h2>
           </div>
         </div>
@@ -97,135 +98,135 @@ class ContentItemView extends React.Component {
         <div>
           <form
             action={this.state.returnUrl}
-            method="post"
-            encType="application/x-www-form-urlencoded">
+            method='post'
+            encType='application/x-www-form-urlencoded'>
             <table>
               <tbody>
                 <tr>
-                  <td className="ci">lti_message_type</td>
-                  <td className="ci">
+                  <td className='ci'>lti_message_type</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="lti_message_type"
-                      value="ContentItemSelection"
+                      className='ci'
+                      type='text'
+                      name='lti_message_type'
+                      defaultValue='ContentItemSelection'
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">lti_version</td>
-                  <td className="ci">
+                  <td className='ci'>lti_version</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="lti_version"
-                      value={this.state.ltiVersion}
+                      className='ci'
+                      type='text'
+                      name='lti_version'
+                      defaultValue={this.state.ltiVersion}
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">content_items</td>
-                  <td className="ci">
+                  <td className='ci'>content_items</td>
+                  <td className='ci'>
                     <textarea
-                      className="ci"
-                      cols="75"
-                      rows="10"
-                      name="content_items"
-                      value={items}
+                      className='ci'
+                      cols='75'
+                      rows='10'
+                      name='content_items'
+                      defaultValue={items}
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">data</td>
-                  <td className="ci">
+                  <td className='ci'>data</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="data"
-                      value={this.state.tcData}
+                      className='ci'
+                      type='text'
+                      name='data'
+                      defaultValue={this.state.tcData}
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">oauth_version</td>
-                  <td className="ci">
+                  <td className='ci'>oauth_version</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="oauth_version"
-                      defaultValue="1.0"
+                      className='ci'
+                      type='text'
+                      name='oauth_version'
+                      defaultValue='1.0'
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">oauth_nonce</td>
-                  <td className="ci">
+                  <td className='ci'>oauth_nonce</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="oauth_nonce"
-                      value={this.state.oauth_nonce}
+                      className='ci'
+                      type='text'
+                      name='oauth_nonce'
+                      defaultValue={this.state.oauth_nonce}
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">oauth_timestamp</td>
-                  <td className="ci">
+                  <td className='ci'>oauth_timestamp</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="oauth_timestamp"
-                      value={this.state.oauth_timestamp}
+                      className='ci'
+                      type='text'
+                      name='oauth_timestamp'
+                      defaultValue={this.state.oauth_timestamp}
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">oauth_consumer_key</td>
-                  <td className="ci">
+                  <td className='ci'>oauth_consumer_key</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="oauth_consumer_key"
-                      value={this.state.consumerKey}
+                      className='ci'
+                      type='text'
+                      name='oauth_consumer_key'
+                      defaultValue={this.state.consumerKey}
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">oauth_callback</td>
-                  <td className="ci">
+                  <td className='ci'>oauth_callback</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="oauth_callback"
-                      value="about:blank"
+                      className='ci'
+                      type='text'
+                      name='oauth_callback'
+                      defaultValue='about:blank'
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">oauth_signature_method</td>
-                  <td className="ci">
+                  <td className='ci'>oauth_signature_method</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="oauth_signature_method"
-                      value={this.state.oauth_signature_method}
+                      className='ci'
+                      type='text'
+                      name='oauth_signature_method'
+                      defaultValue={this.state.oauth_signature_method}
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td className="ci">oauth_signature</td>
-                  <td className="ci">
+                  <td className='ci'>oauth_signature</td>
+                  <td className='ci'>
                     <input
-                      className="ci"
-                      type="text"
-                      name="oauth_signature"
-                      value={this.state.oauth_signature}
+                      className='ci'
+                      type='text'
+                      name='oauth_signature'
+                      defaultValue={this.state.oauth_signature}
                     />
                   </td>
                 </tr>
               </tbody>
             </table>
-            <input type="submit" value="Submit" />
+            <input type='submit' value='Submit' />
           </form>
         </div>
 
@@ -238,4 +239,6 @@ class ContentItemView extends React.Component {
   }
 }
 
-export default ContentItemView;
+DataItemList.propTypes = {
+  dataItems: PropTypes.any
+};

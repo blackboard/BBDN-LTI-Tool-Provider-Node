@@ -1,27 +1,24 @@
-const path = require("path");
-const webpack = require("webpack");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
-  optimization: {
-    minimizer: [new UglifyJsPlugin({ parallel: true })]
-  },
-  mode: "development",
-  entry: "./public/src/app.js",
+  mode: 'development',
+  entry: './public/src/app.js',
   output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "public/dist")
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'public/dist')
   },
-  devtool: "source-map",
+  stats: 'errors-only',
+  devtool: 'source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
-        include: path.resolve(__dirname, "public/src"),
+        include: path.resolve(__dirname, 'public/src'),
         exclude: /node_modules/,
         use: [
           {
-            loader: "babel-loader"
+            loader: 'babel-loader'
           }
         ]
       }
@@ -29,7 +26,7 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      "window.jQuery": "jquery"
+      'window.jQuery': 'jquery'
     })
   ]
 };

@@ -1,5 +1,6 @@
-import React from "react";
-import { FormControl, FormGroup, FormLabel } from "react-bootstrap";
+import React from 'react';
+import { FormControl, FormGroup, FormLabel } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const EmptyResponse = (
   <div>
@@ -12,14 +13,14 @@ const EmptyResponse = (
         </tr>
         <tr>
           <td>Body</td>
-          <td colSpan="2">N/A</td>
+          <td colSpan='2'>N/A</td>
         </tr>
       </tbody>
     </table>
   </div>
 );
 
-class Response extends React.Component {
+export default class Response extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -61,9 +62,9 @@ class Response extends React.Component {
           <FormGroup>
             <FormLabel>Response Body</FormLabel>
             <FormControl
-              componentClass="textarea"
+              componentClass='textarea'
               value={this.props.response.body}
-              placeholder="textarea"
+              placeholder='textarea'
             />
           </FormGroup>
         </div>
@@ -72,4 +73,6 @@ class Response extends React.Component {
   }
 }
 
-export default Response;
+Response.propTypes = {
+  response: PropTypes.object
+};

@@ -1,29 +1,29 @@
 export class styles {
   static passed = {
-    color: "green",
-    fontWeight: "bold"
+    color: 'green',
+    fontWeight: 'bold'
   };
 
   static failed = {
-    color: "red",
-    fontWeight: "bold"
+    color: 'red',
+    fontWeight: 'bold'
   };
 
   static notAvailable = {
-    color: "grey"
+    color: 'grey'
   };
 
   static ulNoDecoration = {
-    listStyleType: "none"
+    listStyleType: 'none'
   };
 
   static jsonEditor = {
-    fontSize: "16px"
+    fontSize: '16px'
   };
 
   static monokai = {
     scheme: 'monokai',
-    author: 'wimer hazenberg (http://www.monokai.nl)',
+    author: 'wimer hazenberg',
     base00: '#272822',
     base01: '#383830',
     base02: '#49483e',

@@ -1,145 +1,113 @@
-import React from "react";
-import {Table, TableBody, TableCell, TableHead, TableRow, Typography, withStyles} from "@material-ui/core";
-import {parameters} from "../../util/parameters";
+import React from 'react';
+import { Button, Grid, Switch, Typography } from '@material-ui/core';
+import { DeepLinkBuilder, Messages, sampleJSON } from './deepLinkBuilder';
+import parameters from '../../util/parameters';
 
 const params = parameters.getInstance();
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    fontSize: 16,
-    fontWeight: "bold",
-    padding: 4
-  },
-  body: {
-    fontSize: 14,
-    padding: 4
+export default class DeepLinkOptions extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      custom_json: JSON.stringify(sampleJSON),
+      custom_option: false,
+      custom_ltiLinks: 1,
+      embed_ltiLinks: 0,
+      new_ltiLinks: 0,
+      custom_contentLinks: 0,
+      custom_files: 0,
+      custom_htmls: 0,
+      custom_images: 0,
+      custom_message: '',
+      custom_error: ''
+    }
   }
-}))(TableCell);
 
-class DeepLinkOptions extends React.Component {
+  handleCustomJson = (event) => {
+    this.setState( { ...this.state, custom_content: event.json })
+  }
+
+  handleSwitch = (event) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.checked });
+  };
+
+  handleChange = (event) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.value });
+  };
+
+  handleSubmit = () => {
+    if (this.state.custom_option === "true" && this.state.custom_content === null) {
+      this.setState({...this.state, custom_json: sampleJSON });
+    }
+    const data = new URLSearchParams(this.state);
+    fetch(`/deepLinkContent?nonce=${params.getNonce()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      },
+      body: data
+    }).then(() => {
+      this.props.history.push('/deep_link')
+    })
+  }
+
   render() {
-    return (
+    return(
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom><br/>
           Deep Linking Payload Options
         </Typography>
-
-        <div>
-          <form action="deepLinkContent" method="POST">
-            <input type="hidden" name="nonce" value={params.getNonce()}/>
-
-            <Table style={{width: "45%"}}>
-              <TableBody>
-                <TableRow>
-                  <TableCell colSpan={2}>
-                    <Typography variant="h5">
-                      Deep Linking Payloads
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <CustomTableCell>
-                    <input type="radio" name="custom_option" value="1" defaultChecked="true"/>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <Typography variant="h6">
-                      Build-A-Payload
-                    </Typography>
-                    <Table>
-                      <TableBody>
-                        <TableRow>
-                          <CustomTableCell>LTI Links:</CustomTableCell>
-                          <CustomTableCell>
-                            <input type="text" size="2" name="custom_ltilinks" defaultValue="1"/>
-                          </CustomTableCell>
-                        </TableRow>
-                        <TableRow>
-                          <CustomTableCell>Embedded LTI Links:</CustomTableCell>
-                          <CustomTableCell>
-                            <input type="text" size="2" name="embed_ltilinks"/>
-                          </CustomTableCell>
-                        </TableRow>
-                        <TableRow>
-                          <CustomTableCell>New Window LTI Links:</CustomTableCell>
-                          <CustomTableCell>
-                            <input type="text" size="2" name="new_ltilinks"/>
-                          </CustomTableCell>
-                        </TableRow>
-                        <TableRow>
-                          <CustomTableCell>Content Links:</CustomTableCell>
-                          <CustomTableCell>
-                            <input type="text" size="2" name="custom_contentlinks"/>
-                          </CustomTableCell>
-                        </TableRow>
-                        <TableRow>
-                          <CustomTableCell>Files:</CustomTableCell>
-                          <CustomTableCell>
-                            <input type="text" size="2" name="custom_files"/>
-                          </CustomTableCell>
-                        </TableRow>
-                        <TableRow>
-                          <CustomTableCell>HTMLs:</CustomTableCell>
-                          <CustomTableCell>
-                            <input type="text" size="2" name="custom_htmls"/>
-                          </CustomTableCell>
-                        </TableRow>
-                        <TableRow>
-                          <CustomTableCell>Images:</CustomTableCell>
-                          <CustomTableCell>
-                            <input type="text" size="2" name="custom_images"/>
-                          </CustomTableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </CustomTableCell>
-                </TableRow>
-                <TableRow>
-                  <CustomTableCell>
-                    <input type="radio" name="custom_option" value="2"/>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <Typography variant="h6">
-                      Enter JSON
-                    </Typography>
-                    <textarea rows="8" cols="65" name="custom_content"/>
-                  </CustomTableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-
-            <Table style={{width: "45%"}}>
-              <TableHead>
-                <TableRow style={{fontSize: "14px"}}>
-                  <CustomTableCell>&nbsp;</CustomTableCell>
-                  <CustomTableCell>Return messages</CustomTableCell>
-                  <CustomTableCell align="center">Display</CustomTableCell>
-                  <CustomTableCell align="center">Log</CustomTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <CustomTableCell>Message</CustomTableCell>
-                  <CustomTableCell><input type="text" size="50" name="custom_message"
-                                          defaultValue="I have a message"/></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_msg"/></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_message_log"/></CustomTableCell>
-                </TableRow>
-                <TableRow>
-                  <CustomTableCell>Error</CustomTableCell>
-                  <CustomTableCell><input type="text" size="50" name="custom_error"
-                                          defaultValue="I have an error"/></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_msg"/></CustomTableCell>
-                  <CustomTableCell align="center"><input type="checkbox" name="custom_error_log"/></CustomTableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-
-            <input type="submit" value="Submit"/>
-          </form>
-        </div>
+        <Typography variant="subtitle1" gutterBottom>
+          Choose Build-A-Payload to select from various content types or choose Custom JSON to add your own LTI
+          compliant deep linking response.
+        </Typography>
+        <br/>
+        <Grid component="label" container alignItems="center" spacing={3}>
+          <Grid item><Typography variant="h6">Build-A-Payload</Typography></Grid>
+          <Grid item role={'input'}>
+            <Switch
+              checked={this.state.custom_option}
+              onChange={this.handleSwitch}
+              color="secondary"
+              size="medium"
+              name="custom_option"
+            />
+          </Grid>
+          <Grid item><Typography variant="h6">Custom JSON</Typography></Grid>
+        </Grid>
+        <DeepLinkBuilder
+          custom_option={this.state.custom_option}
+          custom_ltiLinks={this.state.custom_ltiLinks}
+          embed_ltiLinks={this.state.embed_ltiLinks}
+          new_ltiLinks={this.state.new_ltiLinks}
+          custom_contentLinks={this.state.custom_contentLinks}
+          custom_files={this.state.custom_files}
+          custom_htmls={this.state.custom_htmls}
+          custom_images={this.state.custom_images}
+          handleChange={this.handleChange}
+          handleCustomJson={this.handleCustomJson}
+          error={this.state.error}
+        />
+        <br/>
+        <Grid container direction={"column"} spacing={3}>
+          <Grid item lg={6}>
+            <Typography variant={"h6"} gutterBottom>Optionally set a custom message or error to send back</Typography>
+          </Grid>
+          <Grid item lg={6}>
+            <Messages message={this.state.custom_message} error={this.state.custom_error} handleChange={this.handleChange}/>
+          </Grid>
+          <Grid item lg={6}>
+            <Button
+              id={'send_button'}
+              size={"medium"}
+              variant={"contained"}
+              color={"secondary"}
+              onClick={this.handleSubmit}>
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
       </div>
     );
   }
 }
-
-export default DeepLinkOptions;
