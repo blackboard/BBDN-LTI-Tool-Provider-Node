@@ -28,7 +28,7 @@
     "oauth-signature": "^1.5.0",
     "pem-jwk": "^2.0.0",
     "prop-types": "^15.7.2",
-    "pug": "2.0.3",
+    "pug": "3.0.1",
     "query-string": "^6.12.1",
     "react": "^16.8.6",
     "react-bootstrap": "^1.4.3",
