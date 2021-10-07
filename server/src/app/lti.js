@@ -279,7 +279,7 @@ export const outcomes = (req, res) =>  {
     sourcedid: lis_result_sourcedid,
     endpoint: lis_outcome_service_url,
     key: oauth_consumer_key,
-    secret: oauth_consumer_key === config.lti11Setup.key ? config.lti11Setup.secret : ''
+    secret: oauth_consumer_key === config.default.lti11Setup.key ? config.default.lti11Setup.secret : ''
   });
 };
 
