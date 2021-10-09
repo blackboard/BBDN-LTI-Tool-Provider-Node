@@ -294,20 +294,20 @@ module.exports = function (app) {
   app.get('/getProctoringPayloadData', async (req, res) => {
     const nonce = req.query.nonce;
     console.log(`--------------------\ngetProctoringPayloadData nonce: ${nonce}`);
-    const jwtPayload = await db.getAuthFromState(nonce).auth['jwt'];
+    const jwtPayload = await db.getAuthFromState(nonce).jwt;
     res.send(jwtPayload);
   });
 
   app.post('/buildProctoringStartReturnPayload', async (req, res) => {
     const nonce = req.body.nonce;
-    const jwtPayload = await db.getAuthFromState(nonce).auth['jwt'];
+    const jwtPayload = await db.getAuthFromState(nonce).jwt;
     buildProctoringStartReturnPayload(req, res, jwtPayload);
     res.redirect('/proctoring_start_actions_view?nonce=${nonce}');
   });
 
   app.post('/buildProctoringEndReturnPayload', async (req, res) => {
     const nonce = req.body.nonce;
-    const jwtPayload = await db.getAuthFromState(nonce).auth['jwt'];
+    const jwtPayload = await db.getAuthFromState(nonce).jwt;
     buildProctoringEndReturnPayload(req, res, jwtPayload);
     res.redirect('/proctoring_end_actions_view?nonce=${nonce}');
   });
