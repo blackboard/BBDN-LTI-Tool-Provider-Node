@@ -8,7 +8,6 @@ import lti from 'ims-lti';
 import moment from 'moment';
 import url from 'url';
 import utils from './utils';
-import { getAppById } from '../database/db-utility';
 import { EntityFactory, EventFactory } from 'ims-caliper';
 const config = require('../config/config');
 
@@ -87,9 +86,10 @@ export const got_launch = (req, res) => {
 };
 
 export const caliper = (req, res) => {
+  const appInfo = config.default.lti11Setup;
   let options = {
     consumer_key: oauth_consumer_key,
-    consumer_secret: oauth_consumer_key === config.lti11Setup.key ? config.lti11Setup.secret : '',
+    consumer_secret: oauth_consumer_key === appInfo.key ? appInfo.secret : '',
     url: caliper_profile_url,
     signer: new HMAC_SHA.HMAC_SHA1(),
     oauth_version: '1.0',
@@ -274,12 +274,13 @@ export const caliper_send = (req, res) =>  {
 };
 
 export const outcomes = (req, res) =>  {
+  const appInfo = config.default.lti11Setup;
   res.render('outcomes', {
     title: 'Enter Grade',
     sourcedid: lis_result_sourcedid,
     endpoint: lis_outcome_service_url,
     key: oauth_consumer_key,
-    secret: oauth_consumer_key === config.default.lti11Setup.key ? config.default.lti11Setup.secret : ''
+    secret: oauth_consumer_key === appInfo.key ? appInfo.secret : ''
   });
 };
 
@@ -503,13 +504,13 @@ export const rest_getcourse = (req, res) =>  {
 };
 
 export const get_membership = (req, res) =>  {
-  const appInfo = getAppById('local11');
+  const appInfo = config.default.lti11Setup;
   if (membership_url !== '') {
     let parts = url.parse(membership_url, true);
 
     let options = {
-      consumer_key: appInfo.setup.key,
-      consumer_secret: appInfo.setup.secret,
+      consumer_key: appInfo.key,
+      consumer_secret: appInfo.secret,
       url: parts.protocol + '//' + parts.host + parts.pathname, // Rebuild url without parameters
       oauth_version: '1.0',
       oauth_signature_method: sha_method
