@@ -1,11 +1,10 @@
-import DeleteIcon from '@material-ui/icons/Delete';
+import { Add, DeleteTwoTone, EditTwoTone, KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 import FormDialog from './formDialog';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import clsx from 'clsx';
 import {
-  Checkbox,
+  Box,
+  Collapse, Fab,
   IconButton,
   Paper,
   Table,
@@ -16,8 +15,7 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
-  Toolbar,
-  Tooltip
+  Toolbar, Tooltip,
 } from '@material-ui/core';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import { openSnackbar } from './snackbar';
@@ -54,49 +52,6 @@ const headCells = [
   { id: 'devPortalUrl', numeric: false, disablePadding: false, label: 'Developer Portal' },
 ];
 
-function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all applications' }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
 const useToolbarStyles = makeStyles((theme) => ( {
   root: {
     paddingLeft: theme.spacing(2),
@@ -117,62 +72,14 @@ const useToolbarStyles = makeStyles((theme) => ( {
   },
 } ));
 
-const EnhancedTableToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { numSelected, selectedApps, onDelete, resetSelected, onAdd } = props;
-
-  const handleDeleteApplication = () => {
-    const results = [];
-    selectedApps.forEach((app) => {
-      fetch(`/applications/${app}`, { method: 'DELETE' })
-        .then(result => {
-          if (result.status === 200) {
-            results.push(app);
-          } else {
-            openSnackbar({ message: 'Something went wrong' });
-          }
-          return results;
-        }).then(res => {
-          if (res.length > 1) {
-            openSnackbar({ message: `${selectedApps.join(' & ')} have been deleted` });
-          } else {
-            openSnackbar({ message: `${selectedApps} has been deleted` });
-          }
-        });
-    });
-    onDelete(selectedApps);
-    resetSelected(true);
-  };
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography className={classes.title} color='inherit' variant='subtitle1' component='div'>
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant='h4' id='tableTitle' component='div'>
-          Registered Applications
-        </Typography>
-      )}
-      {numSelected > 0 ? (
-        <Tooltip title='Delete'>
-          <IconButton aria-label='delete' onClick={handleDeleteApplication}>
-            <DeleteIcon/>
-          </IconButton>
-        </Tooltip>
-      ) : ( <FormDialog onAdd={onAdd}/> )}
-    </Toolbar>
-  );
-};
-
 const useStyles = makeStyles((theme) => ( {
   root: {
     width: '100%',
+  },
+  collapsed: {
+    '& > *': {
+      borderBottom: 'unset',
+    }
   },
   paper: {
     width: '100%',
@@ -195,12 +102,141 @@ const useStyles = makeStyles((theme) => ( {
   },
 } ));
 
+const EnhancedTableToolbar = (props) => {
+  const classes = useToolbarStyles();
+  const { onAdd } = props;
+  const [ isOpen, setIsOpen ] = React.useState(false);
+
+  const handleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <Toolbar className={classes.root}>
+      <Tooltip title='Add New Application'>
+        <Fab color='secondary' aria-label='add' onClick={handleOpen}>
+          <Add />
+        </Fab>
+      </Tooltip>
+      <FormDialog onAdd={onAdd} isDialogOpened={isOpen} handleCloseDialog={() => setIsOpen(false)}/>
+    </Toolbar>
+  );
+};
+
+const EnhancedTableHead = props => {
+  const { classes, order, orderBy, onRequestSort } = props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  return (
+    <TableHead>
+      <TableRow>
+        <TableCell/>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <span className={classes.visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </span>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+};
+
+const ApplicationRow = props => {
+  const { row, onDelete, onAdd } = props;
+  const classes = useStyles();
+  const [ open, setOpen ] = React.useState(false);
+  const [ dialogOpen, setDialogOpen ] = React.useState(false);
+
+  const handleDialogOpen = () => {
+    setDialogOpen(!dialogOpen);
+  };
+
+  const handleDeleteApplication = app => {
+    const results = [];
+    fetch(`/applications/${app}`, { method: 'DELETE' })
+      .then(result => {
+        if (result.status === 200) {
+          results.push(app);
+        } else {
+          openSnackbar({ message: 'Something went wrong' });
+        }
+        return results;
+      }).then(() => {
+        openSnackbar({ message: `${app} has been deleted` });
+      });
+    onDelete(app);
+  };
+
+  return(
+    <React.Fragment>
+      <TableRow className={classes.collapsed} hover>
+        <TableCell>
+          <IconButton size='medium' onClick={() => setOpen(!open)}>
+            {open ? <KeyboardArrowUp/> : <KeyboardArrowDown/>}
+          </IconButton>
+        </TableCell>
+        <TableCell component='th' scope='row'>
+          {row.appName}
+        </TableCell>
+        <TableCell>{row.appId}</TableCell>
+        <TableCell>{row.devPortalUrl}</TableCell>
+        <TableCell>
+          <IconButton size={'medium'} onClick={handleDialogOpen}>
+            <EditTwoTone/>
+          </IconButton>
+          <IconButton size={'medium'} onClick={() => handleDeleteApplication(row.appId)}>
+            <DeleteTwoTone/>
+          </IconButton>
+        </TableCell>
+        <FormDialog editMode={true} onAdd={onAdd} app={row} isDialogOpened={dialogOpen}
+          handleCloseDialog={() => setDialogOpen(false)} />
+      </TableRow>
+      <TableRow style={{ borderBottom: 'unset'}}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+          <Collapse in={open} timeout='auto' unmountOnExit>
+            <Box marginLeft={15} marginBottom={5}>
+              <Table size={'small'} style={{ width: '45%' }}>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Key</TableCell>
+                    <TableCell>{row.key}</TableCell>
+                  </TableRow>
+                  <TableRow key={row.appId}>
+                    <TableCell>Secret</TableCell>
+                    <TableCell>{row.secret}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment> );
+};
+
 export default function ApplicationsTable(props) {
   const { rows, onDelete, onAdd } = props;
   const classes = useStyles();
   const [ order, setOrder ] = React.useState('asc');
   const [ orderBy, setOrderBy ] = React.useState('appName');
-  const [ selected, setSelected ] = React.useState([]);
   const [ page, setPage ] = React.useState(0);
   const [ rowsPerPage, setRowsPerPage ] = React.useState(10);
 
@@ -208,38 +244,6 @@ export default function ApplicationsTable(props) {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.appName);
-      setSelected(newSelecteds);
-      return;
-    }
-    handleResetSelected();
-  };
-
-  const handleResetSelected = (reset) => {
-    if (reset) setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -251,18 +255,12 @@ export default function ApplicationsTable(props) {
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={3}>
         <EnhancedTableToolbar
-          numSelected={selected.length}
-          selectedApps={selected}
-          onDelete={onDelete}
-          resetSelected={handleResetSelected}
           onAdd={onAdd}
         />
         <TableContainer>
@@ -273,42 +271,17 @@ export default function ApplicationsTable(props) {
           >
             <EnhancedTableHead
               classes={classes}
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.appId);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
+                .map((row) => {
                   return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.appId)}
-                      role='checkbox'
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.appId}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell component='th' id={labelId} scope='row' padding='none'>
-                        {row.appName}
-                      </TableCell>
-                      <TableCell>{row.appId}</TableCell>
-                      <TableCell>{row.devPortalUrl}</TableCell>
-                    </TableRow>
+                    <ApplicationRow row={row} key={row.appId} onDelete={onDelete} onEdit={onAdd}/>
                   );
                 })}
               {emptyRows > 0 && (
@@ -325,8 +298,8 @@ export default function ApplicationsTable(props) {
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -334,17 +307,21 @@ export default function ApplicationsTable(props) {
 }
 
 ApplicationsTable.propTypes = {
-  rows: PropTypes.number,
+  rows: PropTypes.array,
   onDelete: PropTypes.func,
   onAdd: PropTypes.func
 };
 
+ApplicationRow.propTypes = {
+  row: PropTypes.any,
+  onAdd: PropTypes.func,
+  onDelete: PropTypes.func,
+};
+
 EnhancedTableHead.propTypes = {
   classes: PropTypes.any,
-  onSelectAllClick: PropTypes.func,
   order: PropTypes.any,
   orderBy: PropTypes.string,
-  numSelected: PropTypes.number,
   rowCount: PropTypes.number,
   onRequestSort: PropTypes.func
 };
@@ -352,7 +329,6 @@ EnhancedTableHead.propTypes = {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number,
   selectedApps: PropTypes.any,
-  onDelete: PropTypes.func,
   resetSelected: PropTypes.any,
   onAdd: PropTypes.any
 };

@@ -1,4 +1,4 @@
-import { Add, Assignment } from '@material-ui/icons';
+import { Assignment } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Fab,
   IconButton,
   InputAdornment,
   MenuItem,
@@ -37,9 +36,50 @@ const portals = [
   }
 ];
 
+function FormField(props) {
+  const { pasteable, pasteAction, fieldLabel, fieldName, fieldValue, onInput } = props;
+  return (
+    pasteable ?
+      <TextField
+        required
+        label={fieldLabel}
+        variant='outlined'
+        fullWidth={true}
+        InputLabelProps={{
+          shrink: true
+        }}
+        name={fieldName}
+        value={fieldValue}
+        onInput={onInput}
+        InputProps={{
+          endAdornment:
+            <InputAdornment position='end'>
+              <Tooltip title={'Paste from clipboard'}>
+                <IconButton onClick={() => {
+                  clipboardy.read().then(pasteAction).catch(e => console.log(e));
+                }}>
+                  <Assignment/>
+                </IconButton>
+              </Tooltip>
+            </InputAdornment>
+        }}
+      /> :
+      <TextField
+        required
+        label={fieldLabel}
+        variant='outlined'
+        fullWidth={true}
+        InputLabelProps={{
+          shrink: true
+        }}
+        name={fieldName}
+        value={fieldValue}
+        onInput={onInput}/>
+  );
+}
+
 export default function FormDialog(props) {
-  const { onAdd } = props;
-  const [ open, setOpen ] = React.useState(false);
+  const { onAdd, isDialogOpened, handleCloseDialog, app, editMode } = props;
   const [ appName, setAppName ] = React.useState('');
   const [ appId, setAppId ] = React.useState('');
   const [ devPortalUrl, setDevPortalUrl ] = React.useState('');
@@ -47,18 +87,8 @@ export default function FormDialog(props) {
   const [ appKey, setAppKey ] = React.useState('');
   const [ appSecret, setAppSecret ] = React.useState('');
 
-  const pasteFromClipboard = () => {
-    clipboardy.read().then((t) => {
-      return t;
-    }).catch(e => console.log(e.message));
-  };
-
-  const handleClickAdd = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+  const closeDialog = () => {
+    handleCloseDialog(false);
   };
 
   const handleSubmit = () => {
@@ -79,7 +109,7 @@ export default function FormDialog(props) {
     }).then(result => {
       if (result.status === 200) {
         openSnackbar({ message: 'Application saved!' });
-        setOpen(false);
+        closeDialog();
         setAppId('');
         setDevPortalUrl('');
         setAppName('');
@@ -94,12 +124,7 @@ export default function FormDialog(props) {
 
   return (
     <div>
-      <Tooltip title='Add New Application'>
-        <Fab color='secondary' aria-label='add' onClick={handleClickAdd}>
-          <Add/>
-        </Fab>
-      </Tooltip>
-      <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+      <Dialog open={isDialogOpened} onClose={closeDialog} aria-labelledby='form-dialog-title'>
         <DialogTitle id='form-dialog-title' style={{ paddingBottom: 0 }}>LTI Advantage Application Details</DialogTitle>
         <form id={'setupForm'}>
           <DialogContent>
@@ -107,95 +132,42 @@ export default function FormDialog(props) {
               Enter the application info provided in Developer Portal.
             </DialogContentText>
             <br/>
-            <TextField
-              required
-              label='Application Name'
-              variant='outlined'
-              fullWidth={true}
-              InputLabelProps={{
-                shrink: true
-              }}
-              name={'appName'}
-              value={appName}
+            <FormField
+              fieldLabel={'Application Name'}
+              fieldName={'appName'}
+              fieldValue={editMode ? app.appName : appName}
+              pasteable={false}
               onInput={(e) => setAppName(e.target.value)}
             />
             <br/>
             <br/>
-            <TextField
-              required
-              label='Application Key'
-              variant='outlined'
-              fullWidth={true}
-              InputLabelProps={{
-                shrink: true
-              }}
-              name={'appKey'}
-              value={appKey}
-              onInput={(e) => setAppKey(e.target.value)}
-              InputProps={{
-                endAdornment:
-                  <InputAdornment position='end'>
-                    <Tooltip title={'Paste from clipboard'}>
-                      <IconButton onClick={() => {
-                        clipboardy.read().then(t => setAppKey(t)).catch(e => console.log(e));
-                      }}>
-                        <Assignment/>
-                      </IconButton>
-                    </Tooltip>
-                  </InputAdornment>
-              }}
+            <FormField
+              fieldLabel={'Application Key'}
+              fieldName={'appKey'}
+              fieldValue={editMode ? app.key : appKey}
+              pasteable={true}
+              onInput={e => setAppKey(e.target.value)}
+              pasteAction={t => setAppKey(t)}
             />
             <br/>
             <br/>
-            <TextField
-              required
-              label='Application Secret'
-              variant='outlined'
-              fullWidth={true}
-              InputLabelProps={{
-                shrink: true
-              }}
-              name={'appSecret'}
-              value={appSecret}
-              onInput={(e) => setAppSecret(e.target.value)}
-              InputProps={{
-                endAdornment:
-                  <InputAdornment position='end'>
-                    <Tooltip title={'Paste from clipboard'}>
-                      <IconButton onClick={() => {
-                        clipboardy.read().then(t => setAppSecret(t)).catch(e => console.log(e));
-                      }}>
-                        <Assignment/>
-                      </IconButton>
-                    </Tooltip>
-                  </InputAdornment>
-              }}
+            <FormField
+              fieldLabel={'Application Secret'}
+              fieldName={'appSecret'}
+              fieldValue={editMode ? app.secret : appSecret}
+              pasteable={true}
+              onInput={e => setAppSecret(e.target.value)}
+              pasteAction={t => setAppSecret(t)}
             />
             <br/>
             <br/>
-            <TextField
-              required
-              label='Application ID'
-              variant='outlined'
-              fullWidth={true}
-              InputLabelProps={{
-                shrink: true
-              }}
-              name={'appId'}
-              value={appId}
-              onInput={(e) => setAppId(e.target.value)}
-              InputProps={{
-                endAdornment:
-                  <InputAdornment position='end'>
-                    <Tooltip title={'Paste from clipboard'}>
-                      <IconButton onClick={() => {
-                        clipboardy.read().then(t => setAppId(t)).catch(e => console.log(e));
-                      }}>
-                        <Assignment/>
-                      </IconButton>
-                    </Tooltip>
-                  </InputAdornment>
-              }}
+            <FormField
+              fieldLabel={'Application ID'}
+              fieldName={'appId'}
+              fieldValue={editMode ? app.appId : appId}
+              pasteable={true}
+              onInput={e => setAppId(e.target.value)}
+              pasteAction={t => setAppId(t)}
             />
             <br/>
             <br/>
@@ -209,7 +181,7 @@ export default function FormDialog(props) {
                 shrink: true
               }}
               name={'devPortalUrl'}
-              value={devPortalUrl}
+              value={editMode ? app.devPortalUrl : devPortalUrl}
               onChange={(e) => setDevPortalUrl(e.target.value)}
             >
               {
@@ -238,7 +210,7 @@ export default function FormDialog(props) {
             <br/>
           </DialogContent>
           <DialogActions style={{ 'padding': '20px' }}>
-            <Button onClick={handleClose} color='primary'>
+            <Button onClick={closeDialog} color='primary'>
               Cancel
             </Button>
             <Button
@@ -256,5 +228,18 @@ export default function FormDialog(props) {
 }
 
 FormDialog.propTypes = {
-  onAdd: PropTypes.any
+  app: PropTypes.object,
+  editMode: PropTypes.bool,
+  onAdd: PropTypes.any,
+  isDialogOpened: PropTypes.any,
+  handleCloseDialog: PropTypes.func
+};
+
+FormField.propTypes = {
+  fieldLabel: PropTypes.string,
+  fieldName: PropTypes.string,
+  fieldValue: PropTypes.any,
+  onInput: PropTypes.func,
+  pasteAction: PropTypes.func,
+  pasteable: PropTypes.bool
 };

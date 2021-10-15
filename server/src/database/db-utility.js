@@ -46,6 +46,32 @@ export const insertNewApp = (app) => {
   }
 };
 
+export const updateApp = (app) => {
+  if (apps.exists(`.applications-data.${app.id}`)) {
+    try {
+      const index = apps.getIndex('.applications-data', app.id);
+      apps.push(`.applications-data[${index}]`, {
+        'id': app.appId,
+        'setup': {
+          'name': app.name,
+          'key': app.appKey,
+          'secret': app.appSecret,
+          'devPortalUrl': app.devPortalUrl,
+          'jwtUrl': `${app.devPortalUrl}${jwtApi}`,
+          'oidcUrl': `${app.devPortalUrl}${oidcApi}`,
+          'issuer': 'www.blackboard.com'
+        }
+      });
+      return 'success';
+    } catch (error) {
+      return error;
+    }
+  } else {
+    return 'application already exists';
+  }
+};
+
+
 export const deleteAppById = (appId) => {
   try {
     const app = apps.getIndex('.applications-data', appId);

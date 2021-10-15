@@ -5,7 +5,7 @@ export default class ApplicationsView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rows: []
+      rows: [],
     };
   }
 
@@ -15,34 +15,50 @@ export default class ApplicationsView extends React.Component {
       .then(data => {
         data.forEach(obj => {
           this.setState({
-            rows: [...this.state.rows, {
-              'appName': obj.setup.name,
-              'appId': obj.id,
-              'devPortalUrl': obj.setup.devPortalUrl
-            }]
+            rows: [
+              ...this.state.rows,
+              {
+                appName: obj.setup.name,
+                appId: obj.id,
+                devPortalUrl: obj.setup.devPortalUrl,
+                key: obj.setup.key,
+                secret: obj.setup.secret,
+              },
+            ],
           });
         });
       });
   }
 
-  onDelete = (appIds) => {
+  onDelete = appIds => {
     this.setState({
       ...this.state,
-      rows: this.state.rows.filter(r => !appIds.includes(r.appId))
+      rows: this.state.rows.filter(r => !appIds.includes(r.appId)),
     });
-  }
+  };
 
-  onAdd = (app) => {
+  onAdd = app => {
     this.setState({
-      rows: [...this.state.rows, {
-        "appName": app.appName,
-        "appId": app.appId,
-        "devPortalUrl": app.devPortalUrl
-      }]
+      rows: [
+        ...this.state.rows,
+        {
+          appName: app.appName,
+          appId: app.appId,
+          devPortalUrl: app.devPortalUrl,
+          appKey: app.key,
+          appSecret: app.secret,
+        },
+      ],
     });
-  }
+  };
 
   render() {
-    return ( <ApplicationsTable rows={this.state.rows} onDelete={this.onDelete} onAdd={this.onAdd}/> );
+    return (
+      <ApplicationsTable
+        rows={this.state.rows}
+        onDelete={this.onDelete}
+        onAdd={this.onAdd}
+      />
+    );
   }
 }
