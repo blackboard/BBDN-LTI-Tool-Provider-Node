@@ -149,7 +149,7 @@ export const addCol = (req, res, agPayload) => {
 };
 
 export const delCol = (req, res, agPayload) => {
-  const agPayload_orig = JSON.parse(agPayload.body.body);
+  const agPayload_orig = JSON.parse(agPayload.form.body);
   const client_id = agPayload_orig.aud;
   getCachedLTIToken(req.nonce, client_id, lineItemScope).then(
     function (token) {
@@ -203,7 +203,7 @@ export const delCol = (req, res, agPayload) => {
 };
 
 export const results = (req, res, agPayload) => {
-  const client_id = req.body.orig_body.aud;
+  const client_id = agPayload.form.body.aud;
   getCachedLTIToken(req.body.nonce, client_id, resultsScope).then(
     function (token) {
       //console.log(agPayload.form.url)
@@ -242,7 +242,7 @@ export const results = (req, res, agPayload) => {
 };
 
 export const scores = (req, res, agPayload, task) => {
-  const agPayload_orig = JSON.parse(agPayload.body.body);
+  const agPayload_orig = JSON.parse(agPayload.form.body);
   const client_id = agPayload_orig.aud;
   getCachedLTIToken(req.nonce, client_id, scoreScope).then(
     function (token) {
