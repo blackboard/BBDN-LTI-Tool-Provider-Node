@@ -2,7 +2,7 @@ import JSONInput from 'react-json-editor-ajrm';
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import locale from 'react-json-editor-ajrm/locale/en';
-import { Button, Grid, TextField } from '@material-ui/core';
+import {Button, FormControl, InputLabel, MenuItem, Select, Grid, TextField} from '@material-ui/core';
 import { styles } from '../../common/styles/custom.js';
 
 class AssignGradesView extends React.Component {
@@ -88,6 +88,14 @@ class AssignGradesView extends React.Component {
                     label={'Due Date'}
                     size={'small'}/>
                 </td>
+                <td>
+                  <TextField
+                      variant={'outlined'}
+                      name={'gradesReleased'}
+                      label={'Grades Released'}
+                      size={'small'}
+                      defaultValue={'y'}/>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -156,6 +164,22 @@ class AssignGradesView extends React.Component {
                 </td>
                 <td>
                   <TextField variant={'outlined'} name={'column'} label={'Column ID'} size={'small'}/>
+                </td>
+                <td>
+                  <FormControl variant='standard' sx={{ m: 1, minWidth: 180 }}>
+                    <InputLabel id='demo-simple-select-standard-label'>Progress</InputLabel>
+                    <Select
+                        labelId='grading-progress-label'
+                        id='grading-progress'
+                        name={'gradingProgress'}
+                        label='Progress'
+                        defaultValue={'FullyGraded'}
+                    >
+                      <MenuItem value={'FullyGraded'}>FullyGraded</MenuItem>
+                      <MenuItem value={'Pending'}>Pending</MenuItem>
+                      <MenuItem value={'Failed'}>Failed</MenuItem>
+                    </Select>
+                  </FormControl>
                 </td>
               </tr>
             </tbody>

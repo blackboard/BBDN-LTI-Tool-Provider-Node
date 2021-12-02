@@ -86,6 +86,7 @@ export const addCol = (req, res, agPayload) => {
       let label = agPayload.form.label;
       let columnId = agPayload.form.columnId;
       let dueDate = agPayload.form.dueDate;
+      let gradesReleased = agPayload.form.gradesReleased === 'y' ? true : false;
       //console.log(`Add/update column ID: ${columnId}, label: ${label}, dueDate: ${dueDate}`);
 
       let newBody = {
@@ -93,7 +94,8 @@ export const addCol = (req, res, agPayload) => {
         label: label,
         resourceId: client_id,
         tag: label + ' tag',
-        endDateTime: dueDate ? dueDate : null
+        endDateTime: dueDate ? dueDate : null,
+        gradesReleased: gradesReleased
       };
       let options;
 
@@ -247,6 +249,7 @@ export const scores = (req, res, agPayload, task) => {
       let userId = agPayload.form.userid;
       let newScore = agPayload.form.score;
       let columnId = agPayload.form.column;
+      let gradingProgress = agPayload.form.gradingProgress;
 
       let url = agPayload.form.url + '/scores';
 
@@ -272,7 +275,7 @@ export const scores = (req, res, agPayload, task) => {
           comment: 'This is exceptional work.',
           timestamp: '2017-04-16T18:54:36.736+00:00',
           activityProgress: 'Completed',
-          gradingProgress: 'FullyGraded'
+          gradingProgress: gradingProgress
         };
         break;
       case 'submit':
