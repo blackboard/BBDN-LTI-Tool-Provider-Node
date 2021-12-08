@@ -206,10 +206,17 @@ export const results = (req, res, agPayload) => {
   const client_id = agPayload.form.body.aud;
   getCachedLTIToken(req.body.nonce, client_id, resultsScope).then(
     function (token) {
-      //console.log(agPayload.form.url)
+      let columnId = agPayload.form.columnId;
+
+      let url = agPayload.form.url;
+
+      if (columnId) {
+        url = `${agPayload.form.itemsUrl}/${columnId}`;
+      }
+
       let options = {
         method: 'GET',
-        uri: agPayload.form.url + '/results',
+        uri: url + '/results',
         headers: {
           Authorization: 'Bearer ' + token
         }

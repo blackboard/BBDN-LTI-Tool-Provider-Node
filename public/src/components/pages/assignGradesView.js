@@ -134,9 +134,21 @@ class AssignGradesView extends React.Component {
     const results =
       this.state.resultsScope ? (
         <form action='/agsResults' method='post'>
-          <Button type={'submit'} variant={'contained'} color={'secondary'}>Read Results</Button>
-          <input type='hidden' name='body' defaultValue={body}/>
-          <input type='hidden' name='url' defaultValue={this.state.lineItem}/>
+          <table>
+            <tbody>
+            <tr>
+              <td>
+                <Button type={'submit'} variant={'contained'} color={'secondary'}>Read Results</Button>
+                <input type='hidden' name='body' defaultValue={body}/>
+                <input type='hidden' name='url' defaultValue={this.state.lineItem}/>
+                <input type='hidden' name='itemsUrl' defaultValue={this.state.lineItems}/>
+              </td>
+              <td>
+                <TextField variant={'outlined'} name={'columnId'} label={'Column Id'} size={'small'}/>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </form>
       ) : (
         <Typography variant='subtitle1' style={styles.notAvailable}>
