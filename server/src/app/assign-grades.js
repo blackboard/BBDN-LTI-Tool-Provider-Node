@@ -86,6 +86,7 @@ export const addCol = (req, res, agPayload) => {
       let label = agPayload.form.label;
       let columnId = agPayload.form.columnId;
       let dueDate = agPayload.form.dueDate;
+      let gradesReleased = agPayload.form.gradesReleased === 'y' ? true : false;
       //console.log(`Add/update column ID: ${columnId}, label: ${label}, dueDate: ${dueDate}`);
 
       let newBody = {
@@ -93,7 +94,8 @@ export const addCol = (req, res, agPayload) => {
         label: label,
         resourceId: client_id,
         tag: label + ' tag',
-        endDateTime: dueDate ? dueDate : null
+        endDateTime: dueDate ? dueDate : null,
+        gradesReleased: gradesReleased
       };
       let options;
 
@@ -147,7 +149,7 @@ export const addCol = (req, res, agPayload) => {
 };
 
 export const delCol = (req, res, agPayload) => {
-  const agPayload_orig = JSON.parse(agPayload.body.body);
+  const agPayload_orig = JSON.parse(agPayload.form.body);
   const client_id = agPayload_orig.aud;
   getCachedLTIToken(req.nonce, client_id, lineItemScope).then(
     function (token) {
@@ -201,13 +203,20 @@ export const delCol = (req, res, agPayload) => {
 };
 
 export const results = (req, res, agPayload) => {
-  const client_id = req.body.orig_body.aud;
+  const client_id = agPayload.form.body.aud;
   getCachedLTIToken(req.body.nonce, client_id, resultsScope).then(
     function (token) {
-      //console.log(agPayload.form.url)
+      let columnId = agPayload.form.columnId;
+
+      let url = agPayload.form.url;
+
+      if (columnId) {
+        url = `${agPayload.form.itemsUrl}/${columnId}`;
+      }
+
       let options = {
         method: 'GET',
-        uri: agPayload.form.url + '/results',
+        uri: url + '/results',
         headers: {
           Authorization: 'Bearer ' + token
         }
@@ -240,13 +249,14 @@ export const results = (req, res, agPayload) => {
 };
 
 export const scores = (req, res, agPayload, task) => {
-  const agPayload_orig = JSON.parse(agPayload.body.body);
+  const agPayload_orig = JSON.parse(agPayload.form.body);
   const client_id = agPayload_orig.aud;
   getCachedLTIToken(req.nonce, client_id, scoreScope).then(
     function (token) {
       let userId = agPayload.form.userid;
       let newScore = agPayload.form.score;
       let columnId = agPayload.form.column;
+      let gradingProgress = agPayload.form.gradingProgress;
 
       let url = agPayload.form.url + '/scores';
 
@@ -272,7 +282,7 @@ export const scores = (req, res, agPayload, task) => {
           comment: 'This is exceptional work.',
           timestamp: '2017-04-16T18:54:36.736+00:00',
           activityProgress: 'Completed',
-          gradingProgress: 'FullyGraded'
+          gradingProgress: gradingProgress
         };
         break;
       case 'submit':

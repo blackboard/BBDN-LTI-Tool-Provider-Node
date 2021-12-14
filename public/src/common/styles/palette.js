@@ -1,6 +1,6 @@
-import { createMuiTheme } from '@material-ui/core/styles/index';
+import { createTheme } from '@material-ui/core/styles/index';
 
-export const darkMode = createMuiTheme({
+export const darkMode = createTheme({
   id: 0,
   typography: {
     useNextVariants: true
@@ -26,7 +26,7 @@ export const darkMode = createMuiTheme({
   }
 });
 
-export const lightMode = createMuiTheme({
+export const lightMode = createTheme({
   id: 1,
   typography: {
     useNextVariants: true
