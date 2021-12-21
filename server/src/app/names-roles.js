@@ -2,19 +2,31 @@ import request from 'request';
 import { getCachedLTIToken } from './lti-token-service';
 
 export const namesRoles = (req, res, nrPayload) => {
+  const rlid = nrPayload.form.rlid;
+  const role = nrPayload.form.role;
+
   if (nrPayload.url === '') {
     nrPayload.orig_body = JSON.parse(req.body.body);
     let namesRoles =
       nrPayload.orig_body[
         'https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice'
       ];
-    nrPayload.url = namesRoles.context_memberships_url + '?groups=true';
+    let url = namesRoles.context_memberships_url + '?groups=true';
+    if (rlid) {
+      url += `&rlid=${encodeURIComponent(rlid)}`;
+    }
+
+    if (role) {
+      url += `&role=${encodeURIComponent(role)}`;
+    }
+    nrPayload.url = url;
     nrPayload.version = namesRoles.service_version;
     nrPayload.return_url =
       nrPayload.orig_body[
         'https://purl.imsglobal.org/spec/lti/claim/launch_presentation'
       ].return_url;
   }
+  console.log(`Name&Roles url: ${nrPayload.url}`);
 
   // Get OAuth2 token and make call to Learn
   getCachedLTIToken(req.body.nonce).then(

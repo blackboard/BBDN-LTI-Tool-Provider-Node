@@ -1,7 +1,7 @@
 import JSONInput from 'react-json-editor-ajrm';
 import React from 'react';
 import locale from 'react-json-editor-ajrm/locale/en';
-import { Button, Grid, Typography } from '@material-ui/core';
+import {Button, Grid, TextField, Typography} from '@material-ui/core';
 import { styles } from '../../common/styles/custom.js';
 
 export default class NamesRolesView extends React.Component {
@@ -73,8 +73,22 @@ export default class NamesRolesView extends React.Component {
             </Grid>
             <Grid item xs>
               <form action='/namesAndRoles' method='post'>
-                <Button type={'submit'} variant={'contained'} color={'secondary'}>Names and Roles</Button>
-                <input type='hidden' name='body' defaultValue={body}/>
+                <table>
+                  <tbody>
+                  <tr>
+                    <td>
+                      <Button type={'submit'} variant={'contained'} color={'secondary'}>Names and Roles</Button>
+                      <input type='hidden' name='body' defaultValue={body}/>
+                    </td>
+                    <td>
+                      <TextField variant={'outlined'} name={'rlid'} label={'Resource Id'} size={'small'}/>
+                    </td>
+                    <td>
+                      <TextField variant={'outlined'} name={'role'} label={'Role'} size={'small'}/>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
               </form>
             </Grid>
             <Grid item xs>
