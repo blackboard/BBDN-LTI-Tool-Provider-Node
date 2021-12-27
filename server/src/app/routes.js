@@ -319,11 +319,13 @@ module.exports = function (app) {
   app.post('/namesAndRoles', (req, res) => {
     console.log('--------------------\nnamesAndRoles');
     nrPayload = new NRPayload();
+    nrPayload.form = req.body;
     namesRoles(req, res, nrPayload);
   });
 
   app.post('/namesAndRoles2', (req, res) => {
     nrPayload.url = req.body.url;
+    nrPayload.form = req.body;
     namesRoles(req, res, nrPayload);
   });
 
