@@ -26,7 +26,6 @@ export const namesRoles = (req, res, nrPayload) => {
         'https://purl.imsglobal.org/spec/lti/claim/launch_presentation'
       ].return_url;
   }
-  console.log(`Name&Roles url: ${nrPayload.url}`);
 
   // Get OAuth2 token and make call to Learn
   getCachedLTIToken(req.body.nonce).then(
