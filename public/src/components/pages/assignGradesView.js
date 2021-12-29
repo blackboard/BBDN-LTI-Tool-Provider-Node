@@ -179,17 +179,37 @@ class AssignGradesView extends React.Component {
                 </td>
                 <td>
                   <FormControl variant='standard' sx={{ m: 1, minWidth: 180 }}>
-                    <InputLabel id='demo-simple-select-standard-label'>Progress</InputLabel>
+                    <InputLabel id='demo-simple-select-standard-label'>G Progress</InputLabel>
                     <Select
                         labelId='grading-progress-label'
                         id='grading-progress'
                         name={'gradingProgress'}
-                        label='Progress'
+                        label='G Progress'
                         defaultValue={'FullyGraded'}
                     >
-                      <MenuItem value={'FullyGraded'}>FullyGraded</MenuItem>
+                      <MenuItem value={'FullyGraded'}>Fully Graded</MenuItem>
                       <MenuItem value={'Pending'}>Pending</MenuItem>
+                      <MenuItem value={'PendingManual'}>Pending Manual</MenuItem>
+                      <MenuItem value={'NotReady'}>Not Ready</MenuItem>
                       <MenuItem value={'Failed'}>Failed</MenuItem>
+                    </Select>
+                  </FormControl>
+                </td>
+                <td>
+                  <FormControl variant='standard' sx={{ m: 1, minWidth: 180 }}>
+                    <InputLabel id='demo-simple-select-standard-label'>A Progress</InputLabel>
+                    <Select
+                      labelId='activity-progress-label'
+                      id='activity-progress'
+                      name={'activityProgress'}
+                      label='A Progress'
+                      defaultValue={'Initialized'}
+                    >
+                      <MenuItem value={'Initialized'}>Initialized</MenuItem>
+                      <MenuItem value={'Started'}>Started</MenuItem>
+                      <MenuItem value={'InProgress'}>In Progress</MenuItem>
+                      <MenuItem value={'Submitted'}>Submitted</MenuItem>
+                      <MenuItem value={'Completed'}>Completed</MenuItem>
                     </Select>
                   </FormControl>
                 </td>
