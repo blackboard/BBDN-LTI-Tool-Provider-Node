@@ -10,6 +10,7 @@ RUN npm ci --ignore-scripts
 
 # Bundle app source
 COPY . /usr/app
+RUN npm run build-server && npm run build-public
 
 VOLUME /data
 
