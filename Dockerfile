@@ -5,11 +5,12 @@ RUN mkdir -p /usr/app
 WORKDIR /usr/app
 
 # Install app dependencies
-COPY package.json /usr/app/
-RUN npm install
+COPY package.json package-lock.json /usr/app/
+RUN npm ci --ignore-scripts
 
 # Bundle app source
 COPY . /usr/app
+RUN npm run build-server && npm run build-public
 
 VOLUME /data
 
