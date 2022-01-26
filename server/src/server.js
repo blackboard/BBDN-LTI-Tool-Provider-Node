@@ -1,5 +1,5 @@
 import bodyParser from 'body-parser';
-import config from './config/config.js';
+import config from './config';
 import express from 'express';
 import request from 'request';
 import routes from './app/routes.js';

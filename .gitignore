@@ -2,6 +2,7 @@
 *.cer
 *.crt
 *.key
+.env
 .nvmrc
 .DS_Store
 /npm-debug.log

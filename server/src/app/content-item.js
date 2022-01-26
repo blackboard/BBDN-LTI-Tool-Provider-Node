@@ -1,5 +1,5 @@
 import * as lti_content_items from './lti-content-item.js';
-import config from '../config/config';
+import config from '../config';
 
 let HMAC_SHA = require('./hmac-sha1');
 let url = require('url');

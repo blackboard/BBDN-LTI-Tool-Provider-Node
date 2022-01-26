@@ -1,4 +1,4 @@
-import config from '../config/config';
+import config from '../config';
 import assignGrades, { addCol, delCol, readCols, results, scores } from './assign-grades';
 import axios from 'axios';
 import cookieParser from 'cookie-parser';
@@ -178,14 +178,14 @@ module.exports = function (app) {
     // Before we can do that we need to get an authorization code for the current user.
     // Save off the JWT to our database so we can get it back after we get the auth code.
     const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-    const oneTimeSessionToken = jwtPayload.body['https://blackboard.com/lti/claim/one_time_session_token'];
+    const idToken = jwtPayload.body['https://blackboard.com/lti/claim/id_token'];
     const redirectUri = `${config.frontend_url}tlocode`;
     const authcodeUrl = new URL('/learn/api/public/v1/oauth2/authorizationcode', lmsServer);
     authcodeUrl.searchParams.append('response_type', 'code');
     authcodeUrl.searchParams.append('client_id', app.setup.key);
     authcodeUrl.searchParams.append('scope', '*');
     authcodeUrl.searchParams.append('redirect_uri', redirectUri);
-    authcodeUrl.searchParams.append('one_time_session_token', oneTimeSessionToken);
+    authcodeUrl.searchParams.append('id_token', idToken);
     authcodeUrl.searchParams.append('state', state);
     console.log('Adv6 - Redirect to Learn to get 3LO code');
     res.redirect(authcodeUrl);
@@ -233,7 +233,9 @@ module.exports = function (app) {
     } else if (jwtPayload.target_link_uri.endsWith('lti')) {
       res.redirect(`/lti_adv_view?nonce=${state}`);
     } else if (jwtPayload.target_link_uri.endsWith('lti13')) {
-      res.redirect(`/lti_adv_view?nonce=${state}`);
+      const jwtPayload = await db.getAuthFromState(state).jwt;
+      const uuid = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/custom']['user_uuid'];
+      res.redirect(`${config.redirect_url}/${uuid}`);
     } else if (jwtPayload.target_link_uri.endsWith('msteams')) {
       res.redirect(`/ms_teams_view?nonce=${state}`);
     } else {
@@ -244,7 +246,6 @@ module.exports = function (app) {
   app.get('/jwtPayloadData', async (req, res) => {
     try {
       const jwtPayload = await db.getAuthFromState(req.query.nonce).jwt;
-      console.log('Auth13 - Nonce matches the state we have so send the jwt');
       res.send(jwtPayload);
     } catch (e) {
       return e;

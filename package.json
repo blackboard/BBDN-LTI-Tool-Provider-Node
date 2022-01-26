@@ -19,6 +19,7 @@
     "clsx": "^1.1.1",
     "cookie-parser": "^1.4.5",
     "core-js": "^3.18.2",
+    "dotenv": "^14.3.2",
     "express": "^4.17.1",
     "finish": "^0.6.3",
     "ims-caliper": "^1.1.0",

@@ -6,7 +6,7 @@ import request from 'request';
 import { JWTPayload } from '../common/restTypes';
 import { jwk2pem } from 'pem-jwk';
 import { getAppById, insertNewAuthToken, insertNewState } from '../database/db-utility';
-import config from '../config/config';
+import config from '../config';
 
 export const applicationInfo = (client_id) => {
   const info = getAppById(client_id);

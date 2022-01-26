@@ -1,6 +1,6 @@
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
-import config from '../config/config';
+import config from '../config';
 
 const apps = new JsonDB(new Config(`${config.database_directory}/applications-data`, true, true, '.'));
 const contentItemMessage = new JsonDB(new Config(`${config.database_directory}/cim-data`,true,true,'.'));
