@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+       - npm install
+       - npm run build-server
+       - npm run build-public
+
+artifacts:
+  files:
+    - Procfile
+    - node_modules/**/*
+    - server/config/**/*
+    - server/lib/**/*
+    - server/views/**/*
+    - public/index.html
+    - public/css/**/*
+    - public/dist/**/*
+    - public/images/**/*
+
