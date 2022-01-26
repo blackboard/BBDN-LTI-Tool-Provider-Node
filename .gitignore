@@ -111,3 +111,8 @@ local.properties
 
 # Code Recommenders
 .recommenders/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
