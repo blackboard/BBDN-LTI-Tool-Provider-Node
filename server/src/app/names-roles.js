@@ -4,6 +4,7 @@ import { getCachedLTIToken } from './lti-token-service';
 export const namesRoles = (req, res, nrPayload) => {
   const rlid = nrPayload.form.rlid;
   const role = nrPayload.form.role;
+  const limit = nrPayload.form.limit;
 
   if (nrPayload.url === '') {
     nrPayload.orig_body = JSON.parse(req.body.body);
@@ -18,6 +19,10 @@ export const namesRoles = (req, res, nrPayload) => {
 
     if (role) {
       url += `&role=${encodeURIComponent(role)}`;
+    }
+
+    if (limit) {
+      url += `&limit=${encodeURIComponent(limit)}`
     }
     nrPayload.url = url;
     nrPayload.version = namesRoles.service_version;
