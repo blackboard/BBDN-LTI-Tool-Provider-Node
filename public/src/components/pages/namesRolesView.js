@@ -86,6 +86,9 @@ export default class NamesRolesView extends React.Component {
                     <td>
                       <TextField variant={'outlined'} name={'role'} label={'Role'} size={'small'}/>
                     </td>
+                    <td>
+                      <TextField variant={'outlined'} name={'limit'} label={'Limit'} size={'small'}/>
+                    </td>
                   </tr>
                   </tbody>
                 </table>
