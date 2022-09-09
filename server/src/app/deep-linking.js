@@ -168,6 +168,7 @@ let deepLinkingLTILink = function () {
       firstAvailable: '$ResourceLink.available.startDateTime',
       lastAvailable: '$ResourceLink.available.endDateTime',
       dueDate: '$ResourceLink.submission.endDateTime',
+      groupId: '$CourseGroup.id',
       userName: '$User.username',
       userEmail: '$Person.email.primary',
       userSysRoles: '@X@user.role@X@',
@@ -197,6 +198,7 @@ let deepLinkingNewWindowLTILink = function () {
       key1: 'new window & link value',
       userName: '$User.username',
       userEmail: '$Person.email.primary',
+      groupId: '$CourseGroup.id',
       userSysRoles: '@X@user.role@X@',
       source: 'new window link'
     },
@@ -225,6 +227,7 @@ let deepLinkingEmbedLTILink = function () {
     custom: {
       deeplinkkey1: 'from deep linking & item',
       userName: '$User.username',
+      groupId: '$CourseGroup.id',
       userEmail: '$Person.email.primary',
       userSysRoles: '@X@user.role@X@',
       assignment_pk: '@X@content.pk_string@X@',
