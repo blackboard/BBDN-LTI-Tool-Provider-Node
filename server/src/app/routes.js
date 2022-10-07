@@ -27,6 +27,53 @@ const ltiScopes = 'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembers
   'https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly ' +
   'https://purl.imsglobal.org/spec/lti-ags/scope/score';
 
+const getToolConfig = function(frontendUrl) {
+  return {
+    application_type: 'web',
+    response_types: [ 'id_token' ],
+    grant_types: [ 'implict', 'client_credentials' ],
+    initiate_login_uri: frontendUrl + 'login',
+    redirect_uris: [ frontendUrl + 'lti13' ],
+    client_name: 'Virtual Garden',
+    'client_name#ja': 'バーチャルガーデン',
+    jwks_uri: frontendUrl + '.well-known/jwks.json',
+    logo_uri: 'https://static.thenounproject.com/png/1993078-200.png',
+    token_endpoint_auth_method: 'private_key_jwt',
+    scope: 'https://purl.imsglobal.org/spec/lti-ags/scope/score',
+    'https://purl.imsglobal.org/spec/lti-tool-configuration': {
+      domain: frontendUrl.substring(0, frontendUrl.length - 1).substring(8),
+      description: 'Learn Botany by tending to your little (virtual) garden.',
+      'description#ja': '小さな（仮想）庭に行くことで植物学を学びましょう。',
+      target_link_uri: frontendUrl + 'lti13',
+      custom_parameters: {
+        userNameLTI: '$User.username',
+        userIdLTI: '$User.id',
+        contextHistory: '$Context.id.history',
+        resourceHistory: '$ResourceLink.id.history',
+      },
+      claims: [ 'iss', 'sub', 'name', 'given_name', 'family_name' ],
+      messages: [
+        {
+          type: 'LtiDeepLinkingRequest',
+          target_link_uri: frontendUrl + 'deepLinkOptions',
+          label: 'Add a virtual garden',
+          'label#ja': 'バーチャルガーデンを追加する',
+          icon_uri: 'https://static.thenounproject.com/png/1993078-200.png',
+          custom_parameters: {
+            botanical_set: '12943,49023,50013'
+          },
+          supported_types: [ 'ltiResourceLink' ]
+        },
+        {
+          'type': 'ContextLaunchRequest',
+          'label': 'RoboCourse For All',
+          'custom_parameters': {}
+        }
+      ]
+    }
+  };
+};
+
 module.exports = function (app) {
   app.use(cookieParser());
 
@@ -130,6 +177,33 @@ module.exports = function (app) {
           //console.log('Redirecting to : ' + redirectUrl);
           res.redirect(redirectUrl);
         });
+    }
+  });
+
+  // Supports LTI dynamic registration
+  app.get('/register', async (req, res) => {
+    const platformUrl = req.query.openid_configuration;
+
+    if (!platformUrl) {
+      res.send('No openid_configuration URL present');
+    }
+
+    console.log(`register platformUrl: ${platformUrl}`);
+    try {
+      const response = await axios.get(platformUrl);
+      const platformConfig = response.data;
+      console.log(`register response body: ${JSON.stringify(platformConfig)}`);
+
+      // Okay now POST back our config to the platform
+      const frontendUrl = config.frontend_url;
+      let toolConfig = getToolConfig(frontendUrl);
+
+      const postResponse = await axios.post(platformConfig.registration_endpoint, toolConfig);
+      console.log(`register post response status ${postResponse.status}\n${JSON.stringify(postResponse.data)}`);
+      res.send(`<div>Got a response ${response.status}</div><div>${JSON.stringify(platformConfig)}</div><button onclick="(window.opener || window.parent).postMessage({subject:'org.imsglobal.lti.close'}, '*')">Close</button>`);
+    } catch (err) {
+      console.log(`register error ${err}`);
+      res.send(err);
     }
   });
 
