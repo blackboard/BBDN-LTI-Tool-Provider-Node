@@ -172,6 +172,7 @@ let deepLinkingLTILink = function () {
       userName: '$User.username',
       userEmail: '$Person.email.primary',
       userSysRoles: '@X@user.role@X@',
+      externalIdentifierUPN: '$User.externalIdentifiers.UPN',
       source: 'link'
     }
   };
@@ -200,6 +201,7 @@ let deepLinkingNewWindowLTILink = function () {
       userEmail: '$Person.email.primary',
       groupId: '$CourseGroup.id',
       userSysRoles: '@X@user.role@X@',
+      externalIdentifierUPN: '$User.externalIdentifiers.UPN',
       source: 'new window link'
     },
     window: {
@@ -230,6 +232,7 @@ let deepLinkingEmbedLTILink = function () {
       groupId: '$CourseGroup.id',
       userEmail: '$Person.email.primary',
       userSysRoles: '@X@user.role@X@',
+      externalIdentifierUPN: '$User.externalIdentifiers.UPN',
       assignment_pk: '@X@content.pk_string@X@',
       course_pk: '@X@course.pk_string@X@'
     }
