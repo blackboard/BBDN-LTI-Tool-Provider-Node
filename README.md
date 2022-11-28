@@ -193,3 +193,17 @@ Custom JSON can also be entered and used to create deep linked items.
 Docker specific files are included (Dockerfile, docker-compose.yml, launch.sh).
 
 Build the LTI tool container with `docker build -t lti-tool .`. Then start containers using `docker-compose up`.
+
+# Substituion variables:
+
+- **$CourseGroup.id**
+
+  To be used for the integration of Cloud Document contents. Resolve the UUID of the assigned group of the content.
+
+  - `minimum-learn-version` : _To be used internally for now. Minium version to be defined._
+  
+- **$User.externalIdentifiers.UPN** _for Microsoft_
+
+  To be used for the integration of Cloud Document contents. Resolve the UPN (User Personal Name) of a user for this Microsoft Integration. For Ultra, the UPN will be the registered institutional email  of the user.
+
+  - `minimum-learn-version` : _To be used internally for now. Minimun version to be defined._
