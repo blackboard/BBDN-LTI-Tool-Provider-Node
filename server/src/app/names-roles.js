@@ -4,11 +4,14 @@ import { getCachedLTIToken } from './lti-token-service';
 export const namesRoles = (req, res, nrPayload) => {
   if (nrPayload.url === '') {
     nrPayload.orig_body = JSON.parse(req.body.body);
+    let rlid = nrPayload.orig_body[
+      'https://purl.imsglobal.org/spec/lti/claim/resource_link'
+    ].id;
     let namesRoles =
       nrPayload.orig_body[
         'https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice'
       ];
-    nrPayload.url = namesRoles.context_memberships_url + '?groups=true';
+    nrPayload.url = namesRoles.context_memberships_url + '?groups=true&rlid=' + rlid;
     nrPayload.version = namesRoles.service_version;
     nrPayload.return_url =
       nrPayload.orig_body[
