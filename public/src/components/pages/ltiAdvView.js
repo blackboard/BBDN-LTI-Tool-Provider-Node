@@ -18,7 +18,7 @@ export default class LtiAdvView extends React.Component {
   componentDidMount() {
     fetch(`jwtPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
-      .then(jwtPayload => {
+      .then(jwtPayload => {        
         this.setState({
           header: jwtPayload.header,
           body: jwtPayload.body,
@@ -96,6 +96,34 @@ export default class LtiAdvView extends React.Component {
       </Typography>
     );
 
+    const checkMicroPhone = () => {
+      navigator.mediaDevices.getUserMedia({ audio: true }). then (
+        function(stream) {
+          alert('Microphone access granted!', stream);
+        }
+      );
+
+      navigator.mediaDevices.getUserMedia({ audio: true }). catch (
+        function(error) {
+          alert('Microphone access denied!', error);
+        }
+      );
+    };
+
+    const checkDisplayCap = () => {
+      navigator.mediaDevices.getDisplayMedia({ video: true }). then (
+        function(stream) {
+          alert('Display capture access granted!', stream);
+        }
+      );
+
+      navigator.mediaDevices.getDisplayMedia({ video: true }). catch (
+        function(error) {
+          alert('Display capture access denied:', error);
+        }
+      );
+    };
+
     return (
       <div>
         <Typography variant='h4' gutterBottom>
@@ -114,6 +142,12 @@ export default class LtiAdvView extends React.Component {
             direction='column'
             spacing={2}
           >
+            <Grid item xs>
+              <Button variant='contained' color='secondary' onClick={() => checkMicroPhone()}>Test MicroPhone</Button>
+            </Grid>
+            <Grid item xs>
+              <Button variant='contained' color='secondary' onClick={() => checkDisplayCap()}>Test Display Capture</Button>
+            </Grid>
             <Grid item xs>
               <form action={this.state.returnUrl} method='post'>
                 <Button variant='contained' type='submit' color='secondary'>Return to Learn</Button>
