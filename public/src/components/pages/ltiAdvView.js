@@ -18,7 +18,7 @@ export default class LtiAdvView extends React.Component {
   componentDidMount() {
     fetch(`jwtPayloadData?nonce=${params.getNonce()}`)
       .then(result => result.json())
-      .then(jwtPayload => {        
+      .then(jwtPayload => {
         this.setState({
           header: jwtPayload.header,
           body: jwtPayload.body,
