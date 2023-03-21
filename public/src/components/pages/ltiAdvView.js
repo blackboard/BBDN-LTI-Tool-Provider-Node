@@ -95,35 +95,25 @@ export default class LtiAdvView extends React.Component {
         <b>Group Sets not available</b>
       </Typography>
     );
-
     const checkMicroPhone = () => {
-      navigator.mediaDevices.getUserMedia({ audio: true }). then (
-        function(stream) {
-          alert('Microphone access granted!', stream);
-        }
-      );
-
-      navigator.mediaDevices.getUserMedia({ audio: true }). catch (
-        function(error) {
-          alert('Microphone access denied!', error);
-        }
-      );
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          alert('Microphone access granted!');
+          closeTracks(stream);
+        })
+        .catch(error => alert('Microphone access denied!', error));
     };
-
     const checkDisplayCap = () => {
-      navigator.mediaDevices.getDisplayMedia({ video: true }). then (
-        function(stream) {
-          alert('Display capture access granted!', stream);
-        }
-      );
-
-      navigator.mediaDevices.getDisplayMedia({ video: true }). catch (
-        function(error) {
-          alert('Display capture access denied:', error);
-        }
-      );
+      navigator.mediaDevices.getDisplayMedia({ video: true })
+        .then(stream => {
+          alert('Display capture access granted');
+          closeTracks(stream);
+        })
+        .catch(error => alert('Display capture access denied', error));
     };
-
+    const closeTracks = (stream) => {
+      console.log(stream);
+    };
     return (
       <div>
         <Typography variant='h4' gutterBottom>
