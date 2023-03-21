@@ -112,7 +112,11 @@ export default class LtiAdvView extends React.Component {
         .catch(error => alert('Display capture access denied', error));
     };
     const closeTracks = (stream) => {
-      console.log(stream);
+      stream.getTracks().forEach(track => {
+        if (track.readyState == 'live') {
+          track.stop();
+        }
+      });
     };
     return (
       <div>
