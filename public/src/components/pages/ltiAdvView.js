@@ -95,7 +95,7 @@ export default class LtiAdvView extends React.Component {
         <b>Group Sets not available</b>
       </Typography>
     );
-    const checkMicroPhone = () => {
+    const checkMicrophone = () => {
       navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
           alert('Microphone access granted!');
@@ -106,10 +106,10 @@ export default class LtiAdvView extends React.Component {
     const checkDisplayCap = () => {
       navigator.mediaDevices.getDisplayMedia({ video: true })
         .then(stream => {
-          alert('Display capture access granted');
+          alert('Display capture access granted!');
           closeTracks(stream);
         })
-        .catch(error => alert('Display capture access denied', error));
+        .catch(error => alert('Display capture access denied!', error));
     };
     const closeTracks = (stream) => {
       stream.getTracks().forEach(track => {
@@ -137,7 +137,7 @@ export default class LtiAdvView extends React.Component {
             spacing={2}
           >
             <Grid item xs>
-              <Button variant='contained' color='secondary' onClick={() => checkMicroPhone()}>Test MicroPhone</Button>
+              <Button variant='contained' color='secondary' onClick={() => checkMicrophone()}>Test MicroPhone</Button>
             </Grid>
             <Grid item xs>
               <Button variant='contained' color='secondary' onClick={() => checkDisplayCap()}>Test Display Capture</Button>
