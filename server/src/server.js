@@ -32,6 +32,9 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // don't validate ssl cert for p
 
 // sections refer to https://www.imsglobal.org/specs/ltiv2p0/implementation-guide
 
+// Access logs
+app.use(require('morgan')('dev'));
+
 app.use(express.static('./public')); // set the static files location
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
