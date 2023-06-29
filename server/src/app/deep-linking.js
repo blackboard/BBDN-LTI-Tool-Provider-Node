@@ -63,6 +63,9 @@ export const deepLinkContent = (req, res, dlPayload) => {
     for (let i = 0; i < req.body.custom_images; i++, total++) {
       items[total] = deepLinkingImage();
     }
+    for (let i = 0; i < req.body.custom_processors; i++, total++) {
+      items[total] = deepLinkingProcessor();
+    }
   } else {
     //console.log('used custom json');
     if (req.body.custom_content !== '') {
@@ -287,3 +290,21 @@ let deepLinkingImage = function () {
     height: 240
   };
 };
+
+let deepLinkingProcessor = function () {
+  return {
+    "type": "ltiAssetProcessor",
+    "title": null,
+    "text": null,
+    "url": null,
+    "lineItem": null,
+    "presentation": null,
+    "submission": null,
+    "available": null,
+    "custom": {
+      "reports_released": "$ReportsReleased"
+    }
+  };
+};
+
+

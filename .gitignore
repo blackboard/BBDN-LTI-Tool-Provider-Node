@@ -10,6 +10,7 @@
 bower_components
 **/public/dist
 **/server/lib
+/server/src/database/applications-data.json
 /server/src/database/auth-data.json
 /server/src/database/cim-data.json
 

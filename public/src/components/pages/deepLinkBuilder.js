@@ -41,6 +41,7 @@ const PayloadBuilder = (props) => {
     custom_files,
     custom_htmls,
     custom_images,
+    custom_processors,
     handleChange,
   } = props;
 
@@ -116,6 +117,16 @@ const PayloadBuilder = (props) => {
           value={custom_images}
         />
       </Grid>
+      <Grid item xs>
+        <TextField
+            variant='outlined'
+            name='custom_processors'
+            type={'number'}
+            onInput={handleChange}
+            label='Asset Processors'
+            value={custom_processors}
+        />
+      </Grid>
     </Grid>
   );
 };
@@ -158,6 +169,7 @@ export const DeepLinkBuilder = (props) => {
     custom_files,
     custom_htmls,
     custom_images,
+    custom_processors,
     custom_ltiLinks,
     error,
     new_ltiLinks,
@@ -177,6 +189,7 @@ export const DeepLinkBuilder = (props) => {
           custom_htmls={custom_htmls}
           custom_ltiLinks={custom_ltiLinks}
           custom_images={custom_images}
+          custom_processors={custom_processors}
           embed_ltiLinks={embed_ltiLinks}
           new_ltiLinks={new_ltiLinks}
           handleChange={handleChange}
@@ -198,6 +211,7 @@ PayloadBuilder.propTypes = {
   custom_files: PropTypes.number,
   custom_htmls: PropTypes.number,
   custom_images: PropTypes.number,
+  custom_processors: PropTypes.number,
   handleChange: PropTypes.func
 };
 
@@ -214,6 +228,7 @@ DeepLinkBuilder.propTypes = {
   custom_htmls: PropTypes.number,
   custom_images: PropTypes.number,
   custom_ltiLinks: PropTypes.number,
+  custom_processors: PropTypes.number,
   error: PropTypes.string,
   new_ltiLinks: PropTypes.number,
   embed_ltiLinks: PropTypes.number,
