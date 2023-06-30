@@ -170,7 +170,7 @@ The normal LTI Resource link should launch to http://localhost:3000/lti13.
 
 ## LTI Asset Processor tool
 
-This tool supports the LTI asset processor spec. All calls current hit http://localhost:3000/lti13.
+This tool supports the LTI asset processor spec. All calls currently hit http://localhost:3000/lti13.
 
 The following functionality is supported:
 - Deep link launch in order to link the processor to the platform item. A processor can be returned, similar to other deep link items. 

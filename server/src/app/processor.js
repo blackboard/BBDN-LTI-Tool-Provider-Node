@@ -33,7 +33,7 @@ const downloadAsset = async(nonce, aud, assetUrl) => {
             };
 
             request(options, function (err, response, body) {
-                if (response.statusCode === 200 || response.statusCode === 307) {
+                if (response.statusCode === 200 || response.statusCode === 307 || response.statusCode === 302) {
                     console.log("Successfully downloaded asset " + assetUrl);
                 } else {
                     console.log("Unexpected download response: " + JSON.stringify(response));
