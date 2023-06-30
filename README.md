@@ -168,6 +168,22 @@ in [Eric Preston's demo at 23:00](https://us.bbcollab.com/recording/e193c6cb59cb
 
 The normal LTI Resource link should launch to http://localhost:3000/lti13.
 
+## LTI Asset Processor tool
+
+This tool supports the LTI asset processor spec. All calls currently hit http://localhost:3000/lti13.
+
+The following functionality is supported:
+- Deep link launch in order to link the processor to the platform item. A processor can be returned, similar to other deep link items. 
+- Asset processor settings launch via LtiAssetProcessorSettingsRequest message type. Echos request payload. 
+- Asset processor EULA launch via LtiEulaRequest message type. Echos request payload.
+- Asset processor report launch via LtiReportReviewRequest message type. Echos request payload. 
+- Submissions are accepted via the LtiSubmissionNotice message type. These trigger the following behavior:
+  - After 1 second each asset is downloaded via the provided URL with a LTI token.
+  - A Processing and Processed message is sent to the platform. A score of 75/100 is reported. 
+
+Note: Very little validation is performed in above workflows. For instance, checksums are not verified on assets, so this is suitable for basic testing. 
+ 
+
 ## Assignment and Grade Services 2.0
 
 If enabled on the LMS this will be available in the tool.
@@ -185,6 +201,7 @@ to return. Possible content items are:
 - Content Link
 - Embedded LTI Links
 - HTML/File/Image Links
+- Asset processor
 
 Custom JSON can also be entered and used to create deep linked items.
 

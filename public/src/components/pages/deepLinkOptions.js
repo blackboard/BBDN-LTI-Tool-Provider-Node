@@ -18,6 +18,7 @@ export default class DeepLinkOptions extends React.Component {
       custom_files: 0,
       custom_htmls: 0,
       custom_images: 0,
+      custom_processors: 0,
       custom_message: '',
       custom_error: ''
     }
@@ -84,6 +85,7 @@ export default class DeepLinkOptions extends React.Component {
           custom_files={this.state.custom_files}
           custom_htmls={this.state.custom_htmls}
           custom_images={this.state.custom_images}
+          custom_processors={this.state.custom_processors}
           handleChange={this.handleChange}
           handleCustomJson={this.handleCustomJson}
           error={this.state.error}

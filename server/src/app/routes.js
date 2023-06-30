@@ -16,6 +16,7 @@ import { namesRoles } from './names-roles';
 import { oidcLogin, verifyToken } from './lti-adv';
 import { AGPayload, ContentItem, GroupsPayload, NRPayload } from '../common/restTypes';
 import { buildProctoringEndReturnPayload, buildProctoringStartReturnPayload } from './proctoring';
+import { handleSubmissionNotice } from './processor';
 import { deepLinkContent } from './deep-linking';
 import { URL } from 'url';
 
@@ -245,24 +246,37 @@ module.exports = function (app) {
     }
     // Parse, verify and save the id_token JWT
     const jwtPayload = await verifyToken(req.body.id_token);
-    await db.insertNewAuthToken(state, jwtPayload, 'jwt');
-    //await insertNewAuthToken(state, appInfo.appId, 'client_id');
-    const app = db.getAppById(jwtPayload.body.aud);
-    // Now we have the JWT but next we need to get an OAuth2 bearer token for REST calls.
-    // Before we can do that we need to get an authorization code for the current user.
-    // Save off the JWT to our database so we can get it back after we get the auth code.
-    const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
-    const oneTimeSessionToken = jwtPayload.body['https://blackboard.com/lti/claim/one_time_session_token'];
-    const redirectUri = `${config.frontend_url}tlocode`;
-    const authcodeUrl = new URL('/learn/api/public/v1/oauth2/authorizationcode', lmsServer);
-    authcodeUrl.searchParams.append('response_type', 'code');
-    authcodeUrl.searchParams.append('client_id', app.setup.key);
-    authcodeUrl.searchParams.append('scope', '*');
-    authcodeUrl.searchParams.append('redirect_uri', redirectUri);
-    authcodeUrl.searchParams.append('one_time_session_token', oneTimeSessionToken);
-    authcodeUrl.searchParams.append('state', state);
-    console.log('Adv6 - Redirect to Learn to get 3LO code');
-    res.redirect(authcodeUrl);
+
+    const messageType = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/message_type'];
+    if (messageType === "LtiSubmissionNotice") {
+      return handleSubmissionNotice(req, res, jwtPayload);
+    } else if (messageType === 'LtiEulaRequest') {
+      // Currently mirror the launch payload for custom processor launches
+      res.send(jwtPayload);
+    } else if (messageType === 'LtiAssetProcessorSettingsRequest') {
+      res.send(jwtPayload);
+    } else if (messageType === 'LtiReportReviewRequest') {
+      res.send(jwtPayload);
+    } else {
+      await db.insertNewAuthToken(state, jwtPayload, 'jwt');
+      //await insertNewAuthToken(state, appInfo.appId, 'client_id');
+      const app = db.getAppById(jwtPayload.body.aud);
+      // Now we have the JWT but next we need to get an OAuth2 bearer token for REST calls.
+      // Before we can do that we need to get an authorization code for the current user.
+      // Save off the JWT to our database so we can get it back after we get the auth code.
+      const lmsServer = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/tool_platform'].url;
+      const oneTimeSessionToken = jwtPayload.body['https://blackboard.com/lti/claim/one_time_session_token'];
+      const redirectUri = `${config.frontend_url}tlocode`;
+      const authcodeUrl = new URL('/learn/api/public/v1/oauth2/authorizationcode', lmsServer);
+      authcodeUrl.searchParams.append('response_type', 'code');
+      authcodeUrl.searchParams.append('client_id', app.setup.key);
+      authcodeUrl.searchParams.append('scope', '*');
+      authcodeUrl.searchParams.append('redirect_uri', redirectUri);
+      authcodeUrl.searchParams.append('one_time_session_token', oneTimeSessionToken);
+      authcodeUrl.searchParams.append('state', state);
+      console.log('Adv6 - Redirect to Learn to get 3LO code');
+      res.redirect(authcodeUrl);
+    }
   });
 
   // The 3LO redirect route
@@ -295,8 +309,7 @@ module.exports = function (app) {
       res.redirect(`/deep_link_options?nonce=${state}`);
     } else if (jwtPayload.target_link_uri.endsWith('lti13bobcat')) {
       res.redirect(`/lti_bobcat_view?nonce=${state}`);
-    } else if ( jwtPayload.target_link_uri.endsWith('proctoring')) {
-      const messageType = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/message_type'];
+    } else if (jwtPayload.target_link_uri.endsWith('proctoring')) {
       if (messageType === 'LtiStartProctoring') {
         res.redirect(`/proctoring_start_options_view?nonce=${state}`);
       } else if (messageType === 'LtiEndAssessment') {
