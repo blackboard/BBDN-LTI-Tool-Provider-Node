@@ -48,7 +48,7 @@ export const getCachedLTIToken = async (nonce, clientId, scope) => {
 };
 
 const cacheToken = async (token, nonce) => {
-  if (nonce != null) {
+  if (nonce) {
     await insertNewAuthToken(nonce, `${token}`, 'lti_token');
   }
 };
