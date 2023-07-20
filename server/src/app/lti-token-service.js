@@ -73,7 +73,7 @@ export const getProcessorToken = async(clientId, scope) => {
   tokenCache[clientId][scope] = {
     'expiration': now + 1000 * 60 * 30,
     'token': token
-  }
+  };
 
   return token;
-}
+};
