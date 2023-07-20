@@ -54,7 +54,7 @@ const cacheToken = async (token, nonce) => {
 };
 
 // Keep a simple in memory cache of processor tokens
-let tokenCache = {};
+const tokenCache = {};
 export const getProcessorToken = async(clientId, scope) => {
   let now = Date.now();
   if (!(clientId in tokenCache)) {
