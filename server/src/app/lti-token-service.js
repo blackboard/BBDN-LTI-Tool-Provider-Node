@@ -48,5 +48,32 @@ export const getCachedLTIToken = async (nonce, clientId, scope) => {
 };
 
 const cacheToken = async (token, nonce) => {
-  await insertNewAuthToken(nonce, `${token}`, 'lti_token');
+  if (nonce) {
+    await insertNewAuthToken(nonce, `${token}`, 'lti_token');
+  }
+};
+
+// Keep a simple in memory cache of processor tokens
+const tokenCache = {};
+export const getProcessorToken = async(clientId, scope) => {
+  let now = Date.now();
+  if (!(clientId in tokenCache)) {
+    tokenCache[clientId] = {};
+  }
+
+  if (scope in tokenCache[clientId]) {
+    let cached = tokenCache[clientId][scope];
+    if (cached['expiration'] > now) {
+      return cached['token'];
+    }
+  }
+
+  const tokenUrl = getAppById(clientId).setup.jwtUrl;
+  let token =  await getLTIToken(clientId, tokenUrl, scope, null);
+  tokenCache[clientId][scope] = {
+    'expiration': now + 1000 * 60 * 30,
+    'token': token
+  };
+
+  return token;
 };

@@ -10,15 +10,15 @@ export const handleSubmissionNotice = async (req, res, jwtPayload) => {
     for (const asset in assets) {
         // Delay downloading/updating status for 1 second after notification
         setTimeout(async () => {
-            await downloadAsset(req.body.nonce, jwtPayload.body.aud, assets[asset].url);
-            await updateAssetStatus(req.body.nonce, jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processing");
-            await updateAssetStatus(req.body.nonce, jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processed");
+            await downloadAsset(jwtPayload.body.aud, assets[asset].url);
+            await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processing");
+            await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processed");
         }, 1000);
     }
     res.sendStatus(200);
 };
 
-const downloadAsset = async(nonce, aud, assetUrl) => {
+const downloadAsset = async(aud, assetUrl) => {
     const scope = "https://purl.imsglobal.org/spec/lti-ap/scope/asset.readonly";
     return getProcessorToken(aud, scope).then(
         function (token) {
@@ -46,7 +46,7 @@ const downloadAsset = async(nonce, aud, assetUrl) => {
     );
 }
 
-const updateAssetStatus = async(nonce, aud, statusUrl, resourceLinkId, assetId, assetStatus) => {
+const updateAssetStatus = async(aud, statusUrl, resourceLinkId, assetId, assetStatus) => {
     const scope = "https://purl.imsglobal.org/spec/lti-ap/scope/report";
     return getProcessorToken(aud, scope).then(
         function (token) {
