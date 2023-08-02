@@ -9,11 +9,10 @@ export const handleSubmissionNotice = async (req, res, jwtPayload) => {
 
     for (const asset in assets) {
         // Delay downloading/updating status for 1 second after notification
-        setTimeout(async () => {
-            await downloadAsset(jwtPayload.body.aud, assets[asset].url);
-            await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processing");
-            await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processed");
-        }, 1000);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await downloadAsset(jwtPayload.body.aud, assets[asset].url);
+        await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processing");
+        await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processed");
     }
     res.sendStatus(200);
 };
