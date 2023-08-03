@@ -17,10 +17,11 @@ export const handleSubmissionNotice = async (req, res, jwtPayload) => {
     res.sendStatus(200);
 };
 
-const downloadAsset = async(aud, assetUrl) => {
-    const scope = "https://purl.imsglobal.org/spec/lti-ap/scope/asset.readonly";
-    return getProcessorToken(aud, scope).then(
-        function (token) {
+const downloadAsset = (aud, assetUrl) => {
+    return new Promise(async (resolve, reject) => {
+        const scope = "https://purl.imsglobal.org/spec/lti-ap/scope/asset.readonly";
+        try {
+            const token = await getProcessorToken(aud, scope);
             let options = {
                 method: 'GET',
                 uri: assetUrl,
@@ -34,21 +35,24 @@ const downloadAsset = async(aud, assetUrl) => {
             request(options, function (err, response, body) {
                 if (response.statusCode === 200 || response.statusCode === 307 || response.statusCode === 302) {
                     console.log("Successfully downloaded asset " + assetUrl);
+                    resolve();
                 } else {
                     console.log("Unexpected download response: " + JSON.stringify(response));
+                    reject(err);
                 }
             });
-        },
-        function (error) {
+        } catch (error) {
             console.log(error);
+            reject(error);
         }
-    );
+    });
 }
 
-const updateAssetStatus = async(aud, statusUrl, resourceLinkId, assetId, assetStatus) => {
-    const scope = "https://purl.imsglobal.org/spec/lti-ap/scope/report";
-    return getProcessorToken(aud, scope).then(
-        function (token) {
+const updateAssetStatus = (aud, statusUrl, resourceLinkId, assetId, assetStatus) => {
+    return new Promise(async (resolve, reject) => {
+        const scope = "https://purl.imsglobal.org/spec/lti-ap/scope/report";
+        try {
+            const token = await getProcessorToken(aud, scope);
             let payload = {
                 "processingProgress": assetStatus,
                 "assetId": assetId,
@@ -74,13 +78,15 @@ const updateAssetStatus = async(aud, statusUrl, resourceLinkId, assetId, assetSt
             request(options, function (err, response, body) {
                 if (response.statusCode < 300) {
                     console.log("Set status to " + assetStatus + " for asset " + assetId);
+                    resolve();
                 } else {
                     console.log("Unexpected asset set status response: " + JSON.stringify(response));
+                    reject(err);
                 }
             });
-        },
-        function (error) {
+        } catch (error) {
             console.log(error);
+            reject(error);
         }
-    );
+    });
 }
