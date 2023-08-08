@@ -8,14 +8,36 @@ export const handleSubmissionNotice = async (req, res, jwtPayload) => {
     const resourceLinkId = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/resource_link"]["id"];
 
     for (const asset in assets) {
+        const title = assets[asset].title;
+
         // Delay downloading/updating status for 1 second after notification
         await new Promise(resolve => setTimeout(resolve, 1000));
         await downloadAsset(jwtPayload.body.aud, assets[asset].url);
         await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processing");
-        await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processed");
+        if (title.startsWith('fail')) {
+            await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Failed");
+        } else if (title.startsWith('notprocessed')) {
+            await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "NotProcessed");
+        } else {
+            const score = parseScore(title);
+            const maxScore = parseMaxScore(title);
+            await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processed", score, maxScore);
+        }
     }
     res.sendStatus(200);
 };
+
+const parseScore = (title) => {
+    // This regex matches numbers with optional decimal part
+    const score = title.match(/(\d+(\.\d+)?)/);
+    return score ? Number(score[0]) : 75;
+}
+
+const parseMaxScore = (title) => {
+    // This regex matches numbers with optional decimal part at the end of a string
+    const score = title.match(/(\d+(\.\d+)?)(?=\.\w+$)/);
+    return score ? Number(score[0]) : 100;
+}
 
 const downloadAsset = (aud, assetUrl) => {
     return new Promise(async (resolve, reject) => {
@@ -48,7 +70,7 @@ const downloadAsset = (aud, assetUrl) => {
     });
 }
 
-const updateAssetStatus = (aud, statusUrl, resourceLinkId, assetId, assetStatus) => {
+const updateAssetStatus = (aud, statusUrl, resourceLinkId, assetId, assetStatus, score, maxScore) => {
     return new Promise(async (resolve, reject) => {
         const scope = "https://purl.imsglobal.org/spec/lti-ap/scope/report";
         try {
@@ -60,9 +82,30 @@ const updateAssetStatus = (aud, statusUrl, resourceLinkId, assetId, assetStatus)
                 "type": "originality"
             };
 
-            if (assetStatus === "Processed") {
-                payload["scoreGiven"] = 75;
-                payload["scoreMaximum"] = 100;
+            if (assetStatus === "Processed" && score) {
+                payload["scoreGiven"] = score;
+                payload["scoreMaximum"] = maxScore;
+                if ( score > 80 ) {
+                    payload["indicationColor"] = "#FF0000";
+                    payload["indicationAlt"] = "Bad";
+                } else if ( score > 50 ) {
+                    payload["indicationColor"] = "#FFFF00";
+                    payload["indicationAlt"] = "Warning";
+                } else if ( score > 20 ) {
+                    payload["indicationColor"] = "#0000FF";
+                    payload["indicationAlt"] = "Probably OK";
+                } else {
+                    payload["indicationColor"] = "#3F704D";
+                    payload["indicationAlt"] = "Clear";
+                }
+            }
+
+            if (assetStatus === "Failed") {
+                payload["comment"] = "Fake Failure";
+            }
+
+            if (assetStatus === "NotProcessed") {
+                payload["comment"] = "File not supported";
             }
 
             let options = {
