@@ -9,7 +9,7 @@ export const handleSubmissionNotice = async (req, res, jwtPayload) => {
     const statusUrl = jwtPayload.body["https://purl.imsglobal.org/spec/lti-ap/claim/assetreport"]["report_url"];
     const resourceLinkId = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/resource_link"]["id"];
 
-    const nonSubmissionTextTitle = assets.find(asset => asset.title !== SUBMISSION_TEXT_TITLE);
+    const nonSubmissionTextTitle = assets.find(asset => asset.title !== SUBMISSION_TEXT_TITLE)?.title;
 
     for (const asset in assets) {
         const currentAssetTitle = assets[asset].title;
