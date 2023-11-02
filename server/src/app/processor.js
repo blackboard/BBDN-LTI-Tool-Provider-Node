@@ -1,26 +1,39 @@
 import { getProcessorToken } from './lti-token-service';
 import request from "request";
 
+const SUBMISSION_TEXT_TITLE = 'Submission_Text.html';
+
 export const handleSubmissionNotice = async (req, res, jwtPayload) => {
     // We need to store the assets
     const assets = jwtPayload.body["https://purl.imsglobal.org/spec/lti-ap/claim/assetservice"]["assets"];
     const statusUrl = jwtPayload.body["https://purl.imsglobal.org/spec/lti-ap/claim/assetreport"]["report_url"];
     const resourceLinkId = jwtPayload.body["https://purl.imsglobal.org/spec/lti/claim/resource_link"]["id"];
 
+    const nonSubmissionTextTitle = assets.find(asset => asset.title !== SUBMISSION_TEXT_TITLE)?.title;
+
     for (const asset in assets) {
-        const title = assets[asset].title;
+        const currentAssetTitle = assets[asset].title;
+
+        // Since we can't manually specify a title for submission text, get the score and status
+        // from the title of the first file attachment
+        let titleToParse;
+        if (nonSubmissionTextTitle && (currentAssetTitle === SUBMISSION_TEXT_TITLE)) {
+            titleToParse = nonSubmissionTextTitle;
+        } else {
+            titleToParse = currentAssetTitle;
+        }
 
         // Delay downloading/updating status for 1 second after notification
         await new Promise(resolve => setTimeout(resolve, 1000));
         await downloadAsset(jwtPayload.body.aud, assets[asset].url);
         await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processing");
-        if (title.startsWith('fail')) {
+        if (titleToParse.startsWith('fail')) {
             await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Failed");
-        } else if (title.startsWith('notprocessed')) {
+        } else if (titleToParse.startsWith('notprocessed')) {
             await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "NotProcessed");
         } else {
-            const score = parseScore(title);
-            const maxScore = parseMaxScore(title);
+            const score = parseScore(titleToParse);
+            const maxScore = parseMaxScore(titleToParse);
             await updateAssetStatus(jwtPayload.body.aud, statusUrl, resourceLinkId, assets[asset].asset_id, "Processed", score, maxScore);
         }
     }
