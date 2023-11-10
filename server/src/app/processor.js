@@ -4,6 +4,9 @@ import request from 'request';
 const SUBMISSION_TEXT_TITLE = 'Submission_Text.html';
 
 export const handleSubmissionNotice = async (req, res, jwtPayload) => {
+  const customClaims = jwtPayload.body['https://purl.imsglobal.org/spec/lti/claim/custom'];
+  console.log('Received custom claims:', JSON.stringify(customClaims));
+
   // We need to store the assets
   const assets = jwtPayload.body['https://purl.imsglobal.org/spec/lti-ap/claim/assetservice']['assets'];
   const statusUrl = jwtPayload.body['https://purl.imsglobal.org/spec/lti-ap/claim/assetreport']['report_url'];
