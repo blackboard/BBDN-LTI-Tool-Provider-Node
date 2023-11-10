@@ -303,8 +303,7 @@ let deepLinkingProcessor = function () {
     available: null,
     custom: {
       reports_released: '$ReportsReleased',
+      due_date: '$ResourceLink.submission.endDateTime',
     }
   };
 };
-
-
