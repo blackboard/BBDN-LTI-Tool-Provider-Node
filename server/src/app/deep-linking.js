@@ -293,18 +293,17 @@ let deepLinkingImage = function () {
 
 let deepLinkingProcessor = function () {
   return {
-    "type": "ltiAssetProcessor",
-    "title": null,
-    "text": null,
-    "url": null,
-    "lineItem": null,
-    "presentation": null,
-    "submission": null,
-    "available": null,
-    "custom": {
-      "reports_released": "$ReportsReleased"
+    type: 'ltiAssetProcessor',
+    title: null,
+    text: null,
+    url: null,
+    lineItem: null,
+    presentation: null,
+    submission: null,
+    available: null,
+    custom: {
+      reports_released: '$ReportsReleased',
+      due_date: '$ResourceLink.submission.endDateTime',
     }
   };
 };
-
-
