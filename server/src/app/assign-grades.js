@@ -258,6 +258,7 @@ export const scores = (req, res, agPayload, task) => {
       let columnId = agPayload.form.column;
       let gradingProgress = agPayload.form.gradingProgress;
       let activityProgress = agPayload.form.activityProgress;
+      let submittedAt = agPayload.form.submittedAt;
 
       let url = agPayload.form.url + '/scores';
 
@@ -283,7 +284,8 @@ export const scores = (req, res, agPayload, task) => {
           comment: 'This is exceptional work.',
           timestamp: '2017-04-16T18:54:36.736+00:00',
           activityProgress: activityProgress,
-          gradingProgress: gradingProgress
+          gradingProgress: gradingProgress,
+          submittedAt: submittedAt
         };
         break;
       case 'submit':
