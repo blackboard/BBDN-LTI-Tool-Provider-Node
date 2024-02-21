@@ -60,6 +60,8 @@ export const namesRoles = (req, res, nrPayload) => {
           nrPayload.next_url = '';
         } else {
           nrPayload.body = json;
+          nrPayload.next_url = '';       //difference_url and next_url need to be set empty, otherwise they will retain the prior values.
+          nrPayload.difference_url = ''; 
           let links = response.headers.link.split(',');
           links.forEach(link => {
             if (link.includes('difference')) {
