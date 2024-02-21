@@ -60,6 +60,8 @@ export const namesRoles = (req, res, nrPayload) => {
           nrPayload.next_url = '';
         } else {
           nrPayload.body = json;
+          nrPayload.difference_url = ''; //mbk - if we don't get a difference link, we should not display the button.
+          nrPayload.next_url = '';       //mbk - if we don't get a next link, we should not display the button.
           let links = response.headers.link.split(',');
           links.forEach(link => {
             if (link.includes('difference')) {
