@@ -285,7 +285,7 @@ export const scores = (req, res, agPayload, task) => {
           timestamp: '2017-04-16T18:54:36.736+00:00',
           activityProgress: activityProgress,
           gradingProgress: gradingProgress,
-          submittedAt: submittedAt
+          submittedAt: submittedAt ? submittedAt : null
         };
         break;
       case 'submit':
