@@ -169,6 +169,9 @@ class AssignGradesView extends React.Component {
                   <input type='hidden' name='itemsUrl' defaultValue={this.state.lineItems}/>
                 </td>
                 <td>
+                  <TextField variant={'outlined'} name={'submittedAt'} label={'Submitted At'} size={'small'} />
+                </td>
+                <td>
                   <TextField variant={'outlined'} name={'userid'} label={'User UUID'} size={'small'}/>
                 </td>
                 <td>
