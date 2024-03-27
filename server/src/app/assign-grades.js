@@ -280,11 +280,10 @@ export const scores = (req, res, agPayload, task) => {
           userId: userId,
           scoreGiven: newScore ? newScore : null,
           scoreMaximum: 100.0,
-          comment: 'Modifed comment from tool for testing.',
+          comment: 'This is exceptional work.',
           timestamp: '2017-04-16T18:54:36.736+00:00',
           activityProgress: activityProgress,
-          scoreMaximum: 100.0,
-          gradingProgress: gradingProgress
+                    gradingProgress: gradingProgress
         };
         break;
       case 'submit':
