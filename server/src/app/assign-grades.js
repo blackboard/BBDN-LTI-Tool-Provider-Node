@@ -258,7 +258,6 @@ export const scores = (req, res, agPayload, task) => {
       let columnId = agPayload.form.column;
       let gradingProgress = agPayload.form.gradingProgress;
       let activityProgress = agPayload.form.activityProgress;
-      let submittedAt = agPayload.form.submittedAt;
 
       let url = agPayload.form.url + '/scores';
 
@@ -281,11 +280,11 @@ export const scores = (req, res, agPayload, task) => {
           userId: userId,
           scoreGiven: newScore ? newScore : null,
           scoreMaximum: 100.0,
-          comment: 'This is exceptional work.',
+          comment: 'Modifed comment from tool for testing.',
           timestamp: '2017-04-16T18:54:36.736+00:00',
           activityProgress: activityProgress,
-          gradingProgress: gradingProgress,
-          submittedAt: submittedAt ? submittedAt : null
+          scoreMaximum: 100.0,
+          gradingProgress: gradingProgress
         };
         break;
       case 'submit':
@@ -312,10 +311,12 @@ export const scores = (req, res, agPayload, task) => {
       };
 
       request(options, function (err, response, body) {
-        let json = JSON.parse(body);
+        let json = body ? JSON.parse(body) : '';
 
         if (err) {
           //console.log('AGS Send Score Error - request failed: ' + err.message);
+        } else if (response.statusCode === 204) {
+          json = JSON.parse('{"status": "204", "message": "Score ignored as timestamp is earlier than the already graded date."}');
         } else if (response.statusCode !== 200) {
           /*console.log(
             'AGS Send Score Error - Service call failed: ' +
@@ -323,10 +324,8 @@ export const scores = (req, res, agPayload, task) => {
             '\n' +
             options.uri
           );*/
-          agPayload.body = json;
-        } else {
-          agPayload.body = json;
         }
+        agPayload.body = json;
         res.redirect('/assign_grades_view');
       });
     },
