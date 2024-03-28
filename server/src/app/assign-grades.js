@@ -317,7 +317,7 @@ export const scores = (req, res, agPayload, task) => {
         if (err) {
           //console.log('AGS Send Score Error - request failed: ' + err.message);
         } else if (response.statusCode === 204) {
-          json = JSON.parse('{"status": "204", "message": "Score ignored as timestamp is earlier than the already graded date."}');
+          json = {"status": 204, "message": "No content"};
         } else if (response.statusCode !== 200) {
           /*console.log(
             'AGS Send Score Error - Service call failed: ' +
