@@ -312,10 +312,12 @@ export const scores = (req, res, agPayload, task) => {
       };
 
       request(options, function (err, response, body) {
-        let json = JSON.parse(body);
+        let json = body ? JSON.parse(body) : '';
 
         if (err) {
           //console.log('AGS Send Score Error - request failed: ' + err.message);
+        } else if (response.statusCode === 204) {
+          json = {"status": 204, "message": "No content"};
         } else if (response.statusCode !== 200) {
           /*console.log(
             'AGS Send Score Error - Service call failed: ' +
@@ -323,10 +325,8 @@ export const scores = (req, res, agPayload, task) => {
             '\n' +
             options.uri
           );*/
-          agPayload.body = json;
-        } else {
-          agPayload.body = json;
         }
+        agPayload.body = json;
         res.redirect('/assign_grades_view');
       });
     },
