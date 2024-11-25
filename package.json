@@ -23,7 +23,7 @@
     "finish": "^0.6.3",
     "ims-caliper": "^1.1.0",
     "ims-lti": "^3.0.2",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongodb": "^4.1.3",
