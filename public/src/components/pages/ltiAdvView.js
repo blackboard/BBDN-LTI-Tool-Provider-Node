@@ -111,6 +111,10 @@ export default class LtiAdvView extends React.Component {
         })
         .catch(error => alert('Display capture access denied!', error));
     };
+    const resizeFrame = () => {
+      const height = window.innerHeight > 500 ? 500 : 600;
+      window.parent.postMessage({ subject: 'lti.frameResize', height }, '*');
+    };
     const closeTracks = (stream) => {
       stream.getTracks().forEach(track => {
         if (track.readyState == 'live') {
@@ -141,6 +145,9 @@ export default class LtiAdvView extends React.Component {
             </Grid>
             <Grid item xs>
               <Button variant='contained' color='secondary' onClick={() => checkDisplayCap()}>Test Display Capture</Button>
+            </Grid>
+            <Grid item xs>
+              <Button variant='contained' color='secondary' onClick={() => resizeFrame()}>Resize Frame</Button>
             </Grid>
             <Grid item xs>
               <form action={this.state.returnUrl} method='post'>
