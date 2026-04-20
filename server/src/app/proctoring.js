@@ -10,7 +10,7 @@ export const buildProctoringStartReturnPayload = (req, res, proctoringPayload) =
     'https://purl.imsglobal.org/spec/lti/claim/version': '1.3.0',
     iss: proctoringPayload.body.iss,
     aud: proctoringPayload.body.iss,
-    sub: proctoringPayload.body.iss,
+    sub: proctoringPayload.body.sub,
     iat: now,
     exp: now + 5 * 60,
     'https://purl.imsglobal.org/spec/lti/claim/deployment_id': proctoringPayload.body['https://purl.imsglobal.org/spec/lti/claim/deployment_id'],
