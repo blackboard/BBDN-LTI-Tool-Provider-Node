@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import { Apps, Home } from '@material-ui/icons';
+import { Apps, Home, Notifications } from '@material-ui/icons';
 import { Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
@@ -36,6 +36,12 @@ export const fullListItems = (
       to='/applications'
       primary='Registered Applications'
       icon={<Apps color={'secondary'}/>}
+    />
+    <Divider/>
+    <ListItemLink
+      to='/pns_view'
+      primary='Platform Notifications'
+      icon={<Notifications color={'secondary'}/>}
     />
   </div>
 );

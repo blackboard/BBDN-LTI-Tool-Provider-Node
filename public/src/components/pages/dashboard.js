@@ -15,6 +15,7 @@ import GroupsView from "./groupsView";
 import IconButton from "@material-ui/core/IconButton/index";
 import LaunchEndpoint from "./home";
 import LinkContentView from "./linkContentView";
+import PnsView from "./pnsView";
 import List from "@material-ui/core/List/index";
 import LtiAdvView from "./ltiAdvView";
 import LtiBobcatView from "./ltiBobcatView";
@@ -149,6 +150,7 @@ class Dashboard extends React.Component {
                 path="/link_content_view"
                 component={LinkContentView}
               />
+              <Route path="/pns_view" component={PnsView}/>
             </main>
             <SnackBar/>
           </ErrorBoundary>

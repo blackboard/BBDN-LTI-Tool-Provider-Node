@@ -128,5 +128,6 @@ console.log('LTI 1.3 Bobcat Target URL:    ' + frontendUrl + 'lti13bobcat');
 console.log('LTI 1.3 Proctoring URL:       ' + frontendUrl + 'proctoring');
 console.log('JWKS URL:                     ' + frontendUrl + '.well-known/jwks.json');
 console.log('Register:                     ' + frontendUrl + 'register');
+console.log('PNS Webhook:                  ' + frontendUrl + 'pns');
 console.log('Data will be saved in ' + dbDir);
 console.log('Listening on ' + listenPort);

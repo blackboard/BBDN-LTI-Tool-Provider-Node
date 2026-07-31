@@ -18,6 +18,7 @@ import { oidcLogin, verifyToken } from './lti-adv';
 import { AGPayload, ContentItem, GroupsPayload, LCSPayload, NRPayload } from '../common/restTypes';
 import { buildProctoringEndReturnPayload, buildProctoringStartReturnPayload } from './proctoring';
 import { handleSubmissionNotice } from './processor';
+import { receivePnsNotification, showPnsStatus, showPnsDeliveries, registerPnsHandler, unregisterPnsHandler, verifyPnsRegistration, setFailMode, getFailMode } from './pns-handler';
 import { deepLinkContent } from './deep-linking';
 import { URL } from 'url';
 
@@ -595,9 +596,56 @@ module.exports = function (app) {
   });
 
   //=======================================================
+  // PNS Webhook Handler
+  app.get('/pns', async (req, res) => {
+    console.log('--------------------\nGET /pns');
+    showPnsStatus(req, res);
+  });
+
+  app.post('/pns', async (req, res) => {
+    console.log('--------------------\nPOST /pns');
+    receivePnsNotification(req, res);
+  });
+
+  app.get('/pns/deliveries', async (req, res) => {
+    console.log('--------------------\nGET /pns/deliveries');
+    showPnsDeliveries(req, res);
+  });
+
+  app.post('/pns/register', async (req, res) => {
+    console.log('--------------------\nPOST /pns/register');
+    registerPnsHandler(req, res);
+  });
+
+  app.post('/pns/unregister', async (req, res) => {
+    console.log('--------------------\nPOST /pns/unregister');
+    unregisterPnsHandler(req, res);
+  });
+
+  app.post('/pns/verify', async (req, res) => {
+    console.log('--------------------\nPOST /pns/verify');
+    verifyPnsRegistration(req, res);
+  });
+
+  app.post('/pns/failmode', async (req, res) => {
+    console.log('--------------------\nPOST /pns/failmode');
+    const enabled = req.body.enabled === true;
+    setFailMode(enabled);
+    res.json({ failMode: getFailMode() });
+  });
+
+  //=======================================================
   // Catch all
-  app.get('*', (req, res) => {
+  app.all('*', (req, res) => {
     console.log('catchall - (' + req.url + ')');
-    res.sendFile(path.resolve('./public', 'index.html'));
+    if (req.method === 'GET') {
+      res.sendFile(path.resolve('./public', 'index.html'));
+    } else {
+      res.status(404).json({
+        error: 'Unknown endpoint',
+        requested: req.method + ' ' + req.url,
+        hint: 'Check the spelling. Valid prefixes: /pns, /lti13, /lti, /login'
+      });
+    }
   });
 };

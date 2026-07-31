@@ -104,6 +104,8 @@ in [Eric Preston's demo at 23:00](https://us.bbcollab.com/recording/e193c6cb59cb
    LTI 1.3 Bobcat Target URL:    https://example.com/lti13bobcat
    LTI 1.3 Proctoring URL:       https://example.com/proctoring
    JWKS URL:                     https://example.com/.well-known/jwks.json
+   Register:                     https://example.com/register
+   PNS Webhook:                  https://example.com/pns
    Data will be saved in data
    Listening on 3000
    ```
@@ -183,6 +185,27 @@ The following functionality is supported:
 
 Note: Very little validation is performed in above workflows. For instance, checksums are not verified on assets, so this is suitable for basic testing. 
  
+
+### Platform Notification Service (PNS)
+
+Submission notices can also be received over PNS rather than an OIDC launch. The tool registers a webhook
+handler with the platform, and the platform then posts a signed notice each time a student submits.
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/pns` | POST | Receives a notice, verifies the JWT against the platform JWKS, records the delivery |
+| `/pns` | GET | Current registration, delivery count, and the notice types advertised by the launch claim |
+| `/pns/deliveries` | GET | Delivery history |
+| `/pns/register` | POST | Registers the handler with the platform, auto-detecting deployment and client from the most recent launch |
+| `/pns/unregister` | POST | Clears the handler on the platform |
+| `/pns/verify` | POST | Read-only. Compares the platform's current handlers against what is registered here |
+| `/pns/failmode` | POST | Makes the handler return 500, so the platform's retry and dead-letter behaviour can be exercised |
+
+The Platform Notifications page in the UI covers the same actions, and shows each delivery's decoded
+claims, assets and raw JWT.
+
+See [docs/pns.md](docs/pns.md) for the notice payload, the claims it carries, and how to exercise
+platform retry behaviour.
 
 ## Assignment and Grade Services 2.0
 
