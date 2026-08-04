@@ -63,6 +63,10 @@ const formatEpoch = (seconds) =>
 // own row, so nothing is lost either way.
 const AUTO_REFRESH_MS = 5000;
 
+// Learn's MAX_ATTEMPTS. Mirrored here only to annotate the deliveries table, so it is an assumption
+// about Learn's configuration rather than something the tool is told. Measured as 5 on 2026-07-31.
+const MAX_ATTEMPTS = 5;
+
 // A notice id is a uuid; show enough to correlate rows without dominating the table
 const shortId = (id) => ( id ? `${id.substring(0, 8)}...` : '--' );
 
@@ -107,7 +111,8 @@ class PnsView extends React.Component {
       regHandler: '',
       unregDeploymentId: '',
       autoRefresh: false,
-      selectedDelivery: null
+      selectedDelivery: null,
+      selectedRegistration: null
     };
     this.refreshTimer = null;
     this.load = this.load.bind(this);
@@ -119,6 +124,7 @@ class PnsView extends React.Component {
     this.toggleFailMode = this.toggleFailMode.bind(this);
     this.register = this.register.bind(this);
     this.unregister = this.unregister.bind(this);
+    this.unregisterOne = this.unregisterOne.bind(this);
     this.verify = this.verify.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
   }
@@ -269,6 +275,13 @@ class PnsView extends React.Component {
     this.postAction('/pns/unregister', { deploymentId: this.state.unregDeploymentId.trim() });
   }
 
+  // Unregister straight from a registrations row, so the common case needs no copying of ids into
+  // a text field. The typed form below stays for targeting a deployment that is not listed.
+  unregisterOne(deploymentId) {
+    this.setState({ selectedRegistration: null });
+    this.postAction('/pns/unregister', { deploymentId: deploymentId });
+  }
+
   // Read-only: asks Learn what it holds and compares. Safe to click at any time, and the only
   // action that works before the first Asset Processor launch.
   verify() {
@@ -289,7 +302,7 @@ class PnsView extends React.Component {
         </Typography>
         <Button
           variant={'contained'}
-          color={'primary'}
+          color={'secondary'}
           disabled={busy || registrations.length === 0}
           onClick={this.verify}
           style={{ marginBottom: '16px' }}
@@ -347,7 +360,9 @@ class PnsView extends React.Component {
         </Button>
 
         <Typography variant='subtitle1' gutterBottom style={{ marginTop: '16px' }}>
-          <b>Unregister</b> - deploymentId is required; prefilled from the current registration
+          <b>Unregister</b> - normally done from the Unregister button on a row under Registrations
+          below. This form is for targeting a deployment that is not listed there. Removes every
+          notice type registered for the deploymentId, and keeps received deliveries.
         </Typography>
         <TextField
           variant={'outlined'}
@@ -451,7 +466,10 @@ class PnsView extends React.Component {
             <CustomTableCell>
               <span style={registered ? styles.passed : styles.notAvailable}>
                 {registered
-                  ? registrations.map(r => r.noticeType).join(', ')
+                  ? `${registrations.length} handler${registrations.length === 1 ? '' : 's'}` +
+                    ` across ${new Set(registrations.map(r => r.deploymentId)).size} deployment` +
+                    `${new Set(registrations.map(r => r.deploymentId)).size === 1 ? '' : 's'}: ` +
+                    [ ...new Set(registrations.map(r => r.noticeType)) ].join(', ')
                   : 'no handler registered'}
               </span>
             </CustomTableCell>
@@ -504,8 +522,12 @@ class PnsView extends React.Component {
     );
   }
 
+  // Every registration, not just the newest. A deployment can register a handler per notice type,
+  // and several deployments can register against this one tool, so the stored list is genuinely
+  // one-to-many. Showing only the last row hid that, and hid which handler URL belonged to which
+  // deployment.
   renderClaim() {
-    const { status } = this.state;
+    const { status, busy, selectedRegistration } = this.state;
     const registrations = status.registrations || [];
 
     // The PNS claim only reaches the tool via a launch; its absence is the first
@@ -521,17 +543,80 @@ class PnsView extends React.Component {
     }
 
     return (
-      <JSONInput
-        id='pns_registration'
-        viewOnly={true}
-        confirmGood={false}
-        placeholder={registrations[registrations.length - 1]}
-        theme='dark_vscode_tribute'
-        style={{ body: styles.jsonEditor }}
-        locale={locale}
-        height='100%'
-        width='max-content'
-      />
+      <div>
+        <Table style={{ marginBottom: '12px' }}>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell>#</CustomTableCell>
+              <CustomTableCell>deploymentId</CustomTableCell>
+              <CustomTableCell>Notice type</CustomTableCell>
+              <CustomTableCell>Handler URL</CustomTableCell>
+              <CustomTableCell>Registered</CustomTableCell>
+              <CustomTableCell align='center'>Actions</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {registrations.map((r, idx) => (
+              <TableRow key={`${r.deploymentId}:${r.noticeType}:${r.clientId}`} hover>
+                <CustomTableCell>{idx + 1}</CustomTableCell>
+                <CustomTableCell title={r.deploymentId}>{shortId(r.deploymentId)}</CustomTableCell>
+                <CustomTableCell>{r.noticeType}</CustomTableCell>
+                <CustomTableCell style={{ wordBreak: 'break-all' }}>{r.handlerUrl}</CustomTableCell>
+                <CustomTableCell>{formatTime(r.registeredAt)}</CustomTableCell>
+                <CustomTableCell align='center'>
+                  <Button
+                    size='small'
+                    variant='outlined'
+                    color='secondary'
+                    style={{ marginRight: '6px' }}
+                    onClick={() => this.setState({ selectedRegistration: r })}
+                  >
+                    Details
+                  </Button>
+                  <Button
+                    size='small'
+                    variant='contained'
+                    color='secondary'
+                    disabled={busy}
+                    onClick={() => this.unregisterOne(r.deploymentId)}
+                  >
+                    Unregister
+                  </Button>
+                </CustomTableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+
+        {selectedRegistration && (
+          <div>
+            <Typography variant='subtitle2' gutterBottom>
+              Stored record for {shortId(selectedRegistration.deploymentId)} /{' '}
+              {selectedRegistration.noticeType}
+              <Button
+                size='small'
+                variant='outlined'
+                color='secondary'
+                style={{ marginLeft: '8px' }}
+                onClick={() => this.setState({ selectedRegistration: null })}
+              >
+                Hide
+              </Button>
+            </Typography>
+            <JSONInput
+              id='pns_registration'
+              viewOnly={true}
+              confirmGood={false}
+              placeholder={selectedRegistration}
+              theme='dark_vscode_tribute'
+              style={{ body: styles.jsonEditor }}
+              locale={locale}
+              height='100%'
+              width='max-content'
+            />
+          </div>
+        )}
+      </div>
     );
   }
 
@@ -547,51 +632,85 @@ class PnsView extends React.Component {
       );
     }
 
+    // Attempt number within each notice. Learn re-sends the same noticeId on every retry, so the
+    // count of rows sharing a noticeId IS the attempt count - the only retry signal the tool can
+    // observe, since Learn never tells the tool it has given up.
+    const attemptsByNotice = {};
+    deliveries
+      .slice()
+      .sort((a, b) => new Date(a.receivedAt) - new Date(b.receivedAt))
+      .forEach(d => {
+        const key = d.noticeId || d.id;
+        attemptsByNotice[key] = ( attemptsByNotice[key] || 0 ) + 1;
+        d.__attempt = attemptsByNotice[key];
+      });
+    const totalByNotice = attemptsByNotice;
+
     return (
-      <Table style={{ marginBottom: '20px' }}>
-        <TableHead>
-          <TableRow>
-            <CustomTableCell>#</CustomTableCell>
-            <CustomTableCell>Received</CustomTableCell>
-            <CustomTableCell>Notice type</CustomTableCell>
-            <CustomTableCell>Notice id</CustomTableCell>
-            <CustomTableCell align='center'>Verified</CustomTableCell>
-            <CustomTableCell align='center'>Duplicate</CustomTableCell>
-            <CustomTableCell>Error</CustomTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {deliveries.map((d, idx) => (
-            <TableRow
-              key={d.id || idx}
-              hover
-              style={{ cursor: 'pointer' }}
-              onClick={() => this.openDelivery(d)}
-              title='Click to inspect the notice claims'
-            >
-              <CustomTableCell>{deliveries.length - idx}</CustomTableCell>
-              <CustomTableCell>{formatTime(d.receivedAt)}</CustomTableCell>
-              <CustomTableCell>{d.noticeType || '--'}</CustomTableCell>
-              <CustomTableCell title={d.noticeId || ''}>{shortId(d.noticeId)}</CustomTableCell>
-              <CustomTableCell align='center'>
-                {/* Notices are signed through the dev portal, so a verified notice is the
-                    expected result - a false here is a real finding, not background noise. */}
-                <span style={d.verified ? styles.passed : styles.failed}>
-                  {d.verified ? 'yes' : 'NO'}
-                </span>
-              </CustomTableCell>
-              <CustomTableCell align='center'>
-                {d.isDuplicate ? 'yes' : ''}
-              </CustomTableCell>
-              <CustomTableCell>
-                <span style={d.error ? styles.failed : styles.notAvailable}>
-                  {d.error || '--'}
-                </span>
-              </CustomTableCell>
+      <div>
+        <Table style={{ marginBottom: '8px' }}>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell>#</CustomTableCell>
+              <CustomTableCell>Received</CustomTableCell>
+              <CustomTableCell>Notice type</CustomTableCell>
+              <CustomTableCell>Notice id</CustomTableCell>
+              <CustomTableCell align='center'>Attempt</CustomTableCell>
+              <CustomTableCell align='center'>Verified</CustomTableCell>
+              <CustomTableCell align='center'>Duplicate</CustomTableCell>
+              <CustomTableCell>Error</CustomTableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {deliveries.map((d, idx) => (
+              <TableRow
+                key={d.id || idx}
+                hover
+                style={{ cursor: 'pointer' }}
+                onClick={() => this.openDelivery(d)}
+                title='Click to inspect the notice claims'
+              >
+                <CustomTableCell>{deliveries.length - idx}</CustomTableCell>
+                <CustomTableCell>{formatTime(d.receivedAt)}</CustomTableCell>
+                <CustomTableCell>{d.noticeType || '--'}</CustomTableCell>
+                <CustomTableCell title={d.noticeId || ''}>{shortId(d.noticeId)}</CustomTableCell>
+                <CustomTableCell align='center'>
+                  {/* Reaching the attempt budget is the tool-side signal that Learn has stopped
+                    retrying. The DEAD_LETTER status itself lives only in Learn's own row. */}
+                  <span style={
+                    totalByNotice[d.noticeId || d.id] >= MAX_ATTEMPTS ? styles.failed : undefined
+                  }>
+                    {d.__attempt} of {totalByNotice[d.noticeId || d.id]}
+                  </span>
+                </CustomTableCell>
+                <CustomTableCell align='center'>
+                  {/* Notices are signed through the dev portal, so a verified notice is the
+                    expected result - a false here is a real finding, not background noise. */}
+                  <span style={d.verified ? styles.passed : styles.failed}>
+                    {d.verified ? 'yes' : 'NO'}
+                  </span>
+                </CustomTableCell>
+                <CustomTableCell align='center'>
+                  {d.isDuplicate ? 'yes' : ''}
+                </CustomTableCell>
+                <CustomTableCell>
+                  <span style={d.error ? styles.failed : styles.notAvailable}>
+                    {d.error || '--'}
+                  </span>
+                </CustomTableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <Typography variant='body2' style={styles.notAvailable}>
+          Attempt counts rows sharing one notice id. A platform keeps the notice id stable across
+          retries and re-signs each attempt, so several rows with the same id are one notice being
+          retried, not several notices. Reaching {MAX_ATTEMPTS} attempts means the platform has
+          exhausted its retry budget and will have given up on the delivery. A platform does not tell
+          the tool it gave up, it simply stops calling, so the final state is only visible on the
+          platform side.
+        </Typography>
+      </div>
     );
   }
 
@@ -778,12 +897,14 @@ class PnsView extends React.Component {
         {this.renderDeliveryDrawer()}
 
         <Typography variant='h5' gutterBottom>
-          Current registration
+          Registrations
         </Typography>
         <Typography variant='body2' style={styles.notAvailable} gutterBottom>
-          The nested <code>discovery</code> block is the snapshot Learn returned <i>before</i> the
-          handler was written, so its <code>handler</code> reads empty even on a successful
-          registration. Use Verify with Learn to see Learn&apos;s current state.
+          One row per registered handler. A deployment can register a handler for each notice type,
+          and more than one deployment can point at this tool, so several rows are normal. In
+          Details, the nested <code>discovery</code> block is the snapshot Learn returned{' '}
+          <i>before</i> the handler was written, so its <code>handler</code> reads empty even on a
+          successful registration. Use Verify with Learn to see Learn&apos;s current state.
         </Typography>
         {this.renderClaim()}
       </div>

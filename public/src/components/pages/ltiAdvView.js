@@ -29,6 +29,7 @@ export default class LtiAdvView extends React.Component {
           grading: jwtPayload.grading,
           groups: jwtPayload.groups,
           linkContent: jwtPayload.link_content,
+          pns: jwtPayload.pns,
         });
       });
   }
@@ -104,6 +105,23 @@ export default class LtiAdvView extends React.Component {
     ) : (
       <Typography variant='body1' style={styles.notAvailable}>
         <b>Link and Content Service not available</b>
+      </Typography>
+    );
+    {/* Navigates in place, matching the other services. Those POST the launch body because they
+        make a service call with it; PNS needs no body here, since the monitoring page reads the
+        stored launch session server-side, so a plain link to the same route the nav drawer uses is
+        enough. */}
+    const platformNotificationService = this.state.pns ? (
+      <Button
+        variant='contained'
+        color='secondary'
+        href='/pns_view'
+      >
+        Platform Notification Service
+      </Button>
+    ) : (
+      <Typography variant='body1' style={styles.notAvailable}>
+        <b>Platform Notification Service not available</b>
       </Typography>
     );
     const checkMicrophone = () => {
@@ -189,6 +207,9 @@ export default class LtiAdvView extends React.Component {
             </Grid>
             <Grid item xs>
               {linkContentService}
+            </Grid>
+            <Grid item xs>
+              {platformNotificationService}
             </Grid>
           </Grid>
 

@@ -106,6 +106,17 @@ export const verifyToken = async (id_token) => {
     jwtPayload.link_content = true;
   }
 
+  // Platform Notification Service. Unlike the other services there is nothing to call at launch
+  // time: the platform pushes notices to the webhook out-of-band. The launch only tells us the
+  // service is offered, which is what gates the link to the monitoring page.
+  if (
+    jwtPayload.body[
+      'https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice'
+    ] !== undefined
+  ) {
+    jwtPayload.pns = true;
+  }
+
   if (
     jwtPayload.body[
       'https://purl.imsglobal.org/spec/lti/claim/target_link_uri'

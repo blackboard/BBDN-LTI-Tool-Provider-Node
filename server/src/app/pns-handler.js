@@ -474,12 +474,18 @@ export const registerPnsHandler = async (req, res) => {
       }
     });
 
+    // The platform endpoint is a PUT, so registering an existing (deployment, notice type, client)
+    // replaces the handler rather than creating a second one. Learn enforces the same thing with a
+    // unique constraint on those three columns. Mirror that here, and report which of the two
+    // happened so a repeated register is not silently indistinguishable from a first one.
+    let replaced = null;
     if (pnsDb.exists('.registrations')) {
       const existing = pnsDb.getData('.registrations');
       const indicesToRemove = [];
       existing.forEach((reg, idx) => {
         if (reg.deploymentId === deploymentId && reg.noticeType === noticeType && reg.clientId === clientId) {
           indicesToRemove.push(idx);
+          replaced = reg;
         }
       });
       indicesToRemove.reverse().forEach(idx => {
@@ -499,7 +505,9 @@ export const registerPnsHandler = async (req, res) => {
     pnsDb.push('.registrations[]', registration);
 
     res.json({
-      status: 'registered',
+      status: replaced ? 'updated' : 'registered',
+      replacedHandlerUrl: replaced ? replaced.handlerUrl : undefined,
+      previouslyRegisteredAt: replaced ? replaced.registeredAt : undefined,
       deploymentId: deploymentId,
       clientId: clientId,
       noticeType: noticeType,
@@ -608,11 +616,20 @@ export const unregisterPnsHandler = async (req, res) => {
     });
   }
 
+  // Deliveries are deliberately kept: they are the evidence of what the platform sent, and a
+  // registration being removed does not make the notices it already delivered less true. Say so
+  // explicitly, so an empty handler list next to a non-empty delivery list is not read as a bug.
+  let retainedDeliveries = 0;
+  if (pnsDb.exists('.deliveries')) {
+    retainedDeliveries = pnsDb.getData('.deliveries').length;
+  }
+
   const uniqueTypes = [...new Set(unregisteredNoticeTypes)];
   res.json({
     status: 'unregistered',
     deploymentId: targetDeploymentId,
     noticeTypes: uniqueTypes,
-    count: successCount
+    count: successCount,
+    deliveriesRetained: retainedDeliveries
   });
 };
