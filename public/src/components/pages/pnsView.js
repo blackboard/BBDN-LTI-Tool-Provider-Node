@@ -11,6 +11,7 @@ import {
   TableBody,
   TableCell,
   TableHead,
+  TablePagination,
   TableRow,
   TextField,
   Typography
@@ -34,27 +35,55 @@ const CustomTableCell = withStyles(() => ( {
 // NOTE the namespace split: activity and submission arrive under `lti-aip`, while assetservice
 // arrives under `lti-ap` -- which is the Proctoring specification's namespace. Both are read here
 // because the drawer's job is to show what Learn really sent, not what it ought to send.
+// The plain `lti` names are the ones the Asset Processor Submission Notice specification requires;
+// the `lti-ap` and `lti-aip` variants are what platforms have been observed sending. Both are listed
+// so the tool keeps working before and after a platform-side correction.
 const CLAIM = {
   notice: 'https://purl.imsglobal.org/spec/lti/claim/notice',
-  activity: 'https://purl.imsglobal.org/spec/lti-aip/claim/activity',
-  submission: 'https://purl.imsglobal.org/spec/lti-aip/claim/submission',
-  assetService: 'https://purl.imsglobal.org/spec/lti-ap/claim/assetservice',
-  assetServiceAlt: 'https://purl.imsglobal.org/spec/lti-aip/claim/assetservice',
+  activity: 'https://purl.imsglobal.org/spec/lti/claim/activity',
+  activityAlt: 'https://purl.imsglobal.org/spec/lti-aip/claim/activity',
+  submission: 'https://purl.imsglobal.org/spec/lti/claim/submission',
+  submissionAlt: 'https://purl.imsglobal.org/spec/lti-aip/claim/submission',
+  assetService: 'https://purl.imsglobal.org/spec/lti/claim/assetservice',
+  assetServiceAlt: 'https://purl.imsglobal.org/spec/lti-ap/claim/assetservice',
+  assetServiceAlt2: 'https://purl.imsglobal.org/spec/lti-aip/claim/assetservice',
   context: 'https://purl.imsglobal.org/spec/lti/claim/context',
   forUser: 'https://purl.imsglobal.org/spec/lti/claim/for_user',
   deploymentId: 'https://purl.imsglobal.org/spec/lti/claim/deployment_id',
   version: 'https://purl.imsglobal.org/spec/lti/claim/version'
 };
 
-// Tolerate either namespace so the drawer keeps working if Learn corrects the assetservice URI.
+// Read the specification name first, then the observed variants, so a platform-side correction is
+// picked up automatically rather than silently blanking the drawer.
+const claimOf = (body, ...names) => {
+  for (const name of names) {
+    if (body && body[name]) {
+      return body[name];
+    }
+  }
+  return null;
+};
+
 const assetServiceClaim = (body) =>
-  ( body && ( body[CLAIM.assetService] || body[CLAIM.assetServiceAlt] ) ) || null;
+  claimOf(body, CLAIM.assetService, CLAIM.assetServiceAlt, CLAIM.assetServiceAlt2);
 
 const formatBytes = (size) => ( typeof size === 'number' ? `${size} B` : '--' );
 
-// iat/exp are numeric epoch seconds in a JWT, not ISO strings
+// Local YYYY-MM-DD HH:MM:SS. Full date including year, because deliveries accumulate indefinitely
+// and a day-and-month value is ambiguous once records span a year boundary. The layout deliberately
+// matches the platform log's own timestamp format so a value here can be pasted straight into a log
+// search, and it is built from the local getters rather than toLocaleString so it renders the same
+// regardless of the tester's locale.
+const stamp = (date) => {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+    `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+};
+
+// iat/exp are numeric epoch seconds in a JWT, not ISO strings. Same full-date format as the table so
+// a JWT lifetime can be compared against a delivery time without converting anything.
 const formatEpoch = (seconds) =>
-  ( typeof seconds === 'number' ? new Date(seconds * 1000).toLocaleTimeString() : '--' );
+  ( typeof seconds === 'number' ? stamp(new Date(seconds * 1000)) : '--' );
 
 // Learn re-enqueues a failed delivery immediately with no backoff. Measured against a real retry
 // sequence on 2026-07-31: all five attempts landed in 385ms (gaps of 113/95/88/89ms). No polling
@@ -74,8 +103,45 @@ const formatTime = (iso) => {
   if (!iso) {
     return '--';
   }
-  // Local time is what you compare against the Learn log while testing
-  return new Date(iso).toLocaleTimeString();
+  const when = new Date(iso);
+  return Number.isNaN(when.getTime()) ? '--' : stamp(when);
+};
+
+// The notice claim's own timestamp, which the spec defines as when the event happened inside the
+// platform - not when the JWT was minted and not when we received it. Read from the stored claims so
+// it works for deliveries recorded before this column existed.
+const noticeTimestampOf = (delivery) => {
+  const notice = delivery && delivery.jwtBody && delivery.jwtBody[CLAIM.notice];
+  return ( notice && notice.timestamp ) || null;
+};
+
+// Gap between the platform's event time and our receipt time, i.e. end-to-end delivery latency.
+// Returns null unless both parse, and tolerates a negative result: the two values come from two
+// different clocks, so skew can legitimately put receipt marginally before the event.
+const deliveryLatency = (delivery) => {
+  const noticeTime = new Date(noticeTimestampOf(delivery)).getTime();
+  const received = new Date(delivery && delivery.receivedAt).getTime();
+  if (Number.isNaN(noticeTime) || Number.isNaN(received)) {
+    return null;
+  }
+  const seconds = ( received - noticeTime ) / 1000;
+  return `${seconds >= 0 ? '+' : ''}${seconds.toFixed(1)}s`;
+};
+
+// Oldest first, by receipt time. A missing or unparseable receivedAt sorts to the start rather than
+// poisoning the comparison with NaN, and rows landing in the same millisecond - which retries do,
+// since the platform re-sends with no backoff - fall back to the record id so the order is stable
+// across refreshes instead of shuffling between polls.
+const compareByReceived = (a, b) => {
+  const timeOf = (d) => {
+    const t = new Date(d && d.receivedAt).getTime();
+    return Number.isNaN(t) ? 0 : t;
+  };
+  const delta = timeOf(a) - timeOf(b);
+  if (delta !== 0) {
+    return delta;
+  }
+  return String(( a && a.id ) || '').localeCompare(String(( b && b.id ) || ''));
 };
 
 // Learn returns its REST errors as a JSON string nested inside our error field, e.g.
@@ -112,7 +178,11 @@ class PnsView extends React.Component {
       unregDeploymentId: '',
       autoRefresh: false,
       selectedDelivery: null,
-      selectedRegistration: null
+      selectedRegistration: null,
+      // Deliveries accumulate one row per attempt and the table refreshes on a timer, so the whole
+      // list is re-rendered on every poll. Paginate the rendering to keep that cost flat.
+      page: 0,
+      rowsPerPage: 10
     };
     this.refreshTimer = null;
     this.load = this.load.bind(this);
@@ -621,7 +691,7 @@ class PnsView extends React.Component {
   }
 
   renderDeliveries() {
-    const { deliveries } = this.state;
+    const { deliveries, rowsPerPage } = this.state;
 
     if (deliveries.length === 0) {
       return (
@@ -632,19 +702,35 @@ class PnsView extends React.Component {
       );
     }
 
-    // Attempt number within each notice. Learn re-sends the same noticeId on every retry, so the
-    // count of rows sharing a noticeId IS the attempt count - the only retry signal the tool can
-    // observe, since Learn never tells the tool it has given up.
-    const attemptsByNotice = {};
+    // Attempt number within each notice. A platform re-sends the same noticeId on every retry, so
+    // the count of rows sharing a noticeId IS the attempt count - the only retry signal the tool can
+    // observe, since the platform never tells the tool it has given up.
+    //
+    // Computed across every delivery, never just the visible page: paginating first would make the
+    // counts depend on where the page boundary happens to fall. Results are kept in a local map
+    // rather than assigned onto the delivery objects, which are state and must not be mutated here.
+    const attemptById = new Map();
+    const totalByNotice = {};
     deliveries
       .slice()
-      .sort((a, b) => new Date(a.receivedAt) - new Date(b.receivedAt))
+      .sort(compareByReceived)
       .forEach(d => {
         const key = d.noticeId || d.id;
-        attemptsByNotice[key] = ( attemptsByNotice[key] || 0 ) + 1;
-        d.__attempt = attemptsByNotice[key];
+        totalByNotice[key] = ( totalByNotice[key] || 0 ) + 1;
+        attemptById.set(d.id, totalByNotice[key]);
       });
-    const totalByNotice = attemptsByNotice;
+
+    // Newest first, using the same comparator reversed so the display order, the attempt numbering
+    // and the row numbers can never disagree.
+    const ordered = deliveries.slice().sort((a, b) => compareByReceived(b, a));
+
+    // Clamp rather than trust state.page: auto-refresh can shrink the list underneath a reader who
+    // is on a later page, and a stale index would render an empty table. Clamping on read avoids
+    // calling setState during render.
+    const pageCount = Math.max(1, Math.ceil(ordered.length / rowsPerPage));
+    const page = Math.min(this.state.page, pageCount - 1);
+    const firstRow = page * rowsPerPage;
+    const visible = ordered.slice(firstRow, firstRow + rowsPerPage);
 
     return (
       <div>
@@ -653,6 +739,7 @@ class PnsView extends React.Component {
             <TableRow>
               <CustomTableCell>#</CustomTableCell>
               <CustomTableCell>Received</CustomTableCell>
+              <CustomTableCell>Notice time</CustomTableCell>
               <CustomTableCell>Notice type</CustomTableCell>
               <CustomTableCell>Notice id</CustomTableCell>
               <CustomTableCell align='center'>Attempt</CustomTableCell>
@@ -662,16 +749,24 @@ class PnsView extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {deliveries.map((d, idx) => (
+            {visible.map((d, idx) => (
               <TableRow
-                key={d.id || idx}
+                key={d.id || firstRow + idx}
                 hover
                 style={{ cursor: 'pointer' }}
                 onClick={() => this.openDelivery(d)}
                 title='Click to inspect the notice claims'
               >
-                <CustomTableCell>{deliveries.length - idx}</CustomTableCell>
+                <CustomTableCell>{ordered.length - ( firstRow + idx )}</CustomTableCell>
                 <CustomTableCell>{formatTime(d.receivedAt)}</CustomTableCell>
+                {/* Platform event time, with the delivery latency alongside it. Stays fixed across a
+                  retry burst while Received advances, so a repeated notice is unambiguous. */}
+                <CustomTableCell title={noticeTimestampOf(d) || ''}>
+                  {formatTime(noticeTimestampOf(d))}
+                  {deliveryLatency(d) && (
+                    <span style={styles.notAvailable}> ({deliveryLatency(d)})</span>
+                  )}
+                </CustomTableCell>
                 <CustomTableCell>{d.noticeType || '--'}</CustomTableCell>
                 <CustomTableCell title={d.noticeId || ''}>{shortId(d.noticeId)}</CustomTableCell>
                 <CustomTableCell align='center'>
@@ -680,7 +775,7 @@ class PnsView extends React.Component {
                   <span style={
                     totalByNotice[d.noticeId || d.id] >= MAX_ATTEMPTS ? styles.failed : undefined
                   }>
-                    {d.__attempt} of {totalByNotice[d.noticeId || d.id]}
+                    {attemptById.get(d.id)} of {totalByNotice[d.noticeId || d.id]}
                   </span>
                 </CustomTableCell>
                 <CustomTableCell align='center'>
@@ -702,6 +797,24 @@ class PnsView extends React.Component {
             ))}
           </TableBody>
         </Table>
+        {/* rowsPerPageOptions starts at 5 because a retry burst is MAX_ATTEMPTS rows, so 5 lets one
+          notice's attempts sit together on a single page. */}
+        <TablePagination
+          component='div'
+          count={ordered.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[ 5, 10, 25, 50, 100 ]}
+          onPageChange={( event, newPage ) => this.setState({ page: newPage })}
+          onRowsPerPageChange={event => this.setState({
+            rowsPerPage: parseInt(event.target.value, 10),
+            page: 0
+          })}
+        />
+        <Typography variant='body2' style={styles.notAvailable}>
+          Notice time is when the event happened on the platform, taken from the notice claim.
+          Received is when this tool got the delivery. The gap in brackets is end-to-end latency.
+        </Typography>
         <Typography variant='body2' style={styles.notAvailable}>
           Attempt counts rows sharing one notice id. A platform keeps the notice id stable across
           retries and re-signs each attempt, so several rows with the same id are one notice being
@@ -725,8 +838,8 @@ class PnsView extends React.Component {
     const d = selectedDelivery;
     const body = d.jwtBody || {};
     const notice = body[CLAIM.notice] || {};
-    const activity = body[CLAIM.activity] || {};
-    const submission = body[CLAIM.submission] || {};
+    const activity = claimOf(body, CLAIM.activity, CLAIM.activityAlt) || {};
+    const submission = claimOf(body, CLAIM.submission, CLAIM.submissionAlt) || {};
     const context = body[CLAIM.context] || {};
     const forUser = body[CLAIM.forUser] || {};
     const assetService = assetServiceClaim(body) || {};

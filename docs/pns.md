@@ -37,22 +37,22 @@ Body:
 ```json
 {
   "https://purl.imsglobal.org/spec/lti-aip/claim/activity": {
-    "activity_id": "_77428_1"
+    "activity_id": "<activity-id>"
   },
   "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "<deployment-id>",
   "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
   "https://purl.imsglobal.org/spec/lti/claim/notice": {
-    "id": "9a3a9bf3-b517-4394-87db-ddda210a5092",
+    "id": "<notice-id>",
     "timestamp": "2026-07-31T06:51:07.611796Z",
     "type": "LtiAssetProcessorSubmissionNotice"
   },
   "iss": "https://platform.example.com",
   "https://purl.imsglobal.org/spec/lti-aip/claim/submission": {
-    "submission_id": "_907_1"
+    "submission_id": "<submission-id>"
   },
-  "nonce": "c90a06fd-cb7c-4e9e-af67-57e0838a0878",
+  "nonce": "<nonce>",
   "https://purl.imsglobal.org/spec/lti/claim/context": {
-    "id": "_28490_1",
+    "id": "<context-id>",
     "label": "COURSE-101",
     "title": "Example Course"
   },
@@ -61,11 +61,11 @@ Body:
   "https://purl.imsglobal.org/spec/lti-ap/claim/assetservice": {
     "assets": [
       {
-        "asset_id": "_294_1",
-        "url": "https://platform.example.com/learn/api/v1/lti/assets/_294_1/data",
+        "asset_id": "<asset-id>",
+        "url": "https://platform.example.com/learn/api/v1/lti/assets/<asset-id>/data",
         "title": "Submission_Text.html",
         "filename": "Submission_Text.html",
-        "checksum": "B4b35OS5/BzXi1WreI6lSg==",
+        "checksum": "<checksum>",
         "size": 11,
         "content_type": "text/html"
       }
@@ -100,8 +100,25 @@ Two things worth knowing when writing a consumer:
 - **There is no `assetreport` claim on the notice.** The report endpoint comes from the Asset
   Processor launch, not from the notice, so a tool that only receives notices cannot post a report
   without having seen a launch.
-- **`activity` and `submission` use the `lti-aip` prefix while `assetservice` uses `lti-ap`.** This
-  tool reads either prefix for `assetservice` so it keeps working if that changes.
+- **The prefixes above are not the ones the specification defines.** The Asset Processor Submission
+  Notice specification requires `lti/claim/activity`, `lti/claim/submission`,
+  `lti/claim/assetservice` and `lti/claim/for_user` - all on the plain `lti` prefix, and all as MUST.
+  Neither `lti-ap` nor `lti-aip` appears anywhere in the Asset Processor specification family;
+  `lti-ap` is the LTI Proctoring Services prefix. The table records what the platform under test
+  actually sends. A consumer targeting the specification should read the plain `lti` names, and this
+  tool reads either prefix for `assetservice` so it survives a platform-side correction.
+
+### Timestamps
+
+The deliveries table shows two clocks, which are not the same thing:
+
+- **Notice time** is `lti/claim/notice.timestamp` - when the event happened on the platform. The
+  specification defines it as the event occurrence, explicitly *not* when the JWT was formed.
+- **Received** is when this tool got the HTTP POST.
+
+The gap between them is end-to-end latency: event, notice generation, queueing, signing, delivery.
+It is not network time alone. On a retry the notice time stays fixed while received advances, which
+is how a retried notice is told apart from a new one.
 
 ## Verification
 

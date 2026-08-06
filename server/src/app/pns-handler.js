@@ -57,8 +57,14 @@ const registerHint = (errorMsg) => {
   if (errorMsg.includes('401')) {
     return 'Ensure the noticehandlers scope is granted for this application';
   }
+  if (errorMsg.includes('not enabled for this deployment')) {
+    return 'Enable feature.asset.processor.pns for the tenant on the Learn side';
+  }
   if (errorMsg.includes('403')) {
-    return 'Verify the deploymentId matches the platform\'s record';
+    // The platform returns 403 for the feature flag being off, a rejected bearer token, and a
+    // deployment that belongs to another client. Name all three rather than guessing one: the
+    // flag is the most common cause during branch testing and the cheapest to check.
+    return 'Check feature.asset.processor.pns is enabled, the token is valid, and the deploymentId belongs to this client';
   }
   if (errorMsg.includes('400')) {
     return 'The handler URL must be an HTTPS URL within the tool\'s registered domain';
@@ -66,11 +72,18 @@ const registerHint = (errorMsg) => {
   return null;
 };
 
-// The two failures worth explaining on a verify: the scope was never granted, or the platform is
-// running a build without the PNS endpoint at all (its router answers 404).
+// Failures worth explaining on a verify: the scope was never granted, the PNS feature flag is off
+// on the platform, the token or deployment was rejected, or the platform is running a build without
+// the PNS endpoint at all (its router answers 404).
 const verifyHint = (errorMsg) => {
-  if (errorMsg.includes('401')) { 
+  if (errorMsg.includes('401')) {
     return 'Ensure the noticehandlers scope is granted in the Dev Portal';
+  }
+  if (errorMsg.includes('not enabled for this deployment')) {
+    return 'Enable feature.asset.processor.pns for the tenant on the Learn side';
+  }
+  if (errorMsg.includes('403')) {
+    return 'Check feature.asset.processor.pns is enabled, the token is valid, and the deploymentId belongs to this client';
   }
   if (errorMsg.includes('404')) {
     return 'Learn has no PNS endpoint - is it built from a branch with the PNS code?';
@@ -111,11 +124,10 @@ export const verifyPnsJwt = async (jwtString) => {
 
   try {
     if (config.pns_platform_public_key) {
-      // Learn signs PNS notice JWTs with its LTI domain-config key (blti_domain_config.auth_key), not the
-      // tool-application key registered in DevPortal, and sets no `kid` header on the notice JWT. The
-      // DevPortal application-JWKS lookup below therefore cannot verify these tokens - it fetches this
-      // tool's own keys, not Learn's signing key. Until Learn publishes a JWKS for its notice-signing key,
-      // configure the matching public key (PEM) here to verify platform-signed notices.
+      // Optional override, for a platform that signs notices with a key it does not publish in a JWKS.
+      // Not needed for Learn: it delegates notice signing to the Dev Portal, which sets `kid` to the
+      // signing key pair's id and publishes that key in the application's JWKS, so the lookup below
+      // resolves it. Set this only if JWKS verification is unavailable for your platform.
       jwt.verify(jwtString, config.pns_platform_public_key, { algorithms: ['RS256'] });
       signatureValid = true;
     } else {
@@ -136,9 +148,9 @@ export const verifyPnsJwt = async (jwtString) => {
       const response = await axios.get(jwksUrl);
       const key = response.data.keys.find(k => k.kid === result.header.kid);
       if (!key) {
-        result.error = 'No matching key found for kid: ' + result.header.kid +
-          '. Notice JWTs from Learn currently carry no kid - set pns_platform_public_key in config.json' +
-          ' to verify against Learn\'s auth_key public key instead.';
+        result.error = 'No key in the application JWKS matches kid: ' + result.header.kid +
+          '. The platform may have rotated its signing key, or signed with a key it does not publish;' +
+          ' set pns_platform_public_key in config.json to verify against a known public key instead.';
         return result;
       }
       jwt.verify(jwtString, jwk2pem(key), { algorithms: ['RS256'] });
